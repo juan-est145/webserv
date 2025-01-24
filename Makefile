@@ -5,10 +5,12 @@ SRC-PATH = src
 HEADER-PATH = include
 
 SRCS = $(SRC-PATH)/main.cpp\
+$(SRC-PATH)/Server.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADER = $(HEADER-PATH)/main.hpp\
+$(HEADER-PATH)/Server.hpp\
 
 CXX = $(shell which c++ clang++ g++ | head -n 1)
 
