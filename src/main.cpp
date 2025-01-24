@@ -5,18 +5,20 @@
 #include <string>
 #include <cstring>
 
+// TO DO: Check if port number is under 1024 and the bind process fails, send a message that says that with that port number, the server must run with root privileges.
+
 int main(void)
 {
     int serverFd = socket(AF_INET, SOCK_STREAM, 0);
     if (serverFd < 0)
         return (-1);
 
-        
+
     struct sockaddr_in address;
     int addrLen = sizeof(address);
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = htonl(INADDR_ANY);
-    address.sin_port = htons(80);
+    address.sin_port = htons(8080);
     
     
     int bindResult = bind(serverFd, (sockaddr *)&address, addrLen);
@@ -31,7 +33,7 @@ int main(void)
         int newSocket = accept(serverFd, (sockaddr *)&address, (socklen_t *)&addrLen);
         if (newSocket < 0)
             return (-1);
-        std::string response = "Hola caracola";
+        std::string response = "Hola caracola\n";
         write(newSocket, response.c_str(), response.size());
         close(newSocket);
     }
