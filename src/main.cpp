@@ -34,7 +34,9 @@ int main(void)
         if (newSocket < 0)
             return (-1);
         std::string response = "Hola caracola\n";
-        write(newSocket, response.c_str(), response.size());
+        int writeLen = write(newSocket, response.c_str(), response.size());
+        if (writeLen > 0)
+            break;
         close(newSocket);
     }
     close(serverFd);
