@@ -31,6 +31,7 @@ namespace Webserv
 
 	void Server::initServer(void)
 	{
+		// TO DO: Make sure to use SO_REUSEADDR in setsockopt to avoid problem with not binding
 		this->_listenFd = socket(AF_INET, SOCK_STREAM, 0);
 		if (this->_listenFd < 0)
 			exit(EXIT_FAILURE);
@@ -39,7 +40,10 @@ namespace Webserv
 		this->_address.sin_port = htons(this->_port);
 		memset(this->_address.sin_zero, '\0', sizeof(this->_address.sin_zero));
 		if (bind(this->_listenFd, (sockaddr *)&(this->_address), this->_sizeAddress) < 0)
+		{
+			std::cout << "Failed bind " << strerror(errno) << std::endl;
 			exit(EXIT_FAILURE);
+		}
 		if (listen(this->_listenFd, 20) < 0)
 			exit(EXIT_FAILURE);
 		this->listenConnection();
@@ -56,7 +60,10 @@ namespace Webserv
 			std::string response = "Hola caracola\n";
 			int writeLen = write(newSocket, response.c_str(), response.size());
 			if (writeLen > 0)
+			{
+				close(newSocket);
 				break;
+			}
 			close(newSocket);
 		}
 	}
@@ -68,4 +75,3 @@ namespace Webserv
 	}
 }
 
-// Constructors
