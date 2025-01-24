@@ -31,7 +31,7 @@ namespace Webserv
 
 	void Server::initServer(void)
 	{
-		// TO DO: Make sure to use SO_REUSEADDR in setsockopt to avoid problem with not binding
+		// TO DO: Make sure to use SO_REUSEADDR in setsockopt to avoid problem with not binding. Might need to also use SO_REUSEPORT
 		this->_listenFd = socket(AF_INET, SOCK_STREAM, 0);
 		if (this->_listenFd < 0)
 			exit(EXIT_FAILURE);
