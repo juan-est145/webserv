@@ -11,7 +11,8 @@
 int main(void)
 {
     std::string host = "127.0.0.1";
-    Webserv::Server *server = new Webserv::Server(host, 8080);    
+    std::string port = "3000";
+    Webserv::Server *server = new Webserv::Server(host, port);    
     server->initServer();
     delete server;
     return (0);

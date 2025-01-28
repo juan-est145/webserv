@@ -18,14 +18,14 @@ namespace Webserv
 	private:
 		int _listenFd;
 		struct addrinfo* _address;
-		const unsigned short int _port;
 		const std::string _host;
+		const std::string _port;
 		int _sizeAddress;
 		void listenConnection(void);
 
 	public:
 		Server(void);
-		Server(std::string &host ,const unsigned short int port);
+		Server(const std::string &host, const std::string &port);
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
 		void initServer(void);

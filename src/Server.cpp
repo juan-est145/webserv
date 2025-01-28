@@ -2,7 +2,7 @@
 
 namespace Webserv
 {
-	Server::Server(void) : _port(8080)
+	Server::Server(void) : _host("127.0.0.1"), _port("8080")
 	{
 		this->_listenFd = 0;
 		struct addrinfo hints;
@@ -11,12 +11,12 @@ namespace Webserv
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE;
 		// TO DO. Throw exception later on
-		if (getaddrinfo(NULL, "8080", &hints, &this->_address) != 0)
+		if (getaddrinfo(NULL, this->_port.c_str(), &hints, &this->_address) != 0)
 			exit(1);
 		this->_sizeAddress = sizeof(this->_address);
 	}
 
-	Server::Server(std::string &host, const unsigned short int port) : _port(port), _host(host)
+	Server::Server(const std::string &host, const std::string &port) : _host(host), _port(port)
 	{
 		this->_listenFd = 0;
 		struct addrinfo hints;
@@ -24,8 +24,7 @@ namespace Webserv
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		// TO DO. Throw exception later on
-		this->_sizeAddress = sizeof(this->_address);
-		if (getaddrinfo(this->_host.c_str(), "8080", &hints, &this->_address) != 0)
+		if (getaddrinfo(this->_host.c_str(), this->_port.c_str(), &hints, &this->_address) != 0)
 			exit(1);
 		this->_sizeAddress = sizeof(this->_address);
 	}
