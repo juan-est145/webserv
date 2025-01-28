@@ -63,7 +63,7 @@ namespace Webserv
 	void Server::listenConnection(void)
 	{
 		struct sockaddr_storage clientAddr;
-		socklen_t	addrSize = sizeof(clientAddr);
+		socklen_t addrSize = sizeof(clientAddr);
 		while (1)
 		{
 			int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
