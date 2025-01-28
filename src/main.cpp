@@ -10,7 +10,8 @@
 
 int main(void)
 {
-    Webserv::Server *server = new Webserv::Server();    
+    std::string host = "127.0.0.1";
+    Webserv::Server *server = new Webserv::Server(host, 8080);    
     server->initServer();
     delete server;
     return (0);

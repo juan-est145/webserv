@@ -16,9 +16,17 @@ namespace Webserv
 		this->_sizeAddress = sizeof(this->_address);
 	}
 
-	Server::Server(const unsigned short int port) : _port(port)
+	Server::Server(std::string &host, const unsigned short int port) : _port(port), _host(host)
 	{
 		this->_listenFd = 0;
+		struct addrinfo hints;
+		memset(&hints, 0, sizeof(hints));
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		// TO DO. Throw exception later on
+		this->_sizeAddress = sizeof(this->_address);
+		if (getaddrinfo(this->_host.c_str(), "8080", &hints, &this->_address) != 0)
+			exit(1);
 		this->_sizeAddress = sizeof(this->_address);
 	}
 
@@ -40,13 +48,14 @@ namespace Webserv
 	void Server::initServer(void)
 	{
 		int optVal = 1;
+		(void)optVal;
 		// TO DO: Make sure to use SO_REUSEADDR in setsockopt to avoid problem with not binding. Might need to also use SO_REUSEPORT
 		this->_listenFd = socket(this->_address->ai_family, this->_address->ai_socktype, this->_address->ai_protocol);
 		if (this->_listenFd < 0)
 			exit(EXIT_FAILURE);
 		if (setsockopt(this->_listenFd, SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal)) == -1)
 			exit(EXIT_FAILURE);
-		if (bind(this->_listenFd, (sockaddr *)(this->_address), this->_sizeAddress) < 0)
+		if (bind(this->_listenFd, this->_address->ai_addr, this->_address->ai_addrlen) < 0)
 		{
 			std::cout << "Failed bind " << strerror(errno) << std::endl;
 			exit(EXIT_FAILURE);
@@ -82,4 +91,3 @@ namespace Webserv
 		freeaddrinfo(this->_address);
 	}
 }
-
