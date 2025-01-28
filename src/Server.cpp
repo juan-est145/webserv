@@ -62,11 +62,11 @@ namespace Webserv
 
 	void Server::listenConnection(void)
 	{
-		struct sockaddr_storage client_addr;
-		socklen_t	addr_size;
+		struct sockaddr_storage clientAddr;
+		socklen_t	addrSize = sizeof(clientAddr);
 		while (1)
 		{
-			int newSocket = accept(this->_listenFd, (sockaddr *)&client_addr, &addr_size);
+			int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
 			if (newSocket < 0)
 				exit(EXIT_FAILURE);
 			std::string response = "Hola caracola\n";
