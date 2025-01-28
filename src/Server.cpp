@@ -5,6 +5,14 @@ namespace Webserv
 	Server::Server(void) : _port(8080)
 	{
 		this->_listenFd = 0;
+		struct addrinfo hints;
+		memset(&hints, 0, sizeof(hints));
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_flags = AI_PASSIVE;
+		// TO DO. Throw exception later on
+		if (getaddrinfo(NULL, "8080", &hints, &this->_address) != 0)
+			exit(1);
 		this->_sizeAddress = sizeof(this->_address);
 	}
 
@@ -31,15 +39,14 @@ namespace Webserv
 
 	void Server::initServer(void)
 	{
+		int optVal = 1;
 		// TO DO: Make sure to use SO_REUSEADDR in setsockopt to avoid problem with not binding. Might need to also use SO_REUSEPORT
-		this->_listenFd = socket(AF_INET, SOCK_STREAM, 0);
+		this->_listenFd = socket(this->_address->ai_family, this->_address->ai_socktype, this->_address->ai_protocol);
 		if (this->_listenFd < 0)
 			exit(EXIT_FAILURE);
-		this->_address.sin_family = AF_INET;
-		this->_address.sin_addr.s_addr = htonl(INADDR_ANY);
-		this->_address.sin_port = htons(this->_port);
-		memset(this->_address.sin_zero, '\0', sizeof(this->_address.sin_zero));
-		if (bind(this->_listenFd, (sockaddr *)&(this->_address), this->_sizeAddress) < 0)
+		if (setsockopt(this->_listenFd, SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal)) == -1)
+			exit(EXIT_FAILURE);
+		if (bind(this->_listenFd, (sockaddr *)(this->_address), this->_sizeAddress) < 0)
 		{
 			std::cout << "Failed bind " << strerror(errno) << std::endl;
 			exit(EXIT_FAILURE);
@@ -54,7 +61,7 @@ namespace Webserv
 	{
 		while (1)
 		{
-			int newSocket = accept(this->_listenFd, (sockaddr *)&(this->_address), (socklen_t *)&(this->_sizeAddress));
+			int newSocket = accept(this->_listenFd, (sockaddr *)(this->_address), (socklen_t *)&(this->_sizeAddress));
 			if (newSocket < 0)
 				exit(EXIT_FAILURE);
 			std::string response = "Hola caracola\n";
@@ -72,6 +79,7 @@ namespace Webserv
 	{
 		if (close(this->_listenFd) < 0)
 			std::cout << "Something got fucked xd" << std::endl;
+		freeaddrinfo(this->_address);
 	}
 }
 

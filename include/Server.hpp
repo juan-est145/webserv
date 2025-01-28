@@ -9,6 +9,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <cerrno>
+#include <netdb.h>
 
 namespace Webserv
 {
@@ -16,7 +17,7 @@ namespace Webserv
 	{
 	private:
 		int _listenFd;
-		struct sockaddr_in _address;
+		struct addrinfo* _address;
 		const unsigned short int _port;
 		int _sizeAddress;
 		void listenConnection(void);
