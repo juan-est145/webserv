@@ -20,7 +20,6 @@ namespace Webserv
 		struct addrinfo* _address;
 		const std::string _host;
 		const std::string _port;
-		int _sizeAddress;
 		void listenConnection(void);
 
 	public:

@@ -13,7 +13,6 @@ namespace Webserv
 		// TO DO. Throw exception later on
 		if (getaddrinfo(NULL, this->_port.c_str(), &hints, &this->_address) != 0)
 			exit(1);
-		this->_sizeAddress = sizeof(this->_address);
 	}
 
 	Server::Server(const std::string &host, const std::string &port) : _host(host), _port(port)
@@ -26,7 +25,6 @@ namespace Webserv
 		// TO DO. Throw exception later on
 		if (getaddrinfo(this->_host.c_str(), this->_port.c_str(), &hints, &this->_address) != 0)
 			exit(1);
-		this->_sizeAddress = sizeof(this->_address);
 	}
 
 	Server::Server(const Server &copy) : _port(copy._port)
@@ -37,10 +35,7 @@ namespace Webserv
 	Server &Server::operator=(const Server &assign)
 	{
 		if (&assign != this)
-		{
 			this->_address = assign._address;
-			this->_sizeAddress = assign._sizeAddress;
-		}
 		return (*this);
 	}
 
@@ -67,9 +62,11 @@ namespace Webserv
 
 	void Server::listenConnection(void)
 	{
+		struct sockaddr_storage client_addr;
+		socklen_t	addr_size;
 		while (1)
 		{
-			int newSocket = accept(this->_listenFd, (sockaddr *)(this->_address), (socklen_t *)&(this->_sizeAddress));
+			int newSocket = accept(this->_listenFd, (sockaddr *)&client_addr, &addr_size);
 			if (newSocket < 0)
 				exit(EXIT_FAILURE);
 			std::string response = "Hola caracola\n";
