@@ -65,7 +65,9 @@ namespace Webserv
 		struct sockaddr_storage clientAddr;
 		socklen_t addrSize = sizeof(clientAddr);
 		struct epoll_event event;
-		struct epoll_event eventList[20];
+		// Later on, try make eventList a buffer in HEAP and multiply a base value 
+		//by how many sockets we are going to be listening to
+		struct epoll_event eventList[50];
 		event.events = EPOLLIN;
 		int epollFd = epoll_create(NUMBER_EPOLL);
 		if (epollFd == -1)
