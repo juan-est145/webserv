@@ -64,20 +64,45 @@ namespace Webserv
 	{
 		struct sockaddr_storage clientAddr;
 		socklen_t addrSize = sizeof(clientAddr);
+		struct epoll_event event;
+		struct epoll_event eventList[20];
+		event.events = EPOLLIN | EPOLLOUT;
+		int epollFd = epoll_create(NUMBER_EPOLL);
+		if (epollFd == -1)
+			exit(EXIT_FAILURE);
+		event.data.fd = this->_listenFd;
+		if (epoll_ctl(epollFd, EPOLL_CTL_ADD, this->_listenFd, &event) == -1)
+			exit(EXIT_FAILURE);
 		while (1)
 		{
-			int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
-			if (newSocket < 0)
+			int eventCount = epoll_wait(epollFd, eventList, sizeof(eventList), E_WAIT_TIMEOUT);
+			if (eventCount == -1)
 				exit(EXIT_FAILURE);
-			std::string response = "Hola caracola\n";
-			int writeLen = write(newSocket, response.c_str(), response.size());
-			if (writeLen > 0)
+			for (int i = 0; i < eventCount; i++)
 			{
-				close(newSocket);
-				break;
+				if (eventList[i].data.fd == this->_listenFd)
+				{
+					int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
+					if (newSocket < 0)
+						exit(EXIT_FAILURE);
+					if (epoll_ctl(epollFd, EPOLL_CTL_ADD, newSocket, &event) == -1)
+						exit(EXIT_FAILURE);
+				}
+				else
+				{
+					// TO DO: Read about flags in recv and send
+					char buffer[1024];
+					ssize_t bufRead = recv(eventList[i].data.fd, buffer, sizeof(buffer), 0);
+					if (bufRead == -1)
+						exit(EXIT_FAILURE);
+					std::string response = "Hola caracola\n";
+					send(eventList[i].data.fd, response.c_str(), response.size(), 0);
+					close(eventList[i].data.fd);
+					epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList[i].data.fd, &event);
+				}
 			}
-			close(newSocket);
 		}
+		epoll_ctl(epollFd, EPOLL_CTL_DEL, this->_listenFd, &event);
 	}
 
 	Server::~Server()

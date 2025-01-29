@@ -1,5 +1,11 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
+#ifndef NUMBER_EPOLL
+#define NUMBER_EPOLL 1
+#endif
+#ifndef E_WAIT_TIMEOUT
+#define E_WAIT_TIMEOUT 100
+#endif
 
 #include <cstdlib>
 #include <cstring>
@@ -10,6 +16,7 @@
 #include <unistd.h>
 #include <cerrno>
 #include <netdb.h>
+#include <sys/epoll.h>
 
 namespace Webserv
 {
