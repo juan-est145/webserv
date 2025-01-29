@@ -65,8 +65,8 @@ namespace Webserv
 		struct sockaddr_storage clientAddr;
 		socklen_t addrSize = sizeof(clientAddr);
 		struct epoll_event event;
-		// Later on, try make eventList a buffer in HEAP and multiply a base value 
-		//by how many sockets we are going to be listening to
+		// Later on, try make eventList a buffer in HEAP and multiply a base value
+		// by how many sockets we are going to be listening to
 		struct epoll_event eventList[50];
 		event.events = EPOLLIN;
 		int epollFd = epoll_create(NUMBER_EPOLL);
@@ -95,20 +95,44 @@ namespace Webserv
 				}
 				else
 				{
-					std::cout << "Time to write to the client" << std::endl;
-					// TO DO: Read about flags in recv and send
-					// char buffer[1024];
-					// ssize_t bufRead = recv(eventList[i].data.fd, buffer, sizeof(buffer), 0);
-					// if (bufRead == -1)
-					// 	exit(EXIT_FAILURE);
-					std::string response = "Hola caracola\n";
-					send(eventList[i].data.fd, response.c_str(), response.size(), 0);
-					close(eventList[i].data.fd);
-					epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList[i].data.fd, &event);
+					if (eventList[i].events & EPOLLIN)
+					{
+						// TO DO: Set dynamic buffer size according to body size.
+						char buffer[1024];
+						std::cout << "Reading from client" << std::endl;
+						ssize_t bufRead = recv(eventList[i].data.fd, buffer, sizeof(buffer), 0);
+						if (bufRead <= 0)
+						{
+							if (bufRead == -1)
+								exit(EXIT_FAILURE);
+							if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList[i].data.fd, NULL) == -1)
+								exit(EXIT_FAILURE);
+							close(eventList[i].data.fd);
+						}
+						else
+						{
+							event.events = EPOLLOUT;
+							event.data.fd = eventList[i].data.fd;
+							if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList[i].data.fd, &event) == -1)
+								exit(EXIT_FAILURE);
+						}
+					}
+					else
+					{
+						std::cout << "Time to write to the client" << std::endl;
+						std::string response = "Hola caracola\n";
+						if (send(eventList[i].data.fd, response.c_str(), response.size(), 0) == -1)
+							exit(EXIT_FAILURE);
+						if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList[i].data.fd, &event) == -1)
+							exit(EXIT_FAILURE);
+						close(eventList[i].data.fd);
+					}
 				}
 			}
 		}
-		epoll_ctl(epollFd, EPOLL_CTL_DEL, this->_listenFd, &event);
+		if (epoll_ctl(epollFd, EPOLL_CTL_DEL, this->_listenFd, &event) == -1)
+			exit(EXIT_FAILURE);
+		
 	}
 
 	Server::~Server()
