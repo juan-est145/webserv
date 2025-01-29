@@ -132,6 +132,8 @@ namespace Webserv
 		}
 		else
 		{
+			// Aquí es donde se procesa la respuesta Miguel. Prueba aquí si quieres a mandar una respuesta GET HTTP-1.1 para verla en el navegador
+			// Si intentas hacer eso, crea una clase aparte y en otra rama para evitar problemas y conflictos.
 			std::cout << "Time to write to the client" << std::endl;
 			std::string response = "Hola caracola\n";
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
