@@ -24,10 +24,12 @@ namespace Webserv
 	{
 	private:
 		int _listenFd;
-		struct addrinfo* _address;
+		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;
 		void listenConnection(void);
+		void addConnectionToQueue(int epollFd, struct epoll_event &event);
+		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
 
 	public:
 		Server(void);

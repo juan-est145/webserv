@@ -62,8 +62,6 @@ namespace Webserv
 
 	void Server::listenConnection(void)
 	{
-		struct sockaddr_storage clientAddr;
-		socklen_t addrSize = sizeof(clientAddr);
 		struct epoll_event event;
 		// Later on, try make eventList a buffer in HEAP and multiply a base value
 		// by how many sockets we are going to be listening to
@@ -83,56 +81,64 @@ namespace Webserv
 			for (int i = 0; i < eventCount; i++)
 			{
 				if (eventList[i].data.fd == this->_listenFd)
-				{
-					std::cout << "We have a connection" << std::endl;
-					int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
-					if (newSocket < 0)
-						exit(EXIT_FAILURE);
-					event.events = EPOLLIN;
-					event.data.fd = newSocket;
-					if (epoll_ctl(epollFd, EPOLL_CTL_ADD, newSocket, &event) == -1)
-						exit(EXIT_FAILURE);
-				}
+					this->addConnectionToQueue(epollFd, event);
 				else
-				{
-					if (eventList[i].events & EPOLLIN)
-					{
-						// TO DO: Set dynamic buffer size according to body size.
-						char buffer[1024];
-						std::cout << "Reading from client" << std::endl;
-						ssize_t bufRead = recv(eventList[i].data.fd, buffer, sizeof(buffer), 0);
-						if (bufRead <= 0)
-						{
-							if (bufRead == -1)
-								exit(EXIT_FAILURE);
-							if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList[i].data.fd, NULL) == -1)
-								exit(EXIT_FAILURE);
-							close(eventList[i].data.fd);
-						}
-						else
-						{
-							event.events = EPOLLOUT;
-							event.data.fd = eventList[i].data.fd;
-							if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList[i].data.fd, &event) == -1)
-								exit(EXIT_FAILURE);
-						}
-					}
-					else
-					{
-						std::cout << "Time to write to the client" << std::endl;
-						std::string response = "Hola caracola\n";
-						if (send(eventList[i].data.fd, response.c_str(), response.size(), 0) == -1)
-							exit(EXIT_FAILURE);
-						if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList[i].data.fd, &event) == -1)
-							exit(EXIT_FAILURE);
-						close(eventList[i].data.fd);
-					}
-				}
+					this->processClientConn(epollFd, eventList[i], event);
 			}
 		}
 		if (epoll_ctl(epollFd, EPOLL_CTL_DEL, this->_listenFd, &event) == -1)
 			exit(EXIT_FAILURE);
-		
+	}
+
+	void Server::addConnectionToQueue(int epollFd, struct epoll_event &event)
+	{
+		struct sockaddr_storage clientAddr;
+		socklen_t addrSize = sizeof(clientAddr);
+		std::cout << "We have a connection" << std::endl;
+		int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
+		if (newSocket < 0)
+			exit(EXIT_FAILURE);
+		event.events = EPOLLIN;
+		event.data.fd = newSocket;
+		if (epoll_ctl(epollFd, EPOLL_CTL_ADD, newSocket, &event) == -1)
+			exit(EXIT_FAILURE);
+	}
+
+	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
+	{
+		if (eventList.events & EPOLLIN)
+		{
+			// TO DO: Set dynamic buffer size according to body size.
+			// TO DO: Possibly will need to add a timer to listening to timeout connection
+			char buffer[1024];
+			std::cout << "Reading from client" << std::endl;
+			ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+			if (bufRead <= 0)
+			{
+				if (bufRead == -1)
+					exit(EXIT_FAILURE);
+				if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
+					exit(EXIT_FAILURE);
+				close(eventList.data.fd);
+			}
+			else
+			{
+				eventConf.events = EPOLLOUT;
+				eventConf.data.fd = eventList.data.fd;
+				if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList.data.fd, &eventConf) == -1)
+					exit(EXIT_FAILURE);
+			}
+		}
+		else
+		{
+			std::cout << "Time to write to the client" << std::endl;
+			std::string response = "Hola caracola\n";
+			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
+				exit(EXIT_FAILURE);
+			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
+				exit(EXIT_FAILURE);
+			close(eventList.data.fd);
+		}
 	}
 
 	Server::~Server()
