@@ -66,7 +66,7 @@ namespace Webserv
 		socklen_t addrSize = sizeof(clientAddr);
 		struct epoll_event event;
 		struct epoll_event eventList[20];
-		event.events = EPOLLIN | EPOLLOUT;
+		event.events = EPOLLIN;
 		int epollFd = epoll_create(NUMBER_EPOLL);
 		if (epollFd == -1)
 			exit(EXIT_FAILURE);
@@ -82,19 +82,23 @@ namespace Webserv
 			{
 				if (eventList[i].data.fd == this->_listenFd)
 				{
+					std::cout << "We have a connection" << std::endl;
 					int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
 					if (newSocket < 0)
 						exit(EXIT_FAILURE);
+					event.events = EPOLLIN;
+					event.data.fd = newSocket;
 					if (epoll_ctl(epollFd, EPOLL_CTL_ADD, newSocket, &event) == -1)
 						exit(EXIT_FAILURE);
 				}
 				else
 				{
+					std::cout << "Time to write to the client" << std::endl;
 					// TO DO: Read about flags in recv and send
-					char buffer[1024];
-					ssize_t bufRead = recv(eventList[i].data.fd, buffer, sizeof(buffer), 0);
-					if (bufRead == -1)
-						exit(EXIT_FAILURE);
+					// char buffer[1024];
+					// ssize_t bufRead = recv(eventList[i].data.fd, buffer, sizeof(buffer), 0);
+					// if (bufRead == -1)
+					// 	exit(EXIT_FAILURE);
 					std::string response = "Hola caracola\n";
 					send(eventList[i].data.fd, response.c_str(), response.size(), 0);
 					close(eventList[i].data.fd);
