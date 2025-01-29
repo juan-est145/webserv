@@ -88,6 +88,7 @@ namespace Webserv
 		}
 		if (epoll_ctl(epollFd, EPOLL_CTL_DEL, this->_listenFd, &event) == -1)
 			exit(EXIT_FAILURE);
+		close(epollFd);
 	}
 
 	void Server::addConnectionToQueue(int epollFd, struct epoll_event &event)
