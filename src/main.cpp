@@ -20,7 +20,6 @@ int main(void)
     try
     {
         server = new Webserv::Server(host, port);
-        
         server->initServer();
     }
     catch (const Webserv::Server::ServerException &e)
