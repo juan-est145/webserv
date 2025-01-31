@@ -1,5 +1,7 @@
 #include "../include/Server.hpp"
 
+extern bool g_stop;
+
 namespace Webserv
 {
 	Server::Server(void) : _host("127.0.0.1"), _port("8080")
@@ -49,13 +51,7 @@ namespace Webserv
 		this->_listenFd = socket(this->_address->ai_family, this->_address->ai_socktype, this->_address->ai_protocol);
 		if (this->_listenFd < 0)
 		{
-			addrinfo *toDel = this->_address;
-			while (toDel != NULL)
-			{
-				freeaddrinfo(toDel);
-				toDel = toDel->ai_next;
-			}
-			//freeaddrinfo(this->_address);
+			freeaddrinfo(this->_address);
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
@@ -100,11 +96,14 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
-		while (1)
+		while (!g_stop)
 		{
 			int eventCount = epoll_wait(epollFd, eventList, sizeof(eventList), E_WAIT_TIMEOUT);
 			if (eventCount == -1)
 			{
+				if (g_stop)
+					break;
+				std::cout << "Failed here" << std::endl;
 				close(epollFd);
 				Webserv::Logger::errorLog(errno, strerror, false);
 				throw Server::ServerException();
