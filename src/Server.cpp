@@ -10,9 +10,11 @@ namespace Webserv
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE;
-		// TO DO. Throw exception later on
-		if (getaddrinfo(NULL, this->_port.c_str(), &hints, &this->_address) != 0)
-			exit(1);
+		if (int errorCode = getaddrinfo(NULL, this->_port.c_str(), &hints, &this->_address) != 0)
+		{
+			Webserv::Logger::errorLog(errorCode, gai_strerror, false);
+			throw Server::ServerException();
+		}
 	}
 
 	Server::Server(const std::string &host, const std::string &port) : _host(host), _port(port)
@@ -22,9 +24,11 @@ namespace Webserv
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
-		// TO DO. Throw exception later on
-		if (getaddrinfo(this->_host.c_str(), this->_port.c_str(), &hints, &this->_address) != 0)
-			exit(1);
+		if (int errorCode = getaddrinfo(this->_host.c_str(), this->_port.c_str(), &hints, &this->_address) != 0)
+		{
+			Webserv::Logger::errorLog(errorCode, gai_strerror, false);
+			throw Server::ServerException();
+		}
 	}
 
 	Server::Server(const Server &copy) : _port(copy._port)
@@ -42,42 +46,69 @@ namespace Webserv
 	void Server::initServer(void)
 	{
 		int optVal = 1;
-		(void)optVal;
-		// TO DO: Make sure to use SO_REUSEADDR in setsockopt to avoid problem with not binding. Might need to also use SO_REUSEPORT
 		this->_listenFd = socket(this->_address->ai_family, this->_address->ai_socktype, this->_address->ai_protocol);
 		if (this->_listenFd < 0)
-			exit(EXIT_FAILURE);
-		if (setsockopt(this->_listenFd, SOL_SOCKET, SO_REUSEADDR, &optVal, sizeof(optVal)) == -1)
-			exit(EXIT_FAILURE);
+		{
+			addrinfo *toDel = this->_address;
+			while (toDel != NULL)
+			{
+				freeaddrinfo(toDel);
+				toDel = toDel->ai_next;
+			}
+			//freeaddrinfo(this->_address);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
+		if (setsockopt(this->_listenFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optVal, sizeof(optVal)) == -1)
+		{
+			freeaddrinfo(this->_address);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		if (bind(this->_listenFd, this->_address->ai_addr, this->_address->ai_addrlen) < 0)
 		{
-			std::cout << "Failed bind " << strerror(errno) << std::endl;
-			exit(EXIT_FAILURE);
+			freeaddrinfo(this->_address);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
 		}
+		freeaddrinfo(this->_address);
 		if (listen(this->_listenFd, 20) < 0)
-			exit(EXIT_FAILURE);
+		{
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		this->listenConnection();
-		// TO DO: Refactor exit method to log errors first. Create a specific method for that
 	}
 
 	void Server::listenConnection(void) const
 	{
 		struct epoll_event event;
-		// Later on, try make eventList a buffer in HEAP and multiply a base value
+		// TO DO: Later on, try make eventList a buffer in HEAP and multiply a base value
 		// by how many sockets we are going to be listening to
 		struct epoll_event eventList[50];
 		event.events = EPOLLIN;
 		int epollFd = epoll_create(NUMBER_EPOLL);
 		if (epollFd == -1)
-			exit(EXIT_FAILURE);
+		{
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		event.data.fd = this->_listenFd;
 		if (epoll_ctl(epollFd, EPOLL_CTL_ADD, this->_listenFd, &event) == -1)
-			exit(EXIT_FAILURE);
+		{
+			close(epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		while (1)
 		{
 			int eventCount = epoll_wait(epollFd, eventList, sizeof(eventList), E_WAIT_TIMEOUT);
 			if (eventCount == -1)
-				exit(EXIT_FAILURE);
+			{
+				close(epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
 			for (int i = 0; i < eventCount; i++)
 			{
 				if (eventList[i].data.fd == this->_listenFd)
@@ -87,7 +118,11 @@ namespace Webserv
 			}
 		}
 		if (epoll_ctl(epollFd, EPOLL_CTL_DEL, this->_listenFd, &event) == -1)
-			exit(EXIT_FAILURE);
+		{
+			close(epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		close(epollFd);
 	}
 
@@ -98,11 +133,19 @@ namespace Webserv
 		std::cout << "We have a connection" << std::endl;
 		int newSocket = accept(this->_listenFd, (sockaddr *)&clientAddr, &addrSize);
 		if (newSocket < 0)
-			exit(EXIT_FAILURE);
+		{
+			close(epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		event.events = EPOLLIN;
 		event.data.fd = newSocket;
 		if (epoll_ctl(epollFd, EPOLL_CTL_ADD, newSocket, &event) == -1)
-			exit(EXIT_FAILURE);
+		{
+			close(epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 	}
 
 	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf) const
@@ -117,9 +160,17 @@ namespace Webserv
 			if (bufRead <= 0)
 			{
 				if (bufRead == -1)
-					exit(EXIT_FAILURE);
+				{
+					close(epollFd);
+					Webserv::Logger::errorLog(errno, strerror, false);
+					throw Server::ServerException();
+				}
 				if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
-					exit(EXIT_FAILURE);
+				{
+					close(epollFd);
+					Webserv::Logger::errorLog(errno, strerror, false);
+					throw Server::ServerException();
+				}
 				close(eventList.data.fd);
 			}
 			else
@@ -127,7 +178,11 @@ namespace Webserv
 				eventConf.events = EPOLLOUT;
 				eventConf.data.fd = eventList.data.fd;
 				if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList.data.fd, &eventConf) == -1)
-					exit(EXIT_FAILURE);
+				{
+					close(epollFd);
+					Webserv::Logger::errorLog(errno, strerror, false);
+					throw Server::ServerException();
+				}
 			}
 		}
 		else
@@ -137,17 +192,25 @@ namespace Webserv
 			std::cout << "Time to write to the client" << std::endl;
 			std::string response = "Hola caracola\n";
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
-				exit(EXIT_FAILURE);
+				Webserv::Logger::errorLog(errno, strerror, false);
 			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
-				exit(EXIT_FAILURE);
+			{
+				close(epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
 			close(eventList.data.fd);
 		}
+	}
+
+	const char *Server::ServerException::what(void) const throw()
+	{
+		return ("The server found a problem and must stop now");
 	}
 
 	Server::~Server()
 	{
 		if (close(this->_listenFd) < 0)
-			std::cout << "Something got fucked xd" << std::endl;
-		freeaddrinfo(this->_address);
+			Webserv::Logger::errorLog(errno, strerror, true);
 	}
 }

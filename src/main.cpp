@@ -7,8 +7,27 @@ int main(void)
 {
     std::string host = "127.0.0.1";
     std::string port = "3000";
-    Webserv::Server *server = new Webserv::Server(host, port);    
-    server->initServer();
+
+    Webserv::Server *server = NULL;
+    try
+    {
+        server = new Webserv::Server(host, port);
+        server->initServer();
+    }
+    catch (const Webserv::Server::ServerException &e)
+    {
+        std::cerr << e.what() << std::endl;
+        if (server)
+            delete server;
+        return (EXIT_FAILURE);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+        if (server)
+            delete server;
+        return (EXIT_FAILURE);
+    }
     delete server;
-    return (0);
+    return (EXIT_SUCCESS);
 }

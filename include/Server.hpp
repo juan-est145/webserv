@@ -17,6 +17,8 @@
 #include <cerrno>
 #include <netdb.h>
 #include <sys/epoll.h>
+#include <exception>
+#include "Logger.hpp"
 
 namespace Webserv
 {
@@ -37,8 +39,14 @@ namespace Webserv
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
 		void initServer(void);
+		class ServerException : std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
 		~Server();
 	};
 } // namespace Webserv
+std::ostream &operator<<(std::ostream &out, const Webserv::Server &Server);
 
 #endif
