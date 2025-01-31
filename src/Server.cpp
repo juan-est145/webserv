@@ -60,7 +60,7 @@ namespace Webserv
 		// TO DO: Refactor exit method to log errors first. Create a specific method for that
 	}
 
-	void Server::listenConnection(void)
+	void Server::listenConnection(void) const
 	{
 		struct epoll_event event;
 		// Later on, try make eventList a buffer in HEAP and multiply a base value
@@ -91,7 +91,7 @@ namespace Webserv
 		close(epollFd);
 	}
 
-	void Server::addConnectionToQueue(int epollFd, struct epoll_event &event)
+	void Server::addConnectionToQueue(int epollFd, struct epoll_event &event) const
 	{
 		struct sockaddr_storage clientAddr;
 		socklen_t addrSize = sizeof(clientAddr);
@@ -105,7 +105,7 @@ namespace Webserv
 			exit(EXIT_FAILURE);
 	}
 
-	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
+	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf) const
 	{
 		if (eventList.events & EPOLLIN)
 		{

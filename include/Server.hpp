@@ -27,9 +27,9 @@ namespace Webserv
 		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;
-		void listenConnection(void);
-		void addConnectionToQueue(int epollFd, struct epoll_event &event);
-		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
+		void listenConnection(void) const;
+		void addConnectionToQueue(int epollFd, struct epoll_event &event) const;
+		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf) const;
 
 	public:
 		Server(void);
