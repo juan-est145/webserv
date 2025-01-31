@@ -18,6 +18,10 @@
 #include <netdb.h>
 #include <sys/epoll.h>
 
+
+#include <cstdio>
+#include <cstdlib>
+
 namespace Webserv
 {
 	class Server

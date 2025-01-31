@@ -135,7 +135,13 @@ namespace Webserv
 			// Aquí es donde se procesa la respuesta Miguel. Prueba aquí si quieres a mandar una respuesta GET HTTP-1.1 para verla en el navegador
 			// Si intentas hacer eso, crea una clase aparte y en otra rama para evitar problemas y conflictos.
 			std::cout << "Time to write to the client" << std::endl;
-			std::string response = "Hola caracola\n";
+			// Construir una respuesta HTTP/1.1
+			std::string response = 
+				"HTTP/1.1 200 OK\r\n"
+				"Content-Type: text/plain\r\n"
+				"Content-Length: 14\r\n"
+				"\r\n"
+				"Hola caracola\n";
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 				exit(EXIT_FAILURE);
 			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
