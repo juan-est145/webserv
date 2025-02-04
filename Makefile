@@ -6,11 +6,13 @@ HEADER-PATH = include
 
 SRCS = $(SRC-PATH)/main.cpp\
 $(SRC-PATH)/Server.cpp\
+$(SRC-PATH)/HtmlFile.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADER = $(HEADER-PATH)/main.hpp\
 $(HEADER-PATH)/Server.hpp\
+$(HEADER-PATH)/HtmlFile.hpp\
 
 CXX = $(shell which c++ clang++ g++ | head -n 1)
 

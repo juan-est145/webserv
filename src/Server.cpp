@@ -1,5 +1,5 @@
 #include "../include/Server.hpp"
-
+#include "../include/HtmlFile.hpp"
 namespace Webserv
 {
 	Server::Server(void) : _host("127.0.0.1"), _port("8080")
@@ -135,13 +135,25 @@ namespace Webserv
 			// Aquí es donde se procesa la respuesta Miguel. Prueba aquí si quieres a mandar una respuesta GET HTTP-1.1 para verla en el navegador
 			// Si intentas hacer eso, crea una clase aparte y en otra rama para evitar problemas y conflictos.
 			std::cout << "Time to write to the client" << std::endl;
-			// Construir una respuesta HTTP/1.1
+			/************************************************************* */
+			// Make answer HTTP/1.1
+			HtmlFile htmlFile("./html/prueba.html");
+
+			// Get the content and size
+			std::string htmlContent = htmlFile.getContent();
+			long fileSize = htmlFile.getSize();
+
+			// Convertir el tamaño del archivo a una cadena
+			// Transform  the size of archive in chain
+			char contentLength[50];
+			sprintf(contentLength, "Content-Length: %ld\r\n", fileSize);
+
 			std::string response = 
 				"HTTP/1.1 200 OK\r\n"
-				"Content-Type: text/plain\r\n"
-				"Content-Length: 14\r\n"
-				"\r\n"
-				"Hola caracola\n";
+				"Content-Type: text/html\r\n" +
+				std::string(contentLength) +
+				"\r\n" + htmlContent; 
+			/************************************************************************************/
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 				exit(EXIT_FAILURE);
 			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
