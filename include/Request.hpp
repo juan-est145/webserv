@@ -12,6 +12,7 @@ namespace Webserv
 {
 	class Request
 	{
+	// TO DO: consider creating attributes to HTTP method with an enum and the response code to use later on with Response class
 	private:
 		std::map<std::string, std::string> _reqHeader;
 
