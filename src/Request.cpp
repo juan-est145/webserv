@@ -47,5 +47,9 @@ namespace Webserv
 			this->_reqHeader[temp.substr(0, pos)] = temp.substr(pos + 2);
 		}
 	}
+	const std::map<std::string, std::string> &Request::getReqHeader(void) const
+	{
+		return (this->_reqHeader);
+	}
 	Request::~Request() {}
 }

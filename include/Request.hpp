@@ -20,6 +20,7 @@ namespace Webserv
 		Request(const Request &copy);
 		Request &operator=(const Request &assign);
 		void processReq(const char *buffer);
+		const std::map<std::string, std::string> &getReqHeader(void) const;
 		~Request();
 	};
 }
