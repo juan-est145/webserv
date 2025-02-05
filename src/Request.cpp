@@ -29,7 +29,7 @@ namespace Webserv
 			line.erase(0, pos + del.length());
 			pos = line.find(del);
 		}
-		// Need to check for valid http method header here or later
+		// Need to check for valid http method header here for later
 		this->_reqHeader["GET"] = headers.front();
 		headers.pop();
 		while (headers.size() > 0)
