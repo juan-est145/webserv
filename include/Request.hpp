@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <queue>
+#include "Logger.hpp"
 
 
 namespace Webserv
