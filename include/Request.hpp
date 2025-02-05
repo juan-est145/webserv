@@ -4,18 +4,21 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <queue>
+
 
 namespace Webserv
 {
 	class Request
 	{
 	private:
-		std::map<std::string, std::string> reqHeader;
+		std::map<std::string, std::string> _reqHeader;
 
 	public:
 		Request(void);
 		Request(const Request &copy);
 		Request &operator=(const Request &assign);
+		void processReq(const char *buffer);
 		~Request();
 	};
 }

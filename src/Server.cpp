@@ -1,4 +1,5 @@
 #include "../include/Server.hpp"
+#include "../include/Request.hpp"
 
 extern bool g_stop;
 
@@ -156,6 +157,8 @@ namespace Webserv
 			char buffer[1024];
 			std::cout << "Reading from client" << std::endl;
 			ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+			Request req = Request();
+			req.processReq(buffer);
 			if (bufRead <= 0)
 			{
 				if (bufRead == -1)
