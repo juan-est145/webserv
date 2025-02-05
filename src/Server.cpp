@@ -190,8 +190,7 @@ namespace Webserv
 		}
 		else
 		{
-			// Aquí es donde se procesa la respuesta Miguel. Prueba aquí si quieres a mandar una respuesta GET HTTP-1.1 para verla en el navegador
-			// Si intentas hacer eso, crea una clase aparte y en otra rama para evitar problemas y conflictos.
+
 			std::cout << "Time to write to the client" << std::endl;
 			/************************************************************* */
 			// Make answer HTTP/1.1
@@ -206,7 +205,6 @@ namespace Webserv
 			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << fileSize << "\r\n" << "\r\n" << htmlContent;
 
 			std::string response = format.str();
-			std::cout << response << std::endl;
 			/************************************************************************************/
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 				Webserv::Logger::errorLog(errno, strerror, false);
