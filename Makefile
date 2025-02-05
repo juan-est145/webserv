@@ -7,12 +7,14 @@ HEADER-PATH = include
 SRCS = $(SRC-PATH)/main.cpp\
 $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/Logger.cpp\
+$(SRC-PATH)/Request.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADER = $(HEADER-PATH)/main.hpp\
 $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/Logger.hpp\
+$(HEADER-PATH)/Request.hpp\
 
 CXX = $(shell which c++ clang++ g++ | head -n 1)
 

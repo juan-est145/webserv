@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 
-namespace webserv
+namespace Webserv
 {
 	class Request
 	{
