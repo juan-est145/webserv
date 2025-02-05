@@ -18,11 +18,9 @@
 #include <netdb.h>
 #include <sys/epoll.h>
 #include <exception>
-#include "Logger.hpp"
-
-
 #include <cstdio>
-#include <cstdlib>
+#include <sstream>
+#include "Logger.hpp"
 
 namespace Webserv
 {

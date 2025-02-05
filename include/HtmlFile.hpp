@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/04 15:38:45 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/05 18:30:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,27 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <cstdlib>
+#include <sys/stat.h>
 
-class HtmlFile {
-private:
-    std::string content;
-    long size;
-    void readFile(std::string& filePath);
-public:
-    HtmlFile();
-    HtmlFile(std::string filePath);
-    HtmlFile(const HtmlFile &copy);
-    ~HtmlFile();
-    HtmlFile &operator=(const HtmlFile& otro);
-    //geter
-    std::string getContent() const;
-    long getSize() const;
-};
+namespace Webserv
+{
+    class HtmlFile
+    {
+    private:
+        std::string content;
+        long size;
+        void readFile(std::string &filePath);
+
+    public:
+        HtmlFile();
+        HtmlFile(std::string filePath);
+        HtmlFile(const HtmlFile &copy);
+        ~HtmlFile();
+        HtmlFile &operator=(const HtmlFile &otro);
+        // geter
+        std::string getContent() const;
+        long getSize() const;
+    };
+}
 
 #endif

@@ -201,16 +201,12 @@ namespace Webserv
 			std::string htmlContent = htmlFile.getContent();
 			long fileSize = htmlFile.getSize();
 
-			// Convertir el tamaño del archivo a una cadena
-			// Transform  the size of archive in chain
-			char contentLength[50];
-			sprintf(contentLength, "Content-Length: %ld\r\n", fileSize);
+			std::stringstream format;
 
-			std::string response = 
-				"HTTP/1.1 200 OK\r\n"
-				"Content-Type: text/html\r\n" +
-				std::string(contentLength) +
-				"\r\n" + htmlContent; 
+			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << fileSize << "\r\n" << "\r\n" << htmlContent;
+
+			std::string response = format.str();
+			std::cout << response << std::endl;
 			/************************************************************************************/
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 				Webserv::Logger::errorLog(errno, strerror, false);
