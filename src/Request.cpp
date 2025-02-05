@@ -38,7 +38,7 @@ namespace Webserv
 			headers.pop();
 			pos = temp.find(":");
 			if (pos == std::string::npos)
-				exit(EXIT_FAILURE); // Temp solution
+				exit(EXIT_FAILURE); // TO DO: Temp solution
 			if (this->_reqHeader.find(temp.substr(0, pos)) != this->_reqHeader.end())
 			{
 				std::cout << "Repeated header, handle later" << std::endl;
