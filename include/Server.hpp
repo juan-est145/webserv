@@ -20,6 +20,10 @@
 #include <exception>
 #include "Logger.hpp"
 
+
+#include <cstdio>
+#include <cstdlib>
+
 namespace Webserv
 {
 	class Server
