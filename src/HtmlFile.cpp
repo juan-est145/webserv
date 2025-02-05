@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/04 16:19:16 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/05 18:11:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void HtmlFile::readFile(std::string& filePath)
     }
     //Get the information of the file(the size)
     struct stat fileStat;
-    if (fstat(fd, &fileStat) == -1) {
+    if (stat(filePath.c_str(), &fileStat) == -1) {
         std::cerr << "Failed to get file size" << std::endl;
         close(fd);
         exit(EXIT_FAILURE);
