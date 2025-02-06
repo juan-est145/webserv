@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/05 18:30:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/06 18:21:04 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <sys/stat.h>
+#include <sys/epoll.h>
+
 
 namespace Webserv
 {
@@ -28,17 +30,16 @@ namespace Webserv
     private:
         std::string content;
         long size;
-        void readFile(std::string &filePath);
 
     public:
         HtmlFile();
-        HtmlFile(std::string filePath);
         HtmlFile(const HtmlFile &copy);
         ~HtmlFile();
         HtmlFile &operator=(const HtmlFile &otro);
         // geter
         std::string getContent() const;
         long getSize() const;
+        void readFile(std::string &filePath,int epollFd, struct epoll_event &eventList);
     };
 }
 

@@ -194,9 +194,10 @@ namespace Webserv
 			std::cout << "Time to write to the client" << std::endl;
 			/************************************************************* */
 			// Make answer HTTP/1.1
-			HtmlFile htmlFile("./html/prueba.html");
-
+			HtmlFile htmlFile;
+			std::string path = "./html/prueba.html";
 			// Get the content and size
+			htmlFile.readFile(path, epollFd, eventConf);
 			std::string htmlContent = htmlFile.getContent();
 			long fileSize = htmlFile.getSize();
 

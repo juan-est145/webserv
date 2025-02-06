@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/05 18:30:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/06 18:14:35 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/HtmlFile.hpp"
-
+#include "../include/Server.hpp"
 namespace Webserv
 {
     HtmlFile::HtmlFile()
@@ -19,11 +19,6 @@ namespace Webserv
         this->content = "";
         this->size = 0;
     }
-    HtmlFile::HtmlFile(std::string filePath)
-    {
-        this->readFile(filePath);
-    }
-
     HtmlFile::HtmlFile(const HtmlFile &copy)
     {
         *this = copy;
@@ -38,7 +33,7 @@ namespace Webserv
         return *this;
     }
 
-    void HtmlFile::readFile(std::string &filePath)
+    void HtmlFile::readFile(std::string &filePath,int epollFd, struct epoll_event &eventList)
     {
         // Open the file
         int fd = open(filePath.c_str(), O_RDONLY);
@@ -65,6 +60,18 @@ namespace Webserv
             close(fd);
             exit(EXIT_FAILURE);
         }
+        eventList.events = EPOLLIN;
+        eventList.data.fd = fd;
+        /********************************************************* */
+        if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd , &eventList) == -1)
+        {
+            close(epollFd);
+            Webserv::Logger::errorLog(errno, strerror, false);
+            throw Server::ServerException();
+        }          
+
+        
+        /********************************************************* */
         // save the content in buffer
         if (read(fd, buffer, this->size) != this->size)
         {
