@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/06 19:20:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/06 19:58:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ namespace Webserv
         
         /********************************************************* */
         // save the content in buffer
-        if (read(pipeFd[PIPE_READ], buffer, this->size) != this->size)
+        if (read(pipeFd[PIPE_READ], buffer, this->size) < 0)
         {
-            std::cerr << "Failed to read file" << std::endl;
+            Logger::errorLog(errno, strerror, false);
             free(buffer);
             close(fd);
             exit(EXIT_FAILURE);
