@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/06 18:14:35 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/06 19:20:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,12 @@ namespace Webserv
     {
         // Open the file
         int fd = open(filePath.c_str(), O_RDONLY);
+        int pipeFd[2];
+        // TO DO: Check return value of pipe
+        pipe(pipeFd);
+        dup2(fd, pipeFd[PIPE_WRITE]);
+        close(fd);
+        close(pipeFd[PIPE_WRITE]);
         if (fd == -1)
         {
             std::cerr << "Failed to open " << filePath << std::endl;
@@ -61,9 +67,9 @@ namespace Webserv
             exit(EXIT_FAILURE);
         }
         eventList.events = EPOLLIN;
-        eventList.data.fd = fd;
+        eventList.data.fd = pipeFd[PIPE_READ];
         /********************************************************* */
-        if (epoll_ctl(epollFd, EPOLL_CTL_ADD, fd , &eventList) == -1)
+        if (epoll_ctl(epollFd, EPOLL_CTL_ADD, pipeFd[PIPE_READ] , &eventList) == -1)
         {
             close(epollFd);
             Webserv::Logger::errorLog(errno, strerror, false);
@@ -73,7 +79,7 @@ namespace Webserv
         
         /********************************************************* */
         // save the content in buffer
-        if (read(fd, buffer, this->size) != this->size)
+        if (read(pipeFd[PIPE_READ], buffer, this->size) != this->size)
         {
             std::cerr << "Failed to read file" << std::endl;
             free(buffer);
@@ -84,7 +90,8 @@ namespace Webserv
         // Save the content
         this->content = std::string(buffer);
         free(buffer);
-        close(fd);
+        //close(fd);
+        close(pipeFd[PIPE_READ]);
     }
     // GETTERS
     std::string HtmlFile::getContent() const
