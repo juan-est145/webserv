@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/07 20:05:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/07 21:22:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ namespace Webserv
     {
         char *args[] = {
             (char *)"python3",
-            (char *)"pyTest.py",
+            (char *)"./cgi/readHtml.py",
             NULL,
         };
         close(pipeFd[PIPE_READ]);
@@ -95,6 +95,12 @@ namespace Webserv
     const std::string &HtmlFile::getContent(void) const
     {
         return (this->_content);
+    }
+
+    void HtmlFile::setContent(const char *buffer)
+    {
+        // TO DO: Check for null values in buffer
+        this->_content = buffer;
     }
 
     int HtmlFile::getSocketFd(void) const

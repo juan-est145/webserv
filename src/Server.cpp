@@ -78,7 +78,7 @@ namespace Webserv
 		this->listenConnection();
 	}
 
-	void Server::listenConnection(void) const
+	void Server::listenConnection(void)
 	{
 		struct epoll_event event;
 		// TO DO: Later on, try make eventList a buffer in HEAP and multiply a base value
@@ -155,9 +155,16 @@ namespace Webserv
 			this->readClient(epollFd, eventList, eventConf);
 		else
 		{
+			std::map<int, HtmlFile *>::iterator it = this->_htmlFdSockPair.begin();
+			while (it != this->_htmlFdSockPair.end())
+			{
+				if (it->second->getSocketFd() == eventList.data.fd)
+					break;
+				it++;
+			}
 
 			std::cout << "Time to write to the client" << std::endl;
-			std::string
+
 			/************************************************************* */
 			// Make answer HTTP/1.1
 			// HtmlFile htmlFile;
@@ -169,20 +176,23 @@ namespace Webserv
 
 			std::stringstream format;
 
-			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << fileSize << "\r\n"
+			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << it->second->getSize() << "\r\n"
 				   << "\r\n"
-				   << htmlContent;
+				   << (std::string)it->second->getContent();
 
 			std::string response = format.str();
 			/************************************************************************************/
 			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 				Webserv::Logger::errorLog(errno, strerror, false);
+			eventConf.events = EPOLLOUT;
+			eventConf.data.fd = eventList.data.fd;
 			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
 			{
 				close(epollFd);
 				Webserv::Logger::errorLog(errno, strerror, false);
 				throw Server::ServerException();
 			}
+			// TO DO: Remember to free memory from map and release the keys
 			close(eventList.data.fd);
 		}
 	}
@@ -229,6 +239,22 @@ namespace Webserv
 		// TO DO. Implement socket must be changed with epoll ctl and epoll mod
 		else
 		{
+			long size = this->_htmlFdSockPair[eventList.data.fd]->getSize();
+			char *buffer = new char[size + 1];
+			// TO DO. Check value of read.
+			read(eventList.data.fd, buffer, size);
+			buffer[size] = '\0';
+			this->_htmlFdSockPair[eventList.data.fd]->setContent(buffer);
+			delete[] buffer;
+			eventConf.events = EPOLLIN;
+			eventConf.data.fd = eventList.data.fd;
+			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventConf.data.fd, &eventConf) == -1)
+			{
+				close(epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
+			close(eventConf.data.fd);
 			eventConf.events = EPOLLOUT;
 			eventConf.data.fd = this->_htmlFdSockPair[eventList.data.fd]->getSocketFd();
 			if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventConf.data.fd, &eventConf) == -1)
