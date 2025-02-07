@@ -40,6 +40,7 @@ int main(void)
 		close(fd[0]);
 		int resultFd = open("./result.txt", O_CREAT | O_WRONLY, S_IRWXU);
 		write(resultFd, buffer, 13);
+		close(resultFd);
 	}
 		
 	return (0);
