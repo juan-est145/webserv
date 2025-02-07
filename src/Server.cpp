@@ -194,6 +194,8 @@ namespace Webserv
 			}
 			// TO DO: Remember to free memory from map and release the keys
 			close(eventList.data.fd);
+			delete it->second;
+			this->_htmlFdSockPair.erase(it);
 		}
 	}
 
