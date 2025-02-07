@@ -22,12 +22,12 @@ int main(void)
 			NULL,
 		};
 		dup2(fd[1], STDOUT_FILENO);
-		//close(fd[1]);
-		/*char *env[] = {
-			{ "python3" },
-			{ "pyTest.py "},
-			{ NULL },
-		};*/
+		close(fd[1]);
+		// char *env[] = {
+		// 	{ "python3" },
+		// 	{ "pyTest.py "},
+		// 	{ NULL },
+		// };
 		execve((const char *)"/usr/bin/python3", args, NULL);
 		exit(0);
 	}
@@ -38,7 +38,7 @@ int main(void)
 		waitpid(pid, &status, 0);
 		read(fd[0], buffer, 13);
 		close(fd[0]);
-		int resultFd = open("./result.txt", O_CREAT, S_IRWXU);
+		int resultFd = open("./result.txt", O_CREAT | O_WRONLY, S_IRWXU);
 		write(resultFd, buffer, 13);
 	}
 		
