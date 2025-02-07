@@ -152,42 +152,7 @@ namespace Webserv
 	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf) const
 	{
 		if (eventList.events & EPOLLIN)
-		{
-			// TO DO: Set dynamic buffer size according to body size.
-			// TO DO: Possibly will need to add a timer to listening to timeout connection
-			char buffer[1024];
-			std::cout << "Reading from client" << std::endl;
-			ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
-			Request req = Request();
-			req.processReq(buffer);
-			if (bufRead <= 0)
-			{
-				if (bufRead == -1)
-				{
-					close(epollFd);
-					Webserv::Logger::errorLog(errno, strerror, false);
-					throw Server::ServerException();
-				}
-				if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
-				{
-					close(epollFd);
-					Webserv::Logger::errorLog(errno, strerror, false);
-					throw Server::ServerException();
-				}
-				close(eventList.data.fd);
-			}
-			else
-			{
-				eventConf.events = EPOLLOUT;
-				eventConf.data.fd = eventList.data.fd;
-				if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList.data.fd, &eventConf) == -1)
-				{
-					close(epollFd);
-					Webserv::Logger::errorLog(errno, strerror, false);
-					throw Server::ServerException();
-				}
-			}
-		}
+			this->readClient(epollFd, eventList, eventConf);
 		else
 		{
 
@@ -203,7 +168,9 @@ namespace Webserv
 
 			std::stringstream format;
 
-			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << fileSize << "\r\n" << "\r\n" << htmlContent;
+			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << fileSize << "\r\n"
+				   << "\r\n"
+				   << htmlContent;
 
 			std::string response = format.str();
 			/************************************************************************************/
@@ -216,6 +183,46 @@ namespace Webserv
 				throw Server::ServerException();
 			}
 			close(eventList.data.fd);
+		}
+	}
+
+	void Server::readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf) const
+	{
+
+		
+		// TO DO: Set dynamic buffer size according to body size.
+		// TO DO: Possibly will need to add a timer to listening to timeout connection
+		char buffer[1024];
+		std::cout << "Reading from client" << std::endl;
+		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+		Request req = Request();
+		req.processReq(buffer);
+		if (bufRead <= 0)
+		{
+			if (bufRead == -1)
+			{
+				close(epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
+			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
+			{
+				close(epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
+			close(eventList.data.fd);
+		}
+		else
+		{
+			eventConf.events = EPOLLOUT;
+			eventConf.data.fd = eventList.data.fd;
+			if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList.data.fd, &eventConf) == -1)
+			{
+				close(epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
 		}
 	}
 
