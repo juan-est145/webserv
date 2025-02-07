@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/07 18:19:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/07 20:05:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,39 +25,42 @@ namespace Webserv
     {
         if (this != &other)
         {
-            this->_pipeFd[PIPE_READ] = other._pipeFd[PIPE_WRITE];
-            this->_pipeFd[PIPE_WRITE] = other._pipeFd[PIPE_WRITE];
+            this->_socketFd = other._socketFd;
+            this->_size = other._size;
+            this->_content = other._content;
         }
         return *this;
     }
 
-    int HtmlFile::readFile(std::string &filePath, int epollFd, struct epoll_event &eventList)
+    int HtmlFile::getFileFd(std::string &filePath, int epollFd, struct epoll_event &eventConf)
     {
+        int pipeFd[2];
         if (!this->fileExits(filePath))
         {
             // TO DO: Later mark this as a 404 response
             std::cerr << "Failed to open file" << std::endl;
             exit(EXIT_FAILURE);
         }
+        this->_socketFd = eventConf.data.fd;
 
         // TO DO: Check return value of pipe, close, dup2 and fork
-        pipe(this->_pipeFd);
+        pipe(pipeFd);
         pid_t pid = fork();
         if (pid == 0)
-            this->execPy();
-        close(this->_pipeFd[PIPE_WRITE]);
-        eventList.events = EPOLLIN;
-        eventList.data.fd = this->_pipeFd[PIPE_READ];
-        if (epoll_ctl(epollFd, EPOLL_CTL_ADD, this->_pipeFd[PIPE_READ], &eventList) == -1)
+            this->execPy(pipeFd);
+        close(pipeFd[PIPE_WRITE]);
+        eventConf.events = EPOLLIN;
+        eventConf.data.fd = pipeFd[PIPE_READ];
+        if (epoll_ctl(epollFd, EPOLL_CTL_ADD, pipeFd[PIPE_READ], &eventConf) == -1)
         {
             close(epollFd);
             Webserv::Logger::errorLog(errno, strerror, false);
             throw Server::ServerException();
         }
-        return (this->_pipeFd[PIPE_READ]);
+        return (pipeFd[PIPE_READ]);
     }
 
-    bool HtmlFile::fileExits(const std::string &path) const
+    bool HtmlFile::fileExits(const std::string &path)
     {
         // TO DO: Check if I can open a file or not
         struct stat fileStat;
@@ -66,22 +69,39 @@ namespace Webserv
             return (false);
         if (!S_ISREG(fileStat.st_mode))
             return (false);
-        return (true);
+        this->_size = fileStat.st_size;
+        return (true); 
     }
 
-    void HtmlFile::execPy()
+    void HtmlFile::execPy(int pipeFd[2])
     {
         char *args[] = {
             (char *)"python3",
             (char *)"pyTest.py",
             NULL,
         };
-        close(this->_pipeFd[PIPE_READ]);
-        dup2(this->_pipeFd[PIPE_WRITE], STDOUT_FILENO);
-        close(this->_pipeFd[PIPE_WRITE]);
+        close(pipeFd[PIPE_READ]);
+        dup2(pipeFd[PIPE_WRITE], STDOUT_FILENO);
+        close(pipeFd[PIPE_WRITE]);
         execve((const char *)"/usr/bin/python3", args, NULL);
         exit(0);
     }
 
+    long HtmlFile::getSize(void) const
+    {
+        return (this->_size);
+    }
+
+    const std::string &HtmlFile::getContent(void) const
+    {
+        return (this->_content);
+    }
+
+    int HtmlFile::getSocketFd(void) const
+    {
+        return (this->_socketFd);
+    }
+
     HtmlFile::~HtmlFile() {}
+
 }

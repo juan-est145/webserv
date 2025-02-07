@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/07 18:16:09 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/07 20:01:12 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,21 @@ namespace Webserv
     class HtmlFile
     {
     private:
-        int _pipeFd[2];
-        void execPy(); // This is a temporal name
-        bool fileExits(const std:: string &path) const;
+        int _socketFd;
+        long _size;
+        std::string _content;
+        void execPy(int pipeFd[2]); // This is a temporal name
+        bool fileExits(const std::string &path);
 
     public:
         HtmlFile();
         HtmlFile(const HtmlFile &copy);
         ~HtmlFile();
         HtmlFile &operator=(const HtmlFile &otro);
-        std::string getContent() const;
-        long getSize() const;
-        int readFile(std::string &filePath, int epollFd, struct epoll_event &eventList);
+        const std::string &getContent(void) const;
+        long getSize(void) const;
+        int getSocketFd(void) const;
+        int getFileFd(std::string &filePath, int epollFd, struct epoll_event &eventConf);
     };
 }
 

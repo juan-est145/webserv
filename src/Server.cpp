@@ -149,7 +149,7 @@ namespace Webserv
 		}
 	}
 
-	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf) const
+	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
 	{
 		if (eventList.events & EPOLLIN)
 			this->readClient(epollFd, eventList, eventConf);
@@ -157,14 +157,15 @@ namespace Webserv
 		{
 
 			std::cout << "Time to write to the client" << std::endl;
+			std::string
 			/************************************************************* */
 			// Make answer HTTP/1.1
-			HtmlFile htmlFile;
-			std::string path = "./html/prueba.html";
-			// Get the content and size
-			htmlFile.readFile(path, epollFd, eventConf);
-			std::string htmlContent = htmlFile.getContent();
-			long fileSize = htmlFile.getSize();
+			// HtmlFile htmlFile;
+			// std::string path = "./html/prueba.html";
+			// // Get the content and size
+			// htmlFile.readFile(path, epollFd, eventConf);
+			// std::string htmlContent = htmlFile.getContent();
+			// long fileSize = htmlFile.getSize();
 
 			std::stringstream format;
 
@@ -186,38 +187,51 @@ namespace Webserv
 		}
 	}
 
-	void Server::readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf) const
+	void Server::readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf)
 	{
-
-		
-		// TO DO: Set dynamic buffer size according to body size.
-		// TO DO: Possibly will need to add a timer to listening to timeout connection
-		char buffer[1024];
-		std::cout << "Reading from client" << std::endl;
-		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
-		Request req = Request();
-		req.processReq(buffer);
-		if (bufRead <= 0)
+		struct stat statbuf;
+		// TO DO Check return value of stat
+		fstat(eventList.data.fd, &statbuf);
+		if (S_ISSOCK(statbuf.st_mode))
 		{
-			if (bufRead == -1)
+			// TO DO: Set dynamic buffer size according to body size.
+			// TO DO: Possibly will need to add a timer to listening to timeout connection
+			char buffer[1024];
+			std::cout << "Reading from client" << std::endl;
+			ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+			Request req = Request();
+			req.processReq(buffer);
+			if (bufRead <= 0)
 			{
-				close(epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
+				if (bufRead == -1)
+				{
+					close(epollFd);
+					Webserv::Logger::errorLog(errno, strerror, false);
+					throw Server::ServerException();
+				}
+				if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
+				{
+					close(epollFd);
+					Webserv::Logger::errorLog(errno, strerror, false);
+					throw Server::ServerException();
+				}
+				close(eventList.data.fd);
 			}
-			if (epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
+			else
 			{
-				close(epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
+				HtmlFile *html = new HtmlFile();
+				std::string path = "./html/prueba.html";
+				int fd = html->getFileFd(path, epollFd, eventConf);
+				this->_htmlFdSockPair[fd] = html;
+				// TO DO: Check that the html fd does not exist
 			}
-			close(eventList.data.fd);
 		}
+		// TO DO. Implement socket must be changed with epoll ctl and epoll mod
 		else
 		{
 			eventConf.events = EPOLLOUT;
-			eventConf.data.fd = eventList.data.fd;
-			if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventList.data.fd, &eventConf) == -1)
+			eventConf.data.fd = this->_htmlFdSockPair[eventList.data.fd]->getSocketFd();
+			if (epoll_ctl(epollFd, EPOLL_CTL_MOD, eventConf.data.fd, &eventConf) == -1)
 			{
 				close(epollFd);
 				Webserv::Logger::errorLog(errno, strerror, false);

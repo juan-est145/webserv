@@ -22,6 +22,7 @@
 #include <sstream>
 #include <map>
 #include "Logger.hpp"
+#include "HtmlFile.hpp"
 
 namespace Webserv
 {
@@ -29,14 +30,14 @@ namespace Webserv
 	{
 	private:
 		int _listenFd;
-		std::map<int, int> readListenMap;
+		std::map<int, HtmlFile*> _htmlFdSockPair;
 		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;
 		void listenConnection(void) const;
 		void addConnectionToQueue(int epollFd, struct epoll_event &event) const;
-		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf) const;
-		void readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf) const;
+		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
+		void readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf);
 
 	public:
 		Server(void);
