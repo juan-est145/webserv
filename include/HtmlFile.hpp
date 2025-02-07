@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/06 19:07:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/07 18:16:09 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,23 @@
 #include <sys/stat.h>
 #include <sys/epoll.h>
 
-
-
 namespace Webserv
 {
     class HtmlFile
     {
     private:
-        std::string content;
-        long size;
+        int _pipeFd[2];
+        void execPy(); // This is a temporal name
+        bool fileExits(const std:: string &path) const;
 
     public:
         HtmlFile();
         HtmlFile(const HtmlFile &copy);
         ~HtmlFile();
         HtmlFile &operator=(const HtmlFile &otro);
-        // geter
         std::string getContent() const;
         long getSize() const;
-        void readFile(std::string &filePath,int epollFd, struct epoll_event &eventList);
+        int readFile(std::string &filePath, int epollFd, struct epoll_event &eventList);
     };
 }
 
