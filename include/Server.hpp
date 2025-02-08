@@ -37,7 +37,7 @@ namespace Webserv
 		void listenConnection(void);
 		void addConnectionToQueue(int epollFd, struct epoll_event &event) const;
 		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
-		void readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf);
+		void readOperations(int epollFd, struct epoll_event eventList, struct epoll_event eventConf);
 
 	public:
 		Server(void);

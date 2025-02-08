@@ -152,7 +152,7 @@ namespace Webserv
 	void Server::processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
 	{
 		if (eventList.events & EPOLLIN)
-			this->readClient(epollFd, eventList, eventConf);
+			this->readOperations(epollFd, eventList, eventConf);
 		else
 		{
 			std::map<int, HtmlFile *>::iterator it = this->_htmlFdSockPair.begin();
@@ -199,7 +199,7 @@ namespace Webserv
 		}
 	}
 
-	void Server::readClient(int epollFd, struct epoll_event eventList, struct epoll_event eventConf)
+	void Server::readOperations(int epollFd, struct epoll_event eventList, struct epoll_event eventConf)
 	{
 		struct stat statbuf;
 		// TO DO Check return value of stat
