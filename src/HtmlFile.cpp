@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 11:15:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:18:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 #include "../include/Server.hpp"
 namespace Webserv
 {
-    HtmlFile::HtmlFile() {}
+    HtmlFile::HtmlFile() 
+    {
+        this->_socketFd = -1;
+        this->_size = -1;
+        this->_content = -1;
+    }
 
     HtmlFile::HtmlFile(const HtmlFile &copy)
     {
