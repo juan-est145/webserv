@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 15:54:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:40:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,20 +98,14 @@ namespace Webserv
 		// TO DO: Later on, try make eventList a buffer in HEAP and multiply a base value
 		// by how many sockets we are going to be listening to
 		struct epoll_event eventList[50];
-		event.events = EPOLLIN;
 		this->_epollFd = epoll_create(NUMBER_EPOLL);
 		if (this->_epollFd == -1)
 		{
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
-		event.data.fd = this->_listenFd;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, this->_listenFd, &event) == -1)
-		{
-			close(this->_epollFd);
-			Webserv::Logger::errorLog(errno, strerror, false);
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, this->_listenFd, event))
 			throw Server::ServerException();
-		}
 		while (!g_stop)
 		{
 			int eventCount = epoll_wait(this->_epollFd, eventList, sizeof(eventList), E_WAIT_TIMEOUT);
@@ -246,7 +240,7 @@ namespace Webserv
 		delete[] buffer;
 		eventConf.events = EPOLLIN;
 		eventConf.data.fd = eventList.data.fd;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventConf.data.fd, &eventConf) == -1)
+		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
 		{
 			close(this->_epollFd);
 			Webserv::Logger::errorLog(errno, strerror, false);

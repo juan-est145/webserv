@@ -9,6 +9,7 @@ $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/Logger.cpp\
 $(SRC-PATH)/Request.cpp\
 $(SRC-PATH)/HtmlFile.cpp\
+$(SRC-PATH)/AuxFunc.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -17,6 +18,7 @@ $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/Logger.hpp\
 $(HEADER-PATH)/Request.hpp\
 $(HEADER-PATH)/HtmlFile.hpp\
+$(HEADER-PATH)/AuxFunc.hpp\
 
 CXX = $(shell which c++ clang++ g++ | head -n 1)
 

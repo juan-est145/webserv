@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 13:12:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:28:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 #include <map>
 #include "Logger.hpp"
 #include "HtmlFile.hpp"
+#include "AuxFunc.hpp"
 
 namespace Webserv
 {
