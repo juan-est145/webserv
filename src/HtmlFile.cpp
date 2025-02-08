@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 11:18:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:20:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../include/Server.hpp"
 namespace Webserv
 {
-    HtmlFile::HtmlFile() 
+    HtmlFile::HtmlFile()
     {
         this->_socketFd = -1;
         this->_size = -1;
@@ -47,20 +47,37 @@ namespace Webserv
             exit(EXIT_FAILURE);
         }
         this->_socketFd = eventConf.data.fd;
-
-        // TO DO: Check return value of pipe, close, dup2 and fork
-        pipe(pipeFd);
+        if (pipe(pipeFd) == -1)
+        {
+            close(epollFd);
+            Logger::errorLog(errno, strerror, false);
+            throw HtmlFile::HtmlFileException();
+        }
         pid_t pid = fork();
-        if (pid == 0)
+        if (pid == -1)
+        {
+            close(epollFd);
+            close(pipeFd[PIPE_READ]);
+            close(pipeFd[PIPE_WRITE]);
+            Logger::errorLog(errno, strerror, false);
+            throw HtmlFile::HtmlFileException();
+        }
+        else if (pid == 0)
             this->execPy(pipeFd);
-        close(pipeFd[PIPE_WRITE]);
+        if (close(pipeFd[PIPE_WRITE]) == -1)
+        {
+            close(epollFd);
+            close(pipeFd[PIPE_READ]);
+            Logger::errorLog(errno, strerror, false);
+            throw HtmlFile::HtmlFileException();
+        }
         eventConf.events = EPOLLIN;
         eventConf.data.fd = pipeFd[PIPE_READ];
         if (epoll_ctl(epollFd, EPOLL_CTL_ADD, pipeFd[PIPE_READ], &eventConf) == -1)
         {
             close(epollFd);
             Webserv::Logger::errorLog(errno, strerror, false);
-            throw Server::ServerException();
+            throw HtmlFile::HtmlFileException();
         }
         return (pipeFd[PIPE_READ]);
     }
@@ -75,7 +92,7 @@ namespace Webserv
         if (!S_ISREG(fileStat.st_mode))
             return (false);
         this->_size = fileStat.st_size;
-        return (true); 
+        return (true);
     }
 
     void HtmlFile::execPy(int pipeFd[2])
@@ -85,11 +102,24 @@ namespace Webserv
             (char *)"./cgi/readHtml.py",
             NULL,
         };
-        close(pipeFd[PIPE_READ]);
-        dup2(pipeFd[PIPE_WRITE], STDOUT_FILENO);
-        close(pipeFd[PIPE_WRITE]);
+        if (close(pipeFd[PIPE_READ]) == -1)
+        {
+            close(pipeFd[PIPE_WRITE]);
+            Logger::errorLog(errno, strerror, true);
+        }
+        if (dup2(pipeFd[PIPE_WRITE], STDOUT_FILENO) == -1)
+        {
+            close(pipeFd[PIPE_READ]);
+            close(pipeFd[PIPE_WRITE]);
+            Logger::errorLog(errno, strerror, true);
+        }
+        if (close(pipeFd[PIPE_WRITE]))
+        {
+            close(pipeFd[PIPE_READ]);
+            Logger::errorLog(errno, strerror, true);
+        }
         execve((const char *)"/usr/bin/python3", args, NULL);
-        exit(0);
+        exit(EXIT_FAILURE);
     }
 
     long HtmlFile::getSize(void) const
@@ -111,6 +141,11 @@ namespace Webserv
     int HtmlFile::getSocketFd(void) const
     {
         return (this->_socketFd);
+    }
+
+    const char *HtmlFile::HtmlFileException::what(void) const throw()
+    {
+        return ("HtmlFile class found a problem and the server must stop now");
     }
 
     HtmlFile::~HtmlFile() {}

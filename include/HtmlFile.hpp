@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 11:15:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:00:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <sys/stat.h>
 #include <sys/epoll.h>
+#include <exception>
 
 namespace Webserv
 {
@@ -51,6 +52,11 @@ namespace Webserv
         void setContent(const char *buffer);
         long getSize(void) const;
         int getSocketFd(void) const;
+        class HtmlFileException : std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
     };
 }
 
