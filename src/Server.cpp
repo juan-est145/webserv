@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 12:15:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:36:35 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,11 +174,14 @@ namespace Webserv
 	void Server::readOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
 	{
 		struct stat statbuf;
-		// TO DO Check return value of stat
-		fstat(eventList.data.fd, &statbuf);
+		if (fstat(eventList.data.fd, &statbuf) == -1)
+		{
+			close(this->_epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
 		if (S_ISSOCK(statbuf.st_mode))
 			this->readSocket(eventList, eventConf);
-		// TO DO. Implement socket must be changed with epoll ctl and epoll mod
 		else
 			this->readFile(eventList, eventConf);
 	}
