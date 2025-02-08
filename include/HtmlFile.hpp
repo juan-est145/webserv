@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 14:18:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:55:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include <sys/stat.h>
 #include <sys/epoll.h>
 #include <exception>
+#include "AuxFunc.hpp"
 
 namespace Webserv
 {

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 16:40:48 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:54:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,14 +126,8 @@ namespace Webserv
 					this->processClientConn(eventList[i], event);
 			}
 		}
-		event.events = EPOLLIN;
-		event.data.fd = this->_listenFd;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, this->_listenFd, &event) == -1)
-		{
-			close(this->_epollFd);
-			Webserv::Logger::errorLog(errno, strerror, false);
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, this->_listenFd, event))
 			throw Server::ServerException();
-		}
 		close(this->_epollFd);
 	}
 
@@ -149,14 +143,8 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
-		event.events = EPOLLIN;
-		event.data.fd = newSocket;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, newSocket, &event) == -1)
-		{
-			close(this->_epollFd);
-			Webserv::Logger::errorLog(errno, strerror, false);
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, newSocket, event))
 			throw Server::ServerException();
-		}
 	}
 
 	void Server::processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf)
@@ -208,22 +196,9 @@ namespace Webserv
 			HtmlFile *html = new HtmlFile();
 			std::string path = "./html/prueba.html";
 			int fd = html->obtainFileFd(path, this->_epollFd, eventList, eventConf);
-			// if (this->_htmlFdSockPair.find(fd) != this->_htmlFdSockPair.end())
-			// {
-			// 	close(this->_epollFd);
-			// 	Webserv::Logger::errorLog(errno, strerror, false);
-			// 	throw Server::ServerException();
-			// }
 			this->_htmlFdSockPair[fd] = html;
-			eventConf.events = EPOLLIN;
-			eventConf.data.fd = eventList.data.fd;
-			if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
-			{
-				close(this->_epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
+			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
 				throw Server::ServerException();
-			}
-			
 		}
 	}
 
@@ -238,31 +213,13 @@ namespace Webserv
 		buffer[size] = '\0';
 		this->_htmlFdSockPair[eventList.data.fd]->setContent(buffer);
 		delete[] buffer;
-		eventConf.events = EPOLLIN;
-		eventConf.data.fd = eventList.data.fd;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
-		{
-			close(this->_epollFd);
-			Webserv::Logger::errorLog(errno, strerror, false);
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
 			throw Server::ServerException();
-		}
-		// if (this->_sockFdHtmlPair.find(socketFd) != this->_htmlFdSockPair.end())
-		// {
-		// 	close(this->_epollFd);
-		// 	Webserv::Logger::errorLog(errno, strerror, false);
-		// 	throw Server::ServerException();
-		// }
 		this->_sockFdHtmlPair[socketFd] = this->_htmlFdSockPair[htmlFd];
 		this->_htmlFdSockPair.erase(htmlFd);
 		close(eventList.data.fd);
-		eventConf.events = EPOLLOUT;
-		eventConf.data.fd = socketFd;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventConf.data.fd, &eventConf) == -1)
-		{
-			close(this->_epollFd);
-			Webserv::Logger::errorLog(errno, strerror, false);
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLOUT, socketFd, eventConf))
 			throw Server::ServerException();
-		}
 	}
 
 	void Server::writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
@@ -277,14 +234,8 @@ namespace Webserv
 		std::string response = format.str();
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
-		eventConf.events = EPOLLOUT;
-		eventConf.data.fd = eventList.data.fd;
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
-		{
-			close(this->_epollFd);
-			Webserv::Logger::errorLog(errno, strerror, false);
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
 			throw Server::ServerException();
-		}
 		delete this->_sockFdHtmlPair[eventList.data.fd];
 		this->_sockFdHtmlPair.erase(eventList.data.fd);
 		close(eventList.data.fd);

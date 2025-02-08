@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 14:17:52 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 16:57:59 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,8 @@ namespace Webserv
             Logger::errorLog(errno, strerror, false);
             throw HtmlFile::HtmlFileException();
         }
-        eventConf.events = EPOLLIN;
-        eventConf.data.fd = pipeFd[PIPE_READ];
-        if (epoll_ctl(epollFd, EPOLL_CTL_ADD, pipeFd[PIPE_READ], &eventConf) == -1)
-        {
-            close(epollFd);
-            Webserv::Logger::errorLog(errno, strerror, false);
+        if (!AuxFunc::handle_ctl(epollFd, EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], eventConf))
             throw HtmlFile::HtmlFileException();
-        }
         return (pipeFd[PIPE_READ]);
     }
 
