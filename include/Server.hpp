@@ -40,6 +40,7 @@ namespace Webserv
 		void processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void readOperations(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void readSocket(struct epoll_event &eventList, struct epoll_event &eventConf);
+		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
 
 	public:
 		Server(void);

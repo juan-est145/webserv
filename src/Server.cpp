@@ -210,32 +210,7 @@ namespace Webserv
 			this->readSocket(eventList, eventConf);
 		// TO DO. Implement socket must be changed with epoll ctl and epoll mod
 		else
-		{
-			long size = this->_htmlFdSockPair[eventList.data.fd]->getSize();
-			char *buffer = new char[size + 1];
-			// TO DO. Check value of read.
-			read(eventList.data.fd, buffer, size);
-			buffer[size] = '\0';
-			this->_htmlFdSockPair[eventList.data.fd]->setContent(buffer);
-			delete[] buffer;
-			eventConf.events = EPOLLIN;
-			eventConf.data.fd = eventList.data.fd;
-			if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventConf.data.fd, &eventConf) == -1)
-			{
-				close(this->_epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
-			}
-			close(eventConf.data.fd);
-			eventConf.events = EPOLLOUT;
-			eventConf.data.fd = this->_htmlFdSockPair[eventList.data.fd]->getSocketFd();
-			if (epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, eventConf.data.fd, &eventConf) == -1)
-			{
-				close(this->_epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
-			}
-		}
+			this->readFile(eventList, eventConf);
 	}
 
 	void Server::readSocket(struct epoll_event &eventList, struct epoll_event &eventConf)
@@ -270,6 +245,34 @@ namespace Webserv
 			int fd = html->obtainFileFd(path, this->_epollFd, eventConf);
 			this->_htmlFdSockPair[fd] = html;
 			// TO DO: Check that the html fd does not exist
+		}
+	}
+
+	void Server::readFile(struct epoll_event &eventList, struct epoll_event &eventConf)
+	{
+		long size = this->_htmlFdSockPair[eventList.data.fd]->getSize();
+		char *buffer = new char[size + 1];
+		// TO DO. Check value of read.
+		read(eventList.data.fd, buffer, size);
+		buffer[size] = '\0';
+		this->_htmlFdSockPair[eventList.data.fd]->setContent(buffer);
+		delete[] buffer;
+		eventConf.events = EPOLLIN;
+		eventConf.data.fd = eventList.data.fd;
+		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventConf.data.fd, &eventConf) == -1)
+		{
+			close(this->_epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
+		close(eventConf.data.fd);
+		eventConf.events = EPOLLOUT;
+		eventConf.data.fd = this->_htmlFdSockPair[eventList.data.fd]->getSocketFd();
+		if (epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, eventConf.data.fd, &eventConf) == -1)
+		{
+			close(this->_epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
 		}
 	}
 
