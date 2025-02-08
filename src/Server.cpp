@@ -6,13 +6,11 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 16:54:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 17:15:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Server.hpp"
-#include "../include/Request.hpp"
-#include "../include/HtmlFile.hpp"
 
 extern bool g_stop;
 
