@@ -156,49 +156,7 @@ namespace Webserv
 		if (eventList.events & EPOLLIN)
 			this->readOperations(eventList, eventConf);
 		else
-		{
-			std::map<int, HtmlFile *>::iterator it = this->_htmlFdSockPair.begin();
-			while (it != this->_htmlFdSockPair.end())
-			{
-				if (it->second->getSocketFd() == eventList.data.fd)
-					break;
-				it++;
-			}
-
-			std::cout << "Time to write to the client" << std::endl;
-
-			/************************************************************* */
-			// Make answer HTTP/1.1
-			// HtmlFile htmlFile;
-			// std::string path = "./html/prueba.html";
-			// // Get the content and size
-			// htmlFile.readFile(path, epollFd, eventConf);
-			// std::string htmlContent = htmlFile.getContent();
-			// long fileSize = htmlFile.getSize();
-
-			std::stringstream format;
-
-			format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << it->second->getSize() << "\r\n"
-				   << "\r\n"
-				   << (std::string)it->second->getContent();
-
-			std::string response = format.str();
-			/************************************************************************************/
-			if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
-				Webserv::Logger::errorLog(errno, strerror, false);
-			eventConf.events = EPOLLOUT;
-			eventConf.data.fd = eventList.data.fd;
-			if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
-			{
-				close(this->_epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
-			}
-			// TO DO: Remember to free memory from map and release the keys
-			close(eventList.data.fd);
-			delete it->second;
-			this->_htmlFdSockPair.erase(it);
-		}
+			this->writeOperations(eventList, eventConf);
 	}
 
 	void Server::readOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
@@ -274,6 +232,38 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
+	}
+
+	void Server::writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
+	{
+		std::map<int, HtmlFile *>::iterator it = this->_htmlFdSockPair.begin();
+		while (it != this->_htmlFdSockPair.end())
+		{
+			if (it->second->getSocketFd() == eventList.data.fd)
+				break;
+			it++;
+		}
+		std::cout << "Time to write to the client" << std::endl;
+		std::stringstream format;
+
+		format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << it->second->getSize() << "\r\n"
+			   << "\r\n"
+			   << (std::string)it->second->getContent();
+
+		std::string response = format.str();
+		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
+			Webserv::Logger::errorLog(errno, strerror, false);
+		eventConf.events = EPOLLOUT;
+		eventConf.data.fd = eventList.data.fd;
+		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
+		{
+			close(this->_epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
+		close(eventList.data.fd);
+		delete it->second;
+		this->_htmlFdSockPair.erase(it);
 	}
 
 	const char *Server::ServerException::what(void) const throw()
