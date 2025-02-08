@@ -30,14 +30,16 @@ namespace Webserv
 	{
 	private:
 		int _listenFd;
+		int _epollFd;
 		std::map<int, HtmlFile*> _htmlFdSockPair;
 		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;
 		void listenConnection(void);
-		void addConnectionToQueue(int epollFd, struct epoll_event &event) const;
-		void processClientConn(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
-		void readOperations(int epollFd, struct epoll_event eventList, struct epoll_event eventConf);
+		void addConnectionToQueue(struct epoll_event &event) const;
+		void processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf);
+		void readOperations(struct epoll_event &eventList, struct epoll_event &eventConf);
+		void readSocket(struct epoll_event &eventList, struct epoll_event &eventConf);
 
 	public:
 		Server(void);
