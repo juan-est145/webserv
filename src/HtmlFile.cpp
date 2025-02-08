@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 12:20:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:49:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,8 @@ namespace Webserv
 
     void HtmlFile::setContent(const char *buffer)
     {
-        // TO DO: Check for null values in buffer
+        if (buffer == NULL)
+            throw HtmlFile::HtmlFileException();
         this->_content = buffer;
     }
 

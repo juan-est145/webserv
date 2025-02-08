@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 12:15:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:47:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ namespace Webserv
 		};
 		~Server();
 	};
-} // namespace Webserv
+}
 std::ostream &operator<<(std::ostream &out, const Webserv::Server &Server);
 
 #endif

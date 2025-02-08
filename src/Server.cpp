@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 12:36:35 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 12:38:42 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ namespace Webserv
 	{
 		long size = this->_htmlFdSockPair[eventList.data.fd]->getSize();
 		char *buffer = new char[size + 1];
-		// TO DO. Check value of read.
+		// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
 		read(eventList.data.fd, buffer, size);
 		buffer[size] = '\0';
 		this->_htmlFdSockPair[eventList.data.fd]->setContent(buffer);
