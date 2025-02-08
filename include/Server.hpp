@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 12:47:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 13:12:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ namespace Webserv
 		int _listenFd;
 		int _epollFd;
 		std::map<int, HtmlFile*> _htmlFdSockPair;
+		std::map<int, HtmlFile*> _sockFdHtmlPair;
 		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;

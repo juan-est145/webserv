@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 12:38:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 15:54:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,8 @@ namespace Webserv
 					this->processClientConn(eventList[i], event);
 			}
 		}
+		event.events = EPOLLIN;
+		event.data.fd = this->_listenFd;
 		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, this->_listenFd, &event) == -1)
 		{
 			close(this->_epollFd);
@@ -197,13 +199,9 @@ namespace Webserv
 		req.processReq(buffer);
 		if (bufRead <= 0)
 		{
-			if (bufRead == -1)
-			{
-				close(this->_epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
-			}
-			if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, NULL) == -1)
+			eventConf.events = EPOLLIN;
+			eventConf.data.fd = eventList.data.fd;
+			if (bufRead == -1 || epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
 			{
 				close(this->_epollFd);
 				Webserv::Logger::errorLog(errno, strerror, false);
@@ -215,14 +213,30 @@ namespace Webserv
 		{
 			HtmlFile *html = new HtmlFile();
 			std::string path = "./html/prueba.html";
-			int fd = html->obtainFileFd(path, this->_epollFd, eventConf);
+			int fd = html->obtainFileFd(path, this->_epollFd, eventList, eventConf);
+			// if (this->_htmlFdSockPair.find(fd) != this->_htmlFdSockPair.end())
+			// {
+			// 	close(this->_epollFd);
+			// 	Webserv::Logger::errorLog(errno, strerror, false);
+			// 	throw Server::ServerException();
+			// }
 			this->_htmlFdSockPair[fd] = html;
-			// TO DO: Check that the html fd does not exist
+			eventConf.events = EPOLLIN;
+			eventConf.data.fd = eventList.data.fd;
+			if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
+			{
+				close(this->_epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
+			
 		}
 	}
 
 	void Server::readFile(struct epoll_event &eventList, struct epoll_event &eventConf)
 	{
+		int htmlFd = eventList.data.fd;
+		int socketFd = this->_htmlFdSockPair[htmlFd]->getSocketFd();
 		long size = this->_htmlFdSockPair[eventList.data.fd]->getSize();
 		char *buffer = new char[size + 1];
 		// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
@@ -238,10 +252,18 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
-		close(eventConf.data.fd);
+		// if (this->_sockFdHtmlPair.find(socketFd) != this->_htmlFdSockPair.end())
+		// {
+		// 	close(this->_epollFd);
+		// 	Webserv::Logger::errorLog(errno, strerror, false);
+		// 	throw Server::ServerException();
+		// }
+		this->_sockFdHtmlPair[socketFd] = this->_htmlFdSockPair[htmlFd];
+		this->_htmlFdSockPair.erase(htmlFd);
+		close(eventList.data.fd);
 		eventConf.events = EPOLLOUT;
-		eventConf.data.fd = this->_htmlFdSockPair[eventList.data.fd]->getSocketFd();
-		if (epoll_ctl(this->_epollFd, EPOLL_CTL_MOD, eventConf.data.fd, &eventConf) == -1)
+		eventConf.data.fd = socketFd;
+		if (epoll_ctl(this->_epollFd, EPOLL_CTL_ADD, eventConf.data.fd, &eventConf) == -1)
 		{
 			close(this->_epollFd);
 			Webserv::Logger::errorLog(errno, strerror, false);
@@ -251,19 +273,12 @@ namespace Webserv
 
 	void Server::writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
 	{
-		std::map<int, HtmlFile *>::iterator it = this->_htmlFdSockPair.begin();
-		while (it != this->_htmlFdSockPair.end())
-		{
-			if (it->second->getSocketFd() == eventList.data.fd)
-				break;
-			it++;
-		}
 		std::cout << "Time to write to the client" << std::endl;
 		std::stringstream format;
 
-		format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << it->second->getSize() << "\r\n"
+		format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << this->_sockFdHtmlPair[eventList.data.fd]->getSize() << "\r\n"
 			   << "\r\n"
-			   << (std::string)it->second->getContent();
+			   << (std::string)this->_sockFdHtmlPair[eventList.data.fd]->getContent();
 
 		std::string response = format.str();
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
@@ -276,9 +291,9 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
+		delete this->_sockFdHtmlPair[eventList.data.fd];
+		this->_sockFdHtmlPair.erase(eventList.data.fd);
 		close(eventList.data.fd);
-		delete it->second;
-		this->_htmlFdSockPair.erase(it);
 	}
 
 	const char *Server::ServerException::what(void) const throw()

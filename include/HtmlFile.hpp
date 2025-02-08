@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 12:00:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 14:18:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ namespace Webserv
         HtmlFile(const HtmlFile &copy);
         ~HtmlFile();
         HtmlFile &operator=(const HtmlFile &otro);
-        int obtainFileFd(std::string &filePath, int epollFd, struct epoll_event &eventConf);
+        int obtainFileFd(std::string &filePath, int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
         const std::string &getContent(void) const;
         void setContent(const char *buffer);
         long getSize(void) const;
