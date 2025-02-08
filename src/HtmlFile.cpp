@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/07 21:22:32 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/08 11:15:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace Webserv
         return *this;
     }
 
-    int HtmlFile::getFileFd(std::string &filePath, int epollFd, struct epoll_event &eventConf)
+    int HtmlFile::obtainFileFd(std::string &filePath, int epollFd, struct epoll_event &eventConf)
     {
         int pipeFd[2];
         if (!this->fileExits(filePath))

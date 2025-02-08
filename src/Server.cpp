@@ -233,7 +233,7 @@ namespace Webserv
 			{
 				HtmlFile *html = new HtmlFile();
 				std::string path = "./html/prueba.html";
-				int fd = html->getFileFd(path, epollFd, eventConf);
+				int fd = html->obtainFileFd(path, epollFd, eventConf);
 				this->_htmlFdSockPair[fd] = html;
 				// TO DO: Check that the html fd does not exist
 			}
