@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/09 19:56:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/09 20:07:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,21 @@ namespace Webserv
 	const std::map<std::string, std::string> &Request::getReqHeader(void) const
 	{
 		return (this->_reqHeader);
+	}
+
+	Request::E_Method Request::getMethod(void) const
+	{
+		return (this->_method);
+	}
+
+	const std::string &Request::getPath(void) const
+	{
+		return (this->_path);
+	}
+
+	const std::string &Request::getHttpVers(void) const
+	{
+		return (this->_httpVers);
 	}
 
 	Request::~Request() {}

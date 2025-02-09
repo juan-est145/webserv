@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/09 19:22:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/09 20:04:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ namespace Webserv
 		Request &operator=(const Request &assign);
 		void processReq(const char *buffer);
 		const std::map<std::string, std::string> &getReqHeader(void) const;
+		enum E_Method getMethod(void) const;
+		const std::string &getPath(void) const;
+		const std::string &getHttpVers(void) const;
 		~Request();
 
 	private:
