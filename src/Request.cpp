@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/09 20:07:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/09 20:14:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ namespace Webserv
 		return *this;
 	}
 
+	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
 	void Request::processReq(const char *buffer)
 	{
 		std::string reqHeader(buffer);
