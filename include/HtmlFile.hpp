@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/11 17:10:32 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:53:10 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include <sys/epoll.h>
 #include <exception>
 #include "AuxFunc.hpp"
+#include "Request.hpp"
 
 namespace Webserv
 {
@@ -39,16 +40,18 @@ namespace Webserv
     private:
         int _socketFd;
         long _size;
+        const Request rq;
         std::string _content;
         void execPy(int pipeFd[2], std::string &path); // This is a temporal name
         bool fileExits(const std::string &path);
 
     public:
         HtmlFile();
+        HtmlFile(const Request &rq);
         HtmlFile(const HtmlFile &copy);
         ~HtmlFile();
         HtmlFile &operator=(const HtmlFile &otro);
-        int obtainFileFd(std::string &filePath, int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
+        int obtainFileFd(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf);
         const std::string &getContent(void) const;
         void setContent(const char *buffer);
         long getSize(void) const;

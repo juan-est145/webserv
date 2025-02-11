@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 17:15:19 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:53:19 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ namespace Webserv
 		{
 			HtmlFile *html = new HtmlFile();
 			std::string path = "./html/prueba.html";
-			int fd = html->obtainFileFd(path, this->_epollFd, eventList, eventConf);
+			int fd = html->obtainFileFd(this->_epollFd, eventList, eventConf);
 			this->_htmlFdSockPair[fd] = html;
 			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
 				throw Server::ServerException();

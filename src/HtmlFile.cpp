@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/11 17:15:07 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/11 18:11:22 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 namespace Webserv
 {
-    HtmlFile::HtmlFile()
+    HtmlFile::HtmlFile(): rq(Request())
     {
+        
         this->_socketFd = -1;
         this->_size = -1;
         this->_content = -1;
@@ -24,6 +25,13 @@ namespace Webserv
     HtmlFile::HtmlFile(const HtmlFile &copy)
     {
         *this = copy;
+    }
+
+    HtmlFile::HtmlFile(const Request &rq): rq(rq)
+    {
+        this->_socketFd = -1;
+        this->_size = -1;
+        this->_content = -1;
     }
 
     HtmlFile &HtmlFile::operator=(const HtmlFile &other)
@@ -36,20 +44,27 @@ namespace Webserv
         }
         return *this;
     }
+    std::string obtainHtmlPath(const std::string &url)
+    {
+        if (url == "/")
+            return ("./html/index.html");
+        if (url == "/upload")
+            return ("./html/upload.html");
+        return ("./html/error404.html");
+    }
 
-    int HtmlFile::obtainFileFd(std::string &filePath, int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
+    int HtmlFile::obtainFileFd(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
     {
         int pipeFd[2];
-        if (!this->fileExits(filePath))
+        std::string path = obtainHtmlPath(rq.getPath());
+        std::cout << rq.getPath() << std::endl;
+        if (!this->fileExits(path))
         {
             // TO DO: Later mark this as a 404 response
-            filePath = "./html/error404.html";
-            if (!this->fileExits(filePath))
-            {
-                std::cerr << "Failed to open error404.html" << std::endl;
-                exit(EXIT_FAILURE);
-            }
+            std::cerr << "Failed to open html" << std::endl;
+            exit(EXIT_FAILURE);
         }
+        
         this->_socketFd = eventList.data.fd;
         if (pipe(pipeFd) == -1)
         {
@@ -67,7 +82,7 @@ namespace Webserv
             throw HtmlFile::HtmlFileException();
         }
         else if (pid == 0)
-            this->execPy(pipeFd, filePath);//CHANGED
+            this->execPy(pipeFd, path);//CHANGED
         if (close(pipeFd[PIPE_WRITE]) == -1)
         {
             close(epollFd);
