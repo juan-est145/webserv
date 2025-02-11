@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 17:16:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:15:07 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,12 @@ namespace Webserv
         if (!this->fileExits(filePath))
         {
             // TO DO: Later mark this as a 404 response
-            std::cerr << "Failed to open file" << std::endl;
-            exit(EXIT_FAILURE);
+            filePath = "./html/error404.html";
+            if (!this->fileExits(filePath))
+            {
+                std::cerr << "Failed to open error404.html" << std::endl;
+                exit(EXIT_FAILURE);
+            }
         }
         this->_socketFd = eventList.data.fd;
         if (pipe(pipeFd) == -1)
@@ -63,7 +67,7 @@ namespace Webserv
             throw HtmlFile::HtmlFileException();
         }
         else if (pid == 0)
-            this->execPy(pipeFd);
+            this->execPy(pipeFd, filePath);//CHANGED
         if (close(pipeFd[PIPE_WRITE]) == -1)
         {
             close(epollFd);
@@ -88,12 +92,13 @@ namespace Webserv
         this->_size = fileStat.st_size;
         return (true);
     }
-
-    void HtmlFile::execPy(int pipeFd[2])
+    /*-----------------------CHANGED-------------------------*/
+    void HtmlFile::execPy(int pipeFd[2], std::string &path)
     {
         char *args[] = {
             (char *)"python3",
             (char *)"./cgi/readHtml.py",
+            (char *) path.c_str(),
             NULL,
         };
         if (close(pipeFd[PIPE_READ]) == -1)
@@ -115,7 +120,7 @@ namespace Webserv
         execve((const char *)"/usr/bin/python3", args, NULL);
         exit(EXIT_FAILURE);
     }
-
+    /*---------------------------------------------------------*/
     long HtmlFile::getSize(void) const
     {
         return (this->_size);

@@ -1,7 +1,14 @@
 #! /usr/bin/python3
 import sys
 
-file = open("./html/prueba.html", "r")
+if len(sys.argv) > 1:
+    htmlFilePath = sys.argv[1]  # Obtiene el argumento
+else:
+    htmlFilePath = '../html/prueba.html'  # Valor predeterminado
+
+
+
+file = open(htmlFilePath, "r")
 
 content = file.read()
 

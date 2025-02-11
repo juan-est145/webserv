@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/08 16:55:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:10:32 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace Webserv
         int _socketFd;
         long _size;
         std::string _content;
-        void execPy(int pipeFd[2]); // This is a temporal name
+        void execPy(int pipeFd[2], std::string &path); // This is a temporal name
         bool fileExits(const std::string &path);
 
     public:
