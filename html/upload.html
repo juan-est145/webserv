@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File uploader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        h1 {
+            color: #ff0000;
+        }
+        .uploadInput {
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Our awesome file uploader</h1>
+    <form action="/upload" method="post">
+        <div class="uploadInput">
+            <label for="file">Upload here</label>
+            <input type="file" name="file" id="file">
+        </div>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
