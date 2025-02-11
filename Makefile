@@ -20,7 +20,9 @@ $(HEADER-PATH)/Request.hpp\
 $(HEADER-PATH)/HtmlFile.hpp\
 $(HEADER-PATH)/AuxFunc.hpp\
 
-CXX = $(shell which c++ clang++ g++ | head -n 1)
+
+# TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
+CXX = $(shell which g++ c++ clang++  | head -n 1)
 
 CXXFLAGS = -Wall -Werror -Wextra -std=c++98
 
