@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/09 20:14:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/11 19:08:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,12 @@
 
 namespace Webserv
 {
-	Request::Request(void) {}
+	Request::Request(void) 
+	{
+		this->_method = UNKNOWN;
+		this->_path = "";
+		this->_httpVers = "";
+	}
 
 	Request::Request(const Request &copy)
 	{
@@ -24,7 +29,12 @@ namespace Webserv
 	Request &Request::operator=(const Request &assign)
 	{
 		if (this != &assign)
+		{
 			this->_reqHeader = assign._reqHeader;
+			this->_method = assign._method;
+			this->_httpVers = assign._httpVers;
+			this->_path = assign._path;
+		}
 		return *this;
 	}
 

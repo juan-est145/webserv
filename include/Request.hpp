@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/09 20:04:56 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/11 19:07:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ namespace Webserv
 
 	private:
 		std::map<std::string, std::string> _reqHeader;
-		void extractReqHead(std::queue<std::string> &headers);
-		void extractFirstHead(std::string &line);
-		enum E_Method selectMethod(std::string &method);
 		enum E_Method _method;
 		std::string _path;
 		std::string _httpVers;
+		void extractReqHead(std::queue<std::string> &headers);
+		void extractFirstHead(std::string &line);
+		enum E_Method selectMethod(std::string &method);
 	};
 }
 
