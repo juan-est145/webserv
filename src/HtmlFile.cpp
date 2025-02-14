@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/11 19:09:59 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/14 12:51:15 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,15 @@ namespace Webserv
     /*-----------------------CHANGED-------------------------*/
     void HtmlFile::execPy(int pipeFd[2], std::string &path)
     {
+        int result_py;
         char *args[] = {
             (char *)"python3",
             (char *)"./cgi/readHtml.py",
             (char *) path.c_str(),
             NULL,
         };
+
+        //setenv("env_python", "valor", 1); VARIABLE PARA EL ARCHIVO PYTHON
         if (close(pipeFd[PIPE_READ]) == -1)
         {
             close(pipeFd[PIPE_WRITE]);
@@ -132,7 +135,8 @@ namespace Webserv
             close(pipeFd[PIPE_READ]);
             Logger::errorLog(errno, strerror, true);
         }
-        execve((const char *)"/usr/bin/python3", args, NULL);
+        result_py = execve((const char *)"/usr/bin/python3", args, NULL);
+        std::cout << result_py << std::endl;
         exit(EXIT_FAILURE);
     }
     /*---------------------------------------------------------*/
