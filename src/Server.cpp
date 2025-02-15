@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/11 19:04:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/15 21:18:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,12 +203,12 @@ namespace Webserv
 	{
 		int htmlFd = eventList.data.fd;
 		int socketFd = this->_htmlFdSockPair[htmlFd]->getSocketFd();
-		long size = this->_htmlFdSockPair[eventList.data.fd]->getSize();
+		long size = this->_htmlFdSockPair[htmlFd]->getSize();
 		char *buffer = new char[size + 1];
 		// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
 		read(eventList.data.fd, buffer, size);
 		buffer[size] = '\0';
-		this->_htmlFdSockPair[eventList.data.fd]->setContent(buffer);
+		this->_htmlFdSockPair[htmlFd]->setContent(buffer);
 		delete[] buffer;
 		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
 			throw Server::ServerException();
