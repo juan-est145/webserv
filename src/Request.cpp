@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/11 19:08:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:30:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 namespace Webserv
 {
-	Request::Request(void) 
+	Request::Request(void)
 	{
 		this->_method = UNKNOWN;
 		this->_path = "";
 		this->_httpVers = "";
+		this->_resCode = 200;
 	}
 
 	Request::Request(const Request &copy)
@@ -34,12 +35,26 @@ namespace Webserv
 			this->_method = assign._method;
 			this->_httpVers = assign._httpVers;
 			this->_path = assign._path;
+			this->_resCode = assign._resCode;
+			this->_resourceData = assign._resourceData;
 		}
 		return *this;
 	}
 
 	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
 	void Request::processReq(const char *buffer)
+	{
+		struct stat fileStat;
+		this->extractHeaders(buffer);
+		// TO DO: Maybe later we will need to use a wrapper for the struct in request
+		this->_resourceData.path = this->mapUriToResource();
+		// TO DO: Check the return value of fileStat
+		stat(this->_resourceData.path.c_str(), &fileStat);
+		this->_resourceData.size = fileStat.st_size;
+		this->_resourceData.resourceType = REG_FILE;
+	}
+
+	void Request::extractHeaders(const char *buffer)
 	{
 		std::string reqHeader(buffer);
 		this->extractFirstHead(reqHeader);
@@ -64,7 +79,7 @@ namespace Webserv
 		std::size_t pos;
 
 		if (headers.size() <= 0)
-			return ;
+			return;
 		std::string temp = headers.front();
 		headers.pop();
 		pos = temp.find(":");
@@ -115,6 +130,18 @@ namespace Webserv
 		}
 	}
 
+	std::string Request::mapUriToResource(void)
+	{
+		// TO DO: Once we have a working configuration file, we should use that information instead
+		this->_resCode = 200;
+		if (this->_path == "/")
+			return ("./html/index.html");
+		else if (this->_path == "/upload")
+			return ("./html/upload.html");
+		this->_resCode = 404;
+		return ("./html/error404.html");
+	}
+
 	Request::E_Method Request::selectMethod(std::string &method)
 	{
 		std::string methods[3] = {
@@ -147,6 +174,28 @@ namespace Webserv
 	const std::string &Request::getHttpVers(void) const
 	{
 		return (this->_httpVers);
+	}
+
+	unsigned int Request::getResCode(void) const
+	{
+		return (this->_resCode);
+	}
+
+	const struct Request::S_Resource &Request::getResourceData(void) const
+	{
+		return (this->_resourceData);
+	}
+
+	void Request::setResCode(unsigned int resCode)
+	{
+		if (resCode < 100 || resCode > 511)
+			throw Webserv::Request::RequestException();
+		this->_resCode = resCode;
+	}
+
+	const char *Request::RequestException::what(void) const throw()
+	{
+		return ("An invalid value was set to private member _resCode in Request class");
 	}
 
 	Request::~Request() {}

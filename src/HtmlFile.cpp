@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/14 12:51:15 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:43:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,27 +44,10 @@ namespace Webserv
         }
         return *this;
     }
-    std::string obtainHtmlPath(const std::string &url)
-    {
-        if (url == "/")
-            return ("./html/index.html");
-        if (url == "/upload")
-            return ("./html/upload.html");
-        return ("./html/error404.html");
-    }
 
     int HtmlFile::obtainFileFd(int epollFd, struct epoll_event &eventList, struct epoll_event &eventConf)
     {
         int pipeFd[2];
-        std::string path = obtainHtmlPath(rq.getPath());
-        std::cout << rq.getPath() << std::endl;
-        if (!this->fileExits(path))
-        {
-            // TO DO: Later mark this as a 404 response
-            std::cerr << "Failed to open html" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        
         this->_socketFd = eventList.data.fd;
         if (pipe(pipeFd) == -1)
         {
@@ -82,7 +65,7 @@ namespace Webserv
             throw HtmlFile::HtmlFileException();
         }
         else if (pid == 0)
-            this->execPy(pipeFd, path);//CHANGED
+            this->execPy(pipeFd, this->rq.getResourceData().path);//CHANGED
         if (close(pipeFd[PIPE_WRITE]) == -1)
         {
             close(epollFd);
@@ -108,7 +91,7 @@ namespace Webserv
         return (true);
     }
     /*-----------------------CHANGED-------------------------*/
-    void HtmlFile::execPy(int pipeFd[2], std::string &path)
+    void HtmlFile::execPy(int pipeFd[2], const std::string &path)
     {
         int result_py;
         char *args[] = {
@@ -136,6 +119,7 @@ namespace Webserv
             Logger::errorLog(errno, strerror, true);
         }
         result_py = execve((const char *)"/usr/bin/python3", args, NULL);
+        // TO DO: Later erase this.
         std::cout << result_py << std::endl;
         exit(EXIT_FAILURE);
     }
@@ -160,6 +144,11 @@ namespace Webserv
     int HtmlFile::getSocketFd(void) const
     {
         return (this->_socketFd);
+    }
+
+    const Request &HtmlFile::getRequest(void) const
+    {
+        return (this->rq);
     }
 
     const char *HtmlFile::HtmlFileException::what(void) const throw()

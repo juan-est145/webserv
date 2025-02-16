@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/15 21:18:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:54:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ namespace Webserv
 	void Server::listenConnection(void)
 	{
 		struct epoll_event event;
-		// TO DO: Later on, try make eventList a buffer in HEAP and multiply a base value
+		// TO DO: Lat er on, try make eventList a buffer in HEAP and multiply a base value
 		// by how many sockets we are going to be listening to
 		struct epoll_event eventList[50];
 		this->_epollFd = epoll_create(NUMBER_EPOLL);
@@ -203,7 +203,7 @@ namespace Webserv
 	{
 		int htmlFd = eventList.data.fd;
 		int socketFd = this->_htmlFdSockPair[htmlFd]->getSocketFd();
-		long size = this->_htmlFdSockPair[htmlFd]->getSize();
+		long size = this->_htmlFdSockPair[htmlFd]->getRequest().getResourceData().size;
 		char *buffer = new char[size + 1];
 		// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
 		read(eventList.data.fd, buffer, size);
@@ -223,8 +223,9 @@ namespace Webserv
 	{
 		std::cout << "Time to write to the client" << std::endl;
 		std::stringstream format;
+		const Request req = this->_sockFdHtmlPair[eventList.data.fd]->getRequest();
 
-		format << "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length:" << this->_sockFdHtmlPair[eventList.data.fd]->getSize() << "\r\n"
+		format << "HTTP/1.1 " << req.getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << this->_sockFdHtmlPair[eventList.data.fd]->getSize() << "\r\n"
 			   << "\r\n"
 			   << (std::string)this->_sockFdHtmlPair[eventList.data.fd]->getContent();
 

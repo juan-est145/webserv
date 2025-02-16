@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HtmlFile.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:09:48 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/11 17:53:10 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:42:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace Webserv
         long _size;
         const Request rq;
         std::string _content;
-        void execPy(int pipeFd[2], std::string &path); // This is a temporal name
+        void execPy(int pipeFd[2], const std::string &path); // This is a temporal name
         bool fileExits(const std::string &path);
 
     public:
@@ -56,6 +56,7 @@ namespace Webserv
         void setContent(const char *buffer);
         long getSize(void) const;
         int getSocketFd(void) const;
+        const Request &getRequest(void) const;
         class HtmlFileException : std::exception
 		{
 		public:
