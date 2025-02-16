@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/16 18:43:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:57:27 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ namespace Webserv
     {
         
         this->_socketFd = -1;
-        this->_size = -1;
         this->_content = -1;
     }
 
@@ -30,7 +29,6 @@ namespace Webserv
     HtmlFile::HtmlFile(const Request &rq): rq(rq)
     {
         this->_socketFd = -1;
-        this->_size = -1;
         this->_content = -1;
     }
 
@@ -39,7 +37,6 @@ namespace Webserv
         if (this != &other)
         {
             this->_socketFd = other._socketFd;
-            this->_size = other._size;
             this->_content = other._content;
         }
         return *this;
@@ -77,19 +74,7 @@ namespace Webserv
             throw HtmlFile::HtmlFileException();
         return (pipeFd[PIPE_READ]);
     }
-
-    bool HtmlFile::fileExits(const std::string &path)
-    {
-        // TO DO: Check if I can open a file or not
-        struct stat fileStat;
-
-        if (stat(path.c_str(), &fileStat) == -1)
-            return (false);
-        if (!S_ISREG(fileStat.st_mode))
-            return (false);
-        this->_size = fileStat.st_size;
-        return (true);
-    }
+    
     /*-----------------------CHANGED-------------------------*/
     void HtmlFile::execPy(int pipeFd[2], const std::string &path)
     {
@@ -122,11 +107,6 @@ namespace Webserv
         // TO DO: Later erase this.
         std::cout << result_py << std::endl;
         exit(EXIT_FAILURE);
-    }
-    /*---------------------------------------------------------*/
-    long HtmlFile::getSize(void) const
-    {
-        return (this->_size);
     }
 
     const std::string &HtmlFile::getContent(void) const

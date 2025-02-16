@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/16 18:54:17 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/16 18:58:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ namespace Webserv
 		std::stringstream format;
 		const Request req = this->_sockFdHtmlPair[eventList.data.fd]->getRequest();
 
-		format << "HTTP/1.1 " << req.getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << this->_sockFdHtmlPair[eventList.data.fd]->getSize() << "\r\n"
+		format << "HTTP/1.1 " << req.getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << this->_sockFdHtmlPair[eventList.data.fd]->getRequest().getResourceData().size << "\r\n"
 			   << "\r\n"
 			   << (std::string)this->_sockFdHtmlPair[eventList.data.fd]->getContent();
 
