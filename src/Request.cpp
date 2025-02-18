@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 17:47:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:17:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,8 @@ namespace Webserv
 	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
 	void Request::processReq(const char *buffer)
 	{
-		
 		this->extractHeaders(buffer);
-		this->_resourceReq.obtainResource(this->_path);
-		// TO DO: Maybe later we will need to use a wrapper for the struct in request
-		// TO DO: Check the return value of fileStat
-		stat(this->_resourceData.path.c_str(), &fileStat);
-		this->_resourceData.size = fileStat.st_size;
-		this->_resourceData.resourceType = REG_FILE;
+		this->_resCode = this->_resourceReq.obtainResource(this->_path);
 	}
 
 	void Request::extractHeaders(const char *buffer)
@@ -130,8 +124,6 @@ namespace Webserv
 		}
 	}
 
-	
-
 	Request::E_Method Request::selectMethod(std::string &method)
 	{
 		std::string methods[3] = {
@@ -169,11 +161,6 @@ namespace Webserv
 	unsigned int Request::getResCode(void) const
 	{
 		return (this->_resCode);
-	}
-
-	const struct Request::S_Resource &Request::getResourceData(void) const
-	{
-		return (this->_resourceData);
 	}
 
 	void Request::setResCode(unsigned int resCode)

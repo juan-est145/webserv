@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 17:12:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:18:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ namespace Webserv
 	private:
 		int _listenFd;
 		int _epollFd;
-		std::map<int, HtmlFile *> _sockFdHtmlPair;
+		std::map<int, Request*> _clientPool;
 		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;

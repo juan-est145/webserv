@@ -15,7 +15,6 @@ namespace Webserv
 		enum E_ResourceType
 		{
 			REG_FILE,
-			BIN_FILE,
 			DIRECTORY,
 			CGI,
 		};
