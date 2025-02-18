@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/16 18:30:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 17:47:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace Webserv
 			this->_httpVers = assign._httpVers;
 			this->_path = assign._path;
 			this->_resCode = assign._resCode;
-			this->_resourceData = assign._resourceData;
+			this->_resourceReq = assign._resourceReq;
 		}
 		return *this;
 	}
@@ -44,10 +44,10 @@ namespace Webserv
 	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
 	void Request::processReq(const char *buffer)
 	{
-		struct stat fileStat;
+		
 		this->extractHeaders(buffer);
+		this->_resourceReq.obtainResource(this->_path);
 		// TO DO: Maybe later we will need to use a wrapper for the struct in request
-		this->_resourceData.path = this->mapUriToResource();
 		// TO DO: Check the return value of fileStat
 		stat(this->_resourceData.path.c_str(), &fileStat);
 		this->_resourceData.size = fileStat.st_size;
@@ -130,17 +130,7 @@ namespace Webserv
 		}
 	}
 
-	std::string Request::mapUriToResource(void)
-	{
-		// TO DO: Once we have a working configuration file, we should use that information instead
-		this->_resCode = 200;
-		if (this->_path == "/")
-			return ("./html/index.html");
-		else if (this->_path == "/upload")
-			return ("./html/upload.html");
-		this->_resCode = 404;
-		return ("./html/error404.html");
-	}
+	
 
 	Request::E_Method Request::selectMethod(std::string &method)
 	{

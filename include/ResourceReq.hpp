@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <string>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fstream>
 
 namespace Webserv
 {
@@ -19,6 +22,7 @@ namespace Webserv
 		ResourceReq();
 		ResourceReq(const ResourceReq &copy);
 		ResourceReq &operator=(const ResourceReq &assign);
+		int obtainResource(const std::string &uri);
 		std::string getPath(void) const;
 		std::string getContent(void) const;
 		void setContent(const std::string &_content);
@@ -26,11 +30,12 @@ namespace Webserv
 		~ResourceReq();
 
 	private:
-		enum E_ResourceType;
 		std::string _path;
 		std::string _content;
 		long _size;
 		enum E_ResourceType _resourceType;
+		int mapUriToResource(const std::string &uri);
+		void readResource(void);
 	};
 }
 

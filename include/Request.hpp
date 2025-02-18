@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 17:28:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 17:48:47 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include <map>
 #include <queue>
 #include <exception>
-#include <sys/stat.h>
 #include "Logger.hpp"
 #include "ResourceReq.hpp"
 
@@ -64,7 +63,6 @@ namespace Webserv
 		void extractHeaders(const char *buffer);
 		void extractReqHead(std::queue<std::string> &headers);
 		void extractFirstHead(std::string &line);
-		std::string mapUriToResource(void);
 		enum E_Method selectMethod(std::string &method);
 	};
 }
