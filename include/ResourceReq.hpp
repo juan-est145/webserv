@@ -23,7 +23,7 @@ namespace Webserv
 		ResourceReq &operator=(const ResourceReq &assign);
 		int obtainResource(const std::string &uri);
 		std::string getPath(void) const;
-		std::string getContent(void) const;
+		const std::string &getContent(void) const;
 		void setContent(const std::string &_content);
 		long getSize(void) const;
 		~ResourceReq();

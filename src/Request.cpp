@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 18:17:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:31:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,16 @@ namespace Webserv
 		this->_path = "";
 		this->_httpVers = "";
 		this->_resCode = 200;
+		this->_socketFd = -1;
+	}
+
+	Request::Request(int socketFd)
+	{
+		this->_method = UNKNOWN;
+		this->_path = "";
+		this->_httpVers = "";
+		this->_resCode = 200;
+		this->_socketFd = socketFd;
 	}
 
 	Request::Request(const Request &copy)
@@ -161,6 +171,16 @@ namespace Webserv
 	unsigned int Request::getResCode(void) const
 	{
 		return (this->_resCode);
+	}
+
+	long Request::getResourceSize(void) const
+	{
+		return (this->_resourceReq.getSize());
+	}
+
+	const std::string &Request::getResourceContent(void) const
+	{
+		return (this->_resourceReq.getContent());
 	}
 
 	void Request::setResCode(unsigned int resCode)

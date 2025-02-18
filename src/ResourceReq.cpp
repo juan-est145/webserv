@@ -1,5 +1,4 @@
-#include "ResourceReq.hpp"
-
+#include "../include/ResourceReq.hpp"
 namespace Webserv
 {
 	// TO DO: Later on we need a public function that takes as an argument the type of verb of the request
@@ -8,6 +7,7 @@ namespace Webserv
 		this->_path = "";
 		this->_content = "";
 		this->_size = 0;
+		this->_resourceType = ResourceReq::REG_FILE;
 	}
 
 	ResourceReq::ResourceReq(const ResourceReq &copy)
@@ -22,6 +22,7 @@ namespace Webserv
 			this->_path = assign._path;
 			this->_content = assign._content;
 			this->_size = assign._size;
+			this->_resourceType = ResourceReq::REG_FILE;
 		}
 		return *this;
 	}
@@ -66,10 +67,11 @@ namespace Webserv
 		std::ifstream resource;
 		char *buffer = NULL;
 
-		resource.open(this->_path, std::ios::in);
+		resource.open(this->_path.c_str(), std::ios::in);
 		buffer = new char[this->_size  + 1];
 		// TO DO: Check that resource is open and throw exception if it is not
 		resource.read(buffer, this->_size);
+		buffer[this->_size] = '\0';
 		this->_content = buffer;
 		delete[] buffer;
 	}
@@ -79,7 +81,7 @@ namespace Webserv
 		return this->_path;
 	}
 
-	std::string ResourceReq::getContent(void) const
+	const std::string &ResourceReq::getContent(void) const
 	{
 		return this->_content;
 	}

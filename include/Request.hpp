@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 17:48:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ namespace Webserv
 		
 		
 		Request(void);
+		Request(int socketFd);
 		Request(const Request &copy);
 		Request &operator=(const Request &assign);
 		void processReq(const char *buffer);
@@ -44,6 +45,8 @@ namespace Webserv
 		const std::string &getPath(void) const;
 		const std::string &getHttpVers(void) const;
 		unsigned int getResCode(void) const;
+		long getResourceSize(void) const;
+		const std::string &getResourceContent(void) const;
 		void setResCode(unsigned int resCode);
 		const struct S_Resource &getResourceData(void) const;
 		class RequestException : std::exception
@@ -55,6 +58,7 @@ namespace Webserv
 
 	private:
 		std::map<std::string, std::string> _reqHeader;
+		int _socketFd;
 		enum E_Method _method;
 		std::string _path;
 		std::string _httpVers;
