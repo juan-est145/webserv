@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/16 18:29:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/18 17:28:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <exception>
 #include <sys/stat.h>
 #include "Logger.hpp"
+#include "ResourceReq.hpp"
 
 namespace Webserv
 {
@@ -33,19 +34,7 @@ namespace Webserv
 			DELETE = 2,
 			UNKNOWN = 3,
 		};
-		enum E_ResourceType
-		{
-			REG_FILE,
-			BIN_FILE,
-			DIRECTORY,
-			CGI,
-		};
-		struct S_Resource
-		{
-			std::string path;
-			long size;
-			enum E_ResourceType resourceType;
-		};
+		
 		
 		Request(void);
 		Request(const Request &copy);
@@ -71,7 +60,7 @@ namespace Webserv
 		std::string _path;
 		std::string _httpVers;
 		unsigned int _resCode;
-		struct S_Resource _resourceData;
+		ResourceReq _resourceReq;
 		void extractHeaders(const char *buffer);
 		void extractReqHead(std::queue<std::string> &headers);
 		void extractFirstHead(std::string &line);
