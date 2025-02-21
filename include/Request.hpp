@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 18:30:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:12:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace Webserv
 		std::string _httpVers;
 		unsigned int _resCode;
 		ResourceReq _resourceReq;
-		void extractHeaders(const char *buffer);
+		void extractHeaders(std::string &buffer);
 		void extractReqHead(std::queue<std::string> &headers);
 		void extractFirstHead(std::string &line);
 		enum E_Method selectMethod(std::string &method);

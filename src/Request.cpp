@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 18:31:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:21:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,39 @@ namespace Webserv
 	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
 	void Request::processReq(const char *buffer)
 	{
-		this->extractHeaders(buffer);
+		std::string strBuff(buffer);
+
+		this->extractHeaders(strBuff);
 		this->_resCode = this->_resourceReq.obtainResource(this->_path);
 	}
 
-	void Request::extractHeaders(const char *buffer)
+	void Request::extractHeaders(std::string &buffer)
 	{
-		std::string reqHeader(buffer);
-		this->extractFirstHead(reqHeader);
+		this->extractFirstHead(buffer);
 		std::string deli = "\r\n";
 		std::queue<std::string> headers;
-		std::size_t pos = reqHeader.find(deli);
+		std::size_t pos = buffer.find(deli);
 
 		// TO DO: Implement body extraction for POST and DELETE requests. Might need to change the extraction
 		// algorithm. Also set a 400 response for GET requests with a body.
-		while (pos != std::string::npos)
+		try
 		{
-			if (reqHeader.substr(0, pos).size() > 0)
-				headers.push(reqHeader.substr(0, pos));
-			reqHeader.erase(0, pos + deli.length());
-			this->extractReqHead(headers);
-			pos = reqHeader.find(deli);
+			while (pos != std::string::npos && buffer.substr(0, 2) != "\r\n")
+			{
+				if (buffer.substr(0, pos).size() > 0)
+					headers.push(buffer.substr(0, pos));
+				buffer.erase(0, pos + deli.length());
+				this->extractReqHead(headers);
+				pos = buffer.find(deli);
+			}
 		}
+		catch (const std::out_of_range &e)
+		{
+			this->_resCode = 400;
+			buffer = "";
+			return;
+		}
+		buffer = buffer.substr(2);
 	}
 
 	void Request::extractReqHead(std::queue<std::string> &headers)
