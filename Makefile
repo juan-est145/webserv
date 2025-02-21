@@ -10,6 +10,7 @@ $(SRC-PATH)/Logger.cpp\
 $(SRC-PATH)/Request.cpp\
 $(SRC-PATH)/AuxFunc.cpp\
 $(SRC-PATH)/ResourceReq.cpp\
+$(SRC-PATH)/PostUpload.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -19,6 +20,7 @@ $(HEADER-PATH)/Logger.hpp\
 $(HEADER-PATH)/Request.hpp\
 $(HEADER-PATH)/AuxFunc.hpp\
 $(HEADER-PATH)/ResourceReq.hpp\
+$(HEADER-PATH)/PostUpload.hpp\
 
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
