@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 11:10:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:38:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace Webserv
 		if (this->_method == POST)
 		{
 			// TO DO: Make sure to later validate that the fields being passed exist
-			PostUpload upload(this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
+			PostUpload upload(this->_reqBody ,this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
 			upload.uploadFile();
 		}
 		this->_resCode = this->_resourceReq.obtainResource(this->_path);

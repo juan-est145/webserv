@@ -9,6 +9,7 @@ namespace Webserv
 	class PostUpload
 	{
 	private:
+		std::string _body;
 		std::string _contentType;
 		long _contentLength;
 		std::string _accept;
@@ -17,7 +18,7 @@ namespace Webserv
 	public:
 		PostUpload();
 		PostUpload(const PostUpload &copy);
-		PostUpload(std::string contentType, long contentLength, std::string accept);
+		PostUpload(std::string body, std::string contentType, long contentLength, std::string accept);
 		PostUpload &operator=(const PostUpload &assign);
 		void uploadFile(void);
 		const std::string &getContentType(void) const;

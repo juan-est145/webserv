@@ -4,13 +4,15 @@ namespace Webserv
 {
 	PostUpload::PostUpload(void)
 	{
+		this->_body = "";
 		this->_contentType = "";
 		this->_contentLength = 0;
 		this->_accept = "";
 	}
 
-	PostUpload::PostUpload(std::string contentType, long contentLength, std::string accept)
+	PostUpload::PostUpload(std::string body ,std::string contentType, long contentLength, std::string accept)
 	{
+		this->_body = body;
 		this->_contentType = contentType;
 		this->_contentLength = contentLength;
 		this->_accept = accept;
@@ -25,6 +27,7 @@ namespace Webserv
 	{
 		if (this != &assign)
 		{
+			this->_body = assign._body;
 			this->_contentType = assign._contentType;
 			this->_contentLength = assign._contentLength;
 			this->_accept = assign._accept;
