@@ -32,6 +32,11 @@ namespace Webserv
 		return *this;
 	}
 
+	void PostUpload::uploadFile(void)
+	{
+		std::cout << "Nothing for now lol" << std::endl;
+	}
+
 	const std::string &PostUpload::getContentType(void) const
 	{
 		return this->_contentType;

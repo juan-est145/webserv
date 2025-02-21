@@ -18,6 +18,7 @@ namespace Webserv
 		PostUpload(const PostUpload &copy);
 		PostUpload(std::string contentType, long contentLength, std::string accept);
 		PostUpload &operator=(const PostUpload &assign);
+		void uploadFile(void);
 		const std::string &getContentType(void) const;
 		long getContentLength(void) const;
 		const std::string &getAccept(void) const;

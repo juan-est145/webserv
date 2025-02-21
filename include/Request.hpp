@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 10:27:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:07:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@
 #include <map>
 #include <queue>
 #include <exception>
+#include <cstdlib>
 #include "Logger.hpp"
 #include "ResourceReq.hpp"
+#include "PostUpload.hpp"
 
 namespace Webserv
 {
