@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 10:21:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:28:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ namespace Webserv
 		this->_httpVers = "";
 		this->_resCode = 200;
 		this->_socketFd = -1;
+		this->_reqBody = "";
 	}
 
 	Request::Request(int socketFd)
@@ -30,6 +31,7 @@ namespace Webserv
 		this->_httpVers = "";
 		this->_resCode = 200;
 		this->_socketFd = socketFd;
+		this->_reqBody = "";
 	}
 
 	Request::Request(const Request &copy)
@@ -42,6 +44,7 @@ namespace Webserv
 		if (this != &assign)
 		{
 			this->_reqHeader = assign._reqHeader;
+			this->_reqBody = assign._reqBody;
 			this->_method = assign._method;
 			this->_httpVers = assign._httpVers;
 			this->_path = assign._path;
@@ -57,6 +60,7 @@ namespace Webserv
 		std::string strBuff(buffer);
 
 		this->extractHeaders(strBuff);
+		this->_reqBody = strBuff;
 		this->_resCode = this->_resourceReq.obtainResource(this->_path);
 	}
 

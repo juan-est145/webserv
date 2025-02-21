@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 10:12:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:27:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ namespace Webserv
 		~Request();
 
 	private:
-		std::map<std::string, std::string> _reqHeader;
 		int _socketFd;
+		std::map<std::string, std::string> _reqHeader;
+		std::string _reqBody;
 		enum E_Method _method;
 		std::string _path;
 		std::string _httpVers;
