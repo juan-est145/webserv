@@ -34,7 +34,15 @@ namespace Webserv
 
 	void PostUpload::uploadFile(void)
 	{
-		std::cout << "Nothing for now lol" << std::endl;
+		std::string delimiter = this->obtainDelimiter();
+	}
+
+	std::string PostUpload::obtainDelimiter(void)
+	{
+		// TO DO: If pos is npos handle accordingly
+		std::string delimiter = "; boundary=";
+		std::size_t pos = this->_contentType.find(delimiter);
+		return (this->_contentType.substr(pos + delimiter.length()));
 	}
 
 	const std::string &PostUpload::getContentType(void) const

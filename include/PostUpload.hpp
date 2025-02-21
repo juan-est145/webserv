@@ -12,6 +12,7 @@ namespace Webserv
 		std::string _contentType;
 		long _contentLength;
 		std::string _accept;
+		std::string obtainDelimiter(void);
 
 	public:
 		PostUpload();
