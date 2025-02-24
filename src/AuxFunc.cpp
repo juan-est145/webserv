@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 17:11:15 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/02/24 14:40:45 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace Webserv
 		return false;
 	}
 	
-	std::string urldecode2(const char *url)
+	std::string urldecode(const char *url)
 	{
 		char a, b;
 		std::string dst;
@@ -62,7 +62,7 @@ namespace Webserv
 							a -= 32;  
 						//Transform in decimal
 						if (a >= 'A')
-							a -= ('A' - 10);  // 'A' -> 10, 'B' -> 11, ..., 'F' -> 15
+							a -= ('A' - 10);
 						else
 							a -= '0';
 						//The same with the second character
