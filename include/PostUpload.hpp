@@ -14,6 +14,7 @@ namespace Webserv
 		long _contentLength;
 		std::string _accept;
 		std::string obtainDelimiter(void);
+		void processUpload(std::string &boundary);
 
 	public:
 		PostUpload();

@@ -38,6 +38,7 @@ namespace Webserv
 	void PostUpload::uploadFile(void)
 	{
 		std::string delimiter = this->obtainDelimiter();
+		this->processUpload(delimiter);
 	}
 
 	std::string PostUpload::obtainDelimiter(void)
@@ -46,6 +47,19 @@ namespace Webserv
 		std::string delimiter = "; boundary=";
 		std::size_t pos = this->_contentType.find(delimiter);
 		return (this->_contentType.substr(pos + delimiter.length()));
+	}
+
+	void PostUpload::processUpload(std::string &boundary)
+	{
+		std::string uploadContent;
+		bool boundaryFound = false;
+		std::string delimiter = "\r\n";
+		std::size_t deliPos = this->_body.find(delimiter);
+
+		this->_body.substr(0, deliPos) == "--" + boundary ? std::cout << "Todo bien" : std::cout << "Eres subnormal Juan xd";
+		this->_body.erase(0, deliPos + 2);
+		(void)uploadContent;
+		(void)boundaryFound;
 	}
 
 	const std::string &PostUpload::getContentType(void) const
