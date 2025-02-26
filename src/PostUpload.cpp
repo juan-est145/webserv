@@ -56,24 +56,17 @@ namespace Webserv
 		std::size_t endBound;
 		std::string delimiter = "\r\n";
 		std::string file;
+		std::size_t begginingIndex;
 
-		startBound = this->_body.find("--" + boundary + delimiter);
-		endBound = this->_body.find("--" + boundary + delimiter, boundary.length() + delimiter.length() + 2);
-		file = this->_body.substr(boundary.length() + delimiter.length() + 2, endBound);
+		startBound = this->_body.find("--" + boundary);
+		endBound = this->_body.find("--" + boundary, 1);
+		begginingIndex = boundary.length() + delimiter.length() + 2;
+		file = this->_body.substr(begginingIndex, endBound - begginingIndex);
+		this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
 		// TO DO: Implement better error handling
 		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
 			exit(EXIT_FAILURE);
-		(void)file;
-		(void)startBound;
-		/*std::string uploadContent;
-		bool boundaryFound = false;
-		std::string delimiter = "\r\n";
-		std::size_t deliPos = this->_body.find(delimiter);
-
-		this->_body.substr(0, deliPos) == "--" + boundary ? std::cout << "Todo bien" : std::cout << "Eres subnormal Juan xd";
-		this->_body.erase(0, deliPos + 2);
-		(void)uploadContent;
-		(void)boundaryFound;*/
+		
 	}
 
 	const std::string &PostUpload::getContentType(void) const
