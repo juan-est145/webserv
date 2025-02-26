@@ -57,6 +57,7 @@ namespace Webserv
 		std::string delimiter = "\r\n";
 		std::string file;
 		std::size_t begginingIndex;
+		std::map<std::string, std::string> metadata;
 
 		startBound = this->_body.find("--" + boundary);
 		endBound = this->_body.find("--" + boundary, 1);
@@ -66,7 +67,24 @@ namespace Webserv
 		// TO DO: Implement better error handling
 		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
 			exit(EXIT_FAILURE);
-		
+		this->extractMetadata(metadata, file);
+	}
+
+	void PostUpload::extractMetadata(std::map<std::string, std::string> &headers, std::string &body)
+	{
+		std::string delimiter = "\r\n";
+		std::size_t newLinePos;
+		std::size_t separatorPos;
+
+		// TO DO: Check that we don't get npos in the separators pos
+		while (body.substr(0, 2) != delimiter)
+		{
+			newLinePos = body.find(delimiter);
+			separatorPos = body.find(":");
+			headers[body.substr(0, separatorPos)] = body.substr(separatorPos + 2, newLinePos - separatorPos);
+			body.erase(0, newLinePos + delimiter.length());
+		}
+		body.erase(0, 2);
 	}
 
 	const std::string &PostUpload::getContentType(void) const
