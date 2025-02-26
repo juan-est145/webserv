@@ -68,6 +68,7 @@ namespace Webserv
 		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
 			exit(EXIT_FAILURE);
 		this->extractMetadata(metadata, file);
+		this->downloadFile(metadata, file);
 	}
 
 	void PostUpload::extractMetadata(std::map<std::string, std::string> &headers, std::string &body)
@@ -85,6 +86,35 @@ namespace Webserv
 			body.erase(0, newLinePos + delimiter.length());
 		}
 		body.erase(0, 2);
+	}
+
+	void PostUpload::downloadFile(std::map<std::string, std::string> &headers, std::string &body)
+	{
+		std::size_t delimiterPos;
+		std::string delimiter = "filename=";
+		std::string fileNameField;
+		std::string newLine = "\r\n";
+		std::size_t newLinePos;
+		
+		// TO DO: Check the value of delimiterPos
+		delimiterPos = headers["Content-Disposition"].find(delimiter);
+		newLinePos = headers["Content-Disposition"].find(newLine);
+		fileNameField = headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
+		if (fileNameField.find(";") != std::string::npos)
+		{
+			// TO DO: Implement something here
+		}
+		std::ofstream document(fileNameField.substr(0, fileNameField.length() - 2).c_str(), std::ios::out);
+		if (document.is_open())
+		{
+			document << body.substr(0, body.length() - 2);
+			document.close();
+		}
+		else
+		{
+			// TO DO: Implement this correctly
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	const std::string &PostUpload::getContentType(void) const

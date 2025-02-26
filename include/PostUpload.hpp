@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdlib>
 #include <map>
+#include <fstream>
 
 namespace Webserv
 {
@@ -18,6 +19,7 @@ namespace Webserv
 		std::string obtainDelimiter(void);
 		void processUpload(std::string &boundary);
 		void extractMetadata(std::map<std::string, std::string> &headers, std::string &body);
+		void downloadFile(std::map<std::string, std::string> &headers, std::string &body);
 
 	public:
 		PostUpload();
