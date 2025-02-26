@@ -60,6 +60,9 @@ namespace Webserv
 		startBound = this->_body.find("--" + boundary + delimiter);
 		endBound = this->_body.find("--" + boundary + delimiter, boundary.length() + delimiter.length() + 2);
 		file = this->_body.substr(boundary.length() + delimiter.length() + 2, endBound);
+		// TO DO: Implement better error handling
+		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
+			exit(EXIT_FAILURE);
 		(void)file;
 		(void)startBound;
 		/*std::string uploadContent;
