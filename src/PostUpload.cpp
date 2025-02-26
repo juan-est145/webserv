@@ -10,7 +10,7 @@ namespace Webserv
 		this->_accept = "";
 	}
 
-	PostUpload::PostUpload(std::string body ,std::string contentType, long contentLength, std::string accept)
+	PostUpload::PostUpload(std::string body, std::string contentType, long contentLength, std::string accept)
 	{
 		this->_body = body;
 		this->_contentType = contentType;
