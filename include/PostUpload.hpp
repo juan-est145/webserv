@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <map>
 #include <fstream>
+#include <exception>
 
 namespace Webserv
 {
@@ -30,6 +31,16 @@ namespace Webserv
 		const std::string &getContentType(void) const;
 		long getContentLength(void) const;
 		const std::string &getAccept(void) const;
+		class BodyParseError : std::exception
+		{
+			public:
+				virtual const char *what(void) const throw();
+		};
+		class UploadError : std::exception
+		{
+			public:
+				virtual const char *what(void) const throw();
+		};
 		~PostUpload();
 	};
 }

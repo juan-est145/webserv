@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 11:38:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:56:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,19 @@ namespace Webserv
 		{
 			// TO DO: Make sure to later validate that the fields being passed exist
 			PostUpload upload(this->_reqBody ,this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
-			upload.uploadFile();
+			try
+			{
+				upload.uploadFile();
+			}
+			catch(const Webserv::PostUpload::BodyParseError& e)
+			{
+				this->_resCode = 400;
+			}
+			catch(const Webserv::PostUpload::UploadError& e)
+			{
+				this->_resCode = 500;
+			}
+			return;
 		}
 		this->_resCode = this->_resourceReq.obtainResource(this->_path);
 	}

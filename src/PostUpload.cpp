@@ -43,9 +43,10 @@ namespace Webserv
 
 	std::string PostUpload::obtainDelimiter(void)
 	{
-		// TO DO: If pos is npos handle accordingly
 		std::string delimiter = "; boundary=";
 		std::size_t pos = this->_contentType.find(delimiter);
+		if (pos == std::string::npos)
+			throw Webserv::PostUpload::BodyParseError();
 		return (this->_contentType.substr(pos + delimiter.length()));
 	}
 
@@ -64,9 +65,9 @@ namespace Webserv
 		begginingIndex = boundary.length() + delimiter.length() + 2;
 		file = this->_body.substr(begginingIndex, endBound - begginingIndex);
 		this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
-		// TO DO: Implement better error handling
+		// TO DO: Test if we throw exception when we upload multiple files at the same time
 		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
-			exit(EXIT_FAILURE);
+			throw Webserv::PostUpload::BodyParseError();
 		this->extractMetadata(metadata, file);
 		this->downloadFile(metadata, file);
 	}
@@ -77,11 +78,12 @@ namespace Webserv
 		std::size_t newLinePos;
 		std::size_t separatorPos;
 
-		// TO DO: Check that we don't get npos in the separators pos
 		while (body.substr(0, 2) != delimiter)
 		{
 			newLinePos = body.find(delimiter);
 			separatorPos = body.find(":");
+			if (newLinePos == std::string::npos || separatorPos == std::string::npos)
+				throw Webserv::PostUpload::BodyParseError();
 			headers[body.substr(0, separatorPos)] = body.substr(separatorPos + 2, newLinePos - separatorPos);
 			body.erase(0, newLinePos + delimiter.length());
 		}
@@ -95,26 +97,31 @@ namespace Webserv
 		std::string fileNameField;
 		std::string newLine = "\r\n";
 		std::size_t newLinePos;
-		
-		// TO DO: Check the value of delimiterPos
+
 		delimiterPos = headers["Content-Disposition"].find(delimiter);
 		newLinePos = headers["Content-Disposition"].find(newLine);
+		if (delimiterPos == std::string::npos || newLinePos == std::string::npos)
+			throw Webserv::PostUpload::BodyParseError();
 		fileNameField = headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
 		if (fileNameField.find(";") != std::string::npos)
 		{
 			// TO DO: Implement something here
 		}
 		std::ofstream document(fileNameField.substr(0, fileNameField.length() - 2).c_str(), std::ios::out);
-		if (document.is_open())
-		{
-			document << body.substr(0, body.length() - 2);
-			document.close();
-		}
-		else
-		{
-			// TO DO: Implement this correctly
-			exit(EXIT_FAILURE);
-		}
+		if (!document.is_open())
+			throw Webserv::PostUpload::UploadError();
+		document << body.substr(0, body.length() - 2);
+		document.close();
+	}
+
+	const char *PostUpload::BodyParseError::what(void) const throw()
+	{
+		return ("Invalid body found in this POST request");
+	}
+
+	const char *PostUpload::UploadError::what(void) const throw()
+	{
+		return ("Could not upload file to the server");
 	}
 
 	const std::string &PostUpload::getContentType(void) const
