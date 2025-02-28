@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 14:27:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 14:48:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ namespace Webserv
 				{
 					expectedSize = std::atol(conLenKey->second.c_str());
 					// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
-					while (bodySize != expectedSize)
+					while (bodySize < expectedSize)
 					{
 						// TO DO: In order to avoid lagging behind with 'big download requests', we need 
 						// to reserve enough space in the body property of request. Should use the value given by conf
