@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 16:38:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:22:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,19 @@ namespace Webserv
 			return (false);
 		}
 		return (true);
+	}
+
+	void AuxFunc::handleRecvError(struct epoll_event &eventConf, struct epoll_event &eventList, ssize_t bufRead, int epollFd)
+	{
+		eventConf.events = EPOLLIN;
+		eventConf.data.fd = eventList.data.fd;
+		if (bufRead == -1 || epoll_ctl(epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
+		{
+			close(epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Webserv::Server::ServerException();
+		}
+		close(eventList.data.fd);
 	}
 
 	AuxFunc::~AuxFunc(void) {}

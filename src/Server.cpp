@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 12:44:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:40:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,26 +175,42 @@ namespace Webserv
 		// TO DO: Possibly will need to add a timer to listening to timeout connection
 		char buffer[1024];
 		std::cout << "Reading from client " << eventList.data.fd << std::endl;
+		// If later bufRead  is less than size of buffer, then we now for a fact that we have read everything.
+		// Try to implement later onto to the logic of the program.
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
 		Request *req = new Request(eventList.data.fd);
-		req->processReq(buffer);
+		req->readReq(buffer);
 		if (bufRead <= 0)
-		{
-			eventConf.events = EPOLLIN;
-			eventConf.data.fd = eventList.data.fd;
-			if (bufRead == -1 || epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, eventList.data.fd, &eventConf) == -1)
-			{
-				close(this->_epollFd);
-				Webserv::Logger::errorLog(errno, strerror, false);
-				throw Server::ServerException();
-			}
-			close(eventList.data.fd);
-		}
+			AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
 		else
 		{
+			// TO DO: Work with transfer encoding chunked later on
+			if (req->getMethod() == Request::POST)
+			{
+				std::size_t bodySize = req->getReqBody().size();
+				std::size_t expectedSize;
+				const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
+				if (conLenKey == req->getReqHeader().end())
+					req->setResCode(400);
+				else
+				{
+					expectedSize = std::atol(conLenKey->second.c_str());
+					// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
+					while (bodySize != expectedSize)
+					{
+						memset(buffer, '\0', sizeof(buffer));
+						ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+						if (bufRead <= 0)
+							AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
+						std::string body(buffer);
+						bodySize = req->setReqBody(body);
+					}
+				}
+			}
+			req->handleReq();
 			this->_clientPool[eventList.data.fd] = req;
 			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, eventConf))
-				throw Server::ServerException();
+				throw Webserv::Server::ServerException();
 		}
 	}
 

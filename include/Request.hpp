@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:00:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:40:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ namespace Webserv
 			DELETE = 2,
 			UNKNOWN = 3,
 		};
-		
-		
+		typedef std::map<std::string, std::string>::const_iterator T_reqHeadIter;		
 		Request(void);
 		Request(int socketFd);
 		Request(const Request &copy);
 		Request &operator=(const Request &assign);
-		void processReq(const char *buffer);
+		void readReq(const char *buffer);
+		void handleReq(void);
 		const std::map<std::string, std::string> &getReqHeader(void) const;
 		enum E_Method getMethod(void) const;
 		const std::string &getPath(void) const;
@@ -51,6 +51,7 @@ namespace Webserv
 		long getResourceSize(void) const;
 		const std::string &getResourceContent(void) const;
 		void setResCode(unsigned int resCode);
+		std::size_t setReqBody(std::string &body);
 		class RequestException : std::exception
 		{
 			public:

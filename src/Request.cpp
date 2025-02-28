@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:02:10 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:39:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ namespace Webserv
 	}
 
 	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
-	void Request::processReq(const char *buffer)
+	void Request::readReq(const char *buffer)
 	{
 		std::string strBuff(buffer);
 
@@ -80,6 +80,29 @@ namespace Webserv
 		// 	return;
 		// }
 		// this->_resCode = this->_resourceReq.obtainResource(this->_path);
+	}
+
+	void Request::handleReq(void)
+	{
+		if (this->_method == POST)
+		{
+			// TO DO: Make sure to later validate that the fields being passed exist
+			PostUpload upload(this->_reqBody ,this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
+			try
+			{
+				upload.uploadFile();
+			}
+			catch(const Webserv::PostUpload::BodyParseError& e)
+			{
+				this->_resCode = 400;
+			}
+			catch(const Webserv::PostUpload::UploadError& e)
+			{
+				this->_resCode = 500;
+			}
+			return;
+		}
+		this->_resCode = this->_resourceReq.obtainResource(this->_path);
 	}
 
 	void Request::extractHeaders(std::string &buffer)
@@ -226,6 +249,12 @@ namespace Webserv
 		if (resCode < 100 || resCode > 511)
 			throw Webserv::Request::RequestException();
 		this->_resCode = resCode;
+	}
+
+	std::size_t Request::setReqBody(std::string &body)
+	{
+		this->_reqBody.length() == 0 ? this->_reqBody = body : this->_reqBody + body;
+		return (this->_reqBody.length());
 	}
 
 	const char *Request::RequestException::what(void) const throw()
