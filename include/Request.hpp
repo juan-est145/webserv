@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/21 11:07:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:00:47 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ namespace Webserv
 		const std::string &getPath(void) const;
 		const std::string &getHttpVers(void) const;
 		unsigned int getResCode(void) const;
+		const std::string &getReqBody(void)const;
 		long getResourceSize(void) const;
 		const std::string &getResourceContent(void) const;
 		void setResCode(unsigned int resCode);
-		const struct S_Resource &getResourceData(void) const;
 		class RequestException : std::exception
 		{
 			public:
