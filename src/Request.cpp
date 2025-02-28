@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:48:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 14:25:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,7 +253,7 @@ namespace Webserv
 
 	std::size_t Request::setReqBody(std::string &body)
 	{
-		this->_reqBody.length() == 0 ? this->_reqBody = body : this->_reqBody += body;
+		this->_reqBody.length() == 0 ? this->_reqBody = body : this->_reqBody.append(body);
 		return (this->_reqBody.length());
 	}
 
