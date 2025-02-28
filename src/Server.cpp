@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 14:48:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:42:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ namespace Webserv
 		// If later bufRead  is less than size of buffer, then we now for a fact that we have read everything.
 		// Try to implement later onto to the logic of the program.
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+		buffer[bufRead] = '\0';
 		Request *req = new Request(eventList.data.fd);
 		req->readReq(buffer);
 		if (bufRead <= 0)
