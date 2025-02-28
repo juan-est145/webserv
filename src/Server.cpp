@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:40:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/02/28 13:53:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,8 @@ namespace Webserv
 					while (bodySize != expectedSize)
 					{
 						memset(buffer, '\0', sizeof(buffer));
-						ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+						bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+						buffer[bufRead] = '\0';
 						if (bufRead <= 0)
 							AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
 						std::string body(buffer);
