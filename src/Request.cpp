@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 14:43:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:38:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,9 @@ namespace Webserv
 	}
 
 	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
-	void Request::readReq(const char *buffer)
+	void Request::readReq(const char *buffer, size_t bufSize)
 	{
-		std::string strBuff(buffer);
+		std::string strBuff(buffer, bufSize);
 
 		this->extractHeaders(strBuff);
 		this->_reqBody = strBuff;

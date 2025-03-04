@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:40:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:38:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace Webserv
 		Request(int socketFd);
 		Request(const Request &copy);
 		Request &operator=(const Request &assign);
-		void readReq(const char *buffer);
+		void readReq(const char *buffer, size_t bufSize);
 		void handleReq(void);
 		const std::map<std::string, std::string> &getReqHeader(void) const;
 		enum E_Method getMethod(void) const;

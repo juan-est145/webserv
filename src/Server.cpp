@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 17:42:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:38:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,96 +177,100 @@ namespace Webserv
 		std::cout << "Reading from client " << eventList.data.fd << std::endl;
 		// If later bufRead  is less than size of buffer, then we now for a fact that we have read everything.
 		// Try to implement later onto to the logic of the program.
-		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
+		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
+		if (bufRead <= 0)
+		{
+			AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
+			return;
+		}
 		buffer[bufRead] = '\0';
 		Request *req = new Request(eventList.data.fd);
-		req->readReq(buffer);
-		if (bufRead <= 0)
-			AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
-		else
+		req->readReq(buffer, bufRead);
+		// TO DO: Work with transfer encoding chunked later on
+		if (req->getMethod() == Request::POST)
 		{
-			// TO DO: Work with transfer encoding chunked later on
-			if (req->getMethod() == Request::POST)
+			std::size_t bodySize = req->getReqBody().size();
+			std::size_t expectedSize;
+			const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
+			if (conLenKey == req->getReqHeader().end())
+				req->setResCode(400);
+			else
 			{
-				std::size_t bodySize = req->getReqBody().size();
-				std::size_t expectedSize;
-				const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
-				if (conLenKey == req->getReqHeader().end())
-					req->setResCode(400);
-				else
+				expectedSize = std::atol(conLenKey->second.c_str());
+				// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
+				while (bodySize < expectedSize)
 				{
-					expectedSize = std::atol(conLenKey->second.c_str());
-					// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
-					while (bodySize < expectedSize)
+					// TO DO: In order to avoid lagging behind with 'big download requests', we need
+					// to reserve enough space in the body property of request. Should use the value given by conf
+					memset(buffer, '\0', sizeof(buffer));
+					bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
+					if (bufRead <= 0)
 					{
-						// TO DO: In order to avoid lagging behind with 'big download requests', we need 
-						// to reserve enough space in the body property of request. Should use the value given by conf
-						memset(buffer, '\0', sizeof(buffer));
-						bufRead = recv(eventList.data.fd, buffer, sizeof(buffer), 0);
-						buffer[bufRead] = '\0';
-						if (bufRead <= 0)
-							AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
-						std::string body(buffer);
-						bodySize = req->setReqBody(body);
+						AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
+						return;
 					}
+					buffer[bufRead] = '\0';
+					std::string body(buffer, bufRead);
+					bodySize = req->setReqBody(body);
 				}
 			}
-			req->handleReq();
-			this->_clientPool[eventList.data.fd] = req;
-			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, eventConf))
-				throw Webserv::Server::ServerException();
 		}
+		req->handleReq();
+		this->_clientPool[eventList.data.fd] = req;
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, eventConf))
+			throw Webserv::Server::ServerException();
 	}
 
-	// Later on, this might be useful for CGI
-	// void Server::readFile(struct epoll_event &eventList, struct epoll_event &eventConf)
-	// {
-	// 	int htmlFd = eventList.data.fd;
-	// 	int socketFd = this->_htmlFdSockPair[htmlFd]->getSocketFd();
-	// 	long size = this->_htmlFdSockPair[htmlFd]->getRequest().getResourceData().size;
-	// 	char *buffer = new char[size + 1];
-	// 	// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
-	// 	read(eventList.data.fd, buffer, size);
-	// 	buffer[size] = '\0';
-	// 	this->_htmlFdSockPair[htmlFd]->setContent(buffer);
-	// 	delete[] buffer;
-	// 	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
-	// 		throw Server::ServerException();
-	// 	this->_sockFdHtmlPair[socketFd] = this->_htmlFdSockPair[htmlFd];
-	// 	this->_htmlFdSockPair.erase(htmlFd);
-	// 	close(eventList.data.fd);
-	// 	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLOUT, socketFd, eventConf))
-	// 		throw Server::ServerException();
-	// }
 
-	void Server::writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
-	{
-		std::cout << "Time to write to the client " << eventList.data.fd << std::endl;
-		std::stringstream format;
-		const Request *req = this->_clientPool[eventList.data.fd];
+// Later on, this might be useful for CGI
+// void Server::readFile(struct epoll_event &eventList, struct epoll_event &eventConf)
+// {
+// 	int htmlFd = eventList.data.fd;
+// 	int socketFd = this->_htmlFdSockPair[htmlFd]->getSocketFd();
+// 	long size = this->_htmlFdSockPair[htmlFd]->getRequest().getResourceData().size;
+// 	char *buffer = new char[size + 1];
+// 	// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
+// 	read(eventList.data.fd, buffer, size);
+// 	buffer[size] = '\0';
+// 	this->_htmlFdSockPair[htmlFd]->setContent(buffer);
+// 	delete[] buffer;
+// 	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
+// 		throw Server::ServerException();
+// 	this->_sockFdHtmlPair[socketFd] = this->_htmlFdSockPair[htmlFd];
+// 	this->_htmlFdSockPair.erase(htmlFd);
+// 	close(eventList.data.fd);
+// 	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLOUT, socketFd, eventConf))
+// 		throw Server::ServerException();
+// }
 
-		format << "HTTP/1.1 " << req->getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << req->getResourceSize() << "\r\n"
-			   << "\r\n"
-			   << req->getResourceContent();
+void Server::writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
+{
+	std::cout << "Time to write to the client " << eventList.data.fd << std::endl;
+	std::stringstream format;
+	const Request *req = this->_clientPool[eventList.data.fd];
 
-		std::string response = format.str();
-		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
-			Webserv::Logger::errorLog(errno, strerror, false);
-		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
-			throw Server::ServerException();
-		delete this->_clientPool[eventList.data.fd];
-		this->_clientPool.erase(eventList.data.fd);
-		close(eventList.data.fd);
-	}
+	format << "HTTP/1.1 " << req->getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << req->getResourceSize() << "\r\n"
+		   << "\r\n"
+		   << req->getResourceContent();
 
-	const char *Server::ServerException::what(void) const throw()
-	{
-		return ("The server found a problem and must stop now");
-	}
+	std::string response = format.str();
+	if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
+		Webserv::Logger::errorLog(errno, strerror, false);
+	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
+		throw Server::ServerException();
+	delete this->_clientPool[eventList.data.fd];
+	this->_clientPool.erase(eventList.data.fd);
+	close(eventList.data.fd);
+}
 
-	Server::~Server()
-	{
-		if (close(this->_listenFd) < 0)
-			Webserv::Logger::errorLog(errno, strerror, true);
-	}
+const char *Server::ServerException::what(void) const throw()
+{
+	return ("The server found a problem and must stop now");
+}
+
+Server::~Server()
+{
+	if (close(this->_listenFd) < 0)
+		Webserv::Logger::errorLog(errno, strerror, true);
+}
 }

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:10:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:29:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 #include <cstdio>
 #include <sstream>
 #include <map>
+#include <algorithm>
 #include "Logger.hpp"
 #include "AuxFunc.hpp"
 #include "Request.hpp"
