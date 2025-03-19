@@ -3,6 +3,7 @@
 
 # include "ConfigFile.hpp"
 # include "ConfigParser.hpp"
+# include "Logger.hpp"
 # include <fstream>
 # include <sstream>
 # include <string>
@@ -149,7 +150,7 @@ namespace Webserv
 			 * Checks parameters of location
 			 * @return 0 if ok, 1 if not ok
 			 */
-			int		isValidLocation(Location &location) const;
+			int		isValidLocation(Location &location);
 
 			/**
 			 * Gets listen fd
@@ -159,60 +160,61 @@ namespace Webserv
 			/**
 			 * Gets server name
 			 */
-			std::string	&getServerName() const;
+			const std::string	&getServerName() const;
 
 			/**
 			 * Gets port
 			 */
-			uint16_t	&getPort() const;
+			const uint16_t	&getPort() const;
 
 			/**
 			 * Gets host
 			 */
-			in_addr_t	&getHost() const;
+			const in_addr_t	&getHost() const;
 
 			/**
 			 * Gets client_max_body_size
 			 */
-			size_t		&getClientMaxBodySize() const;
+			const size_t		&getClientMaxBodySize() const;
 
 			/**
 			 * Gets a vector of Locations
 			 */
-			std::vector<Location>	&getLocations() const;
+			const std::vector<Location>	&getLocations() const;
 
 			/**
 			 * Gets root
 			 */
-			std::string		&getRoot() const;
+			const std::string		&getRoot() const;
 
 			/**
 			 * Gets error pages
 			 */
-			std::map<short, std::string>	&getErrorPages() const;
+			const std::map<short, std::string>
+				&getErrorPages() const;
 
 			/**
 			 * Gets index
 			 */
-			std::string		&getIndex() const;
+			const std::string		&getIndex() const;
 
 			/**
 			 * Gets autoindex
 			 */
-			bool			&getAutoindex() const;
+			const bool			&getAutoindex() const;
 
 			/**
 			 * Gets path of the error page
 			 * @throw exception if error_page doesn't exist
 			 */
-			std::string		&getPathErrorPage(short key) const;
+			const std::string	&getPathErrorPage(short key) const;
 
 			/**
 			 * Finds location by the name
 			 * @throw exception if path to location not found
 			 */
-			std::vector<Location>::iterator	getLocationKey(
-				std::string key) const;
+			const std::vector<Location>::const_iterator
+				getLocationKey(std::string key) const;
 
 			/**
 			 * Check if parameter is properly ended
@@ -224,12 +226,7 @@ namespace Webserv
 			 * Checks if there's a duplicate location
 			 * @return true if yes, false if not
 			 */
-			bool checkLocations() const;
-
-			/**
-			 *
-			 */
-			void	setupServer();
+			bool checkLocations();
 
 		public:
 			class ErrorException: public std::exception
@@ -252,6 +249,6 @@ namespace Webserv
 					virtual ~ErrorException() throw() {}
 		};
 	};
-}
+};
 
 #endif
