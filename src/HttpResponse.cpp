@@ -6,12 +6,12 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/19 18:25:22 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/20 18:23:22 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/HttpResponse.hpp"
-#include <sys/stat.h>
+
 
 namespace Webserv
 {
@@ -60,6 +60,7 @@ namespace Webserv
         << "Content-Type: " << content << "\n"
         << "Content-Length: " << contentLength << "\n\n";
         std::string header = ss.str();
+        return header;
     }
     //*************GETTERS**************//
     std::string HttpResponse::getStatus() const

@@ -10,6 +10,9 @@ $(SRC-PATH)/Logger.cpp\
 $(SRC-PATH)/Request.cpp\
 $(SRC-PATH)/AuxFunc.cpp\
 $(SRC-PATH)/ResourceReq.cpp\
+$(SRC-PATH)/HttpResponse.cpp\
+$(SRC-PATH)/ConcreteBuilder.cpp\
+$(SRC-PATH)/Director.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -19,6 +22,10 @@ $(HEADER-PATH)/Logger.hpp\
 $(HEADER-PATH)/Request.hpp\
 $(HEADER-PATH)/AuxFunc.hpp\
 $(HEADER-PATH)/ResourceReq.hpp\
+$(HEADER-PATH)/HttpResponse.hpp\
+$(HEADER-PATH)/Builder.hpp\
+$(HEADER-PATH)/ConcreteBuilder.hpp\
+$(HEADER-PATH)/Director.hpp\
 
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project

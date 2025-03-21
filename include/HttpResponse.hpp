@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/19 17:49:14 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:25:41 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <sys/stat.h>
 
 namespace Webserv
 {
