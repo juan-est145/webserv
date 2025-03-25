@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/21 12:41:45 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/24 15:21:05 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ namespace Webserv
     //CODE 404        
     void Director::BuildNotFoundResponse()
     {
-        this->builder->SetStatus("201");
+        this->builder->SetStatus("404");
         this->builder->SetContentType("htpp://localhost:3000/error404");
         this->builder->SetContentLength(getFileSize("html/error404.html"));
     }
