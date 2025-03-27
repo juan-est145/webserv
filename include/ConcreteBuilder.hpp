@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:05:43 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/18 18:34:19 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:40:33 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ namespace Webserv
             ConcreteBuilder(ConcreteBuilder &toCopy);
             ConcreteBuilder &operator=(const ConcreteBuilder& other);
             ~ConcreteBuilder();
-            void SetStatus(const std::string& status);
-            void SetContent(const std::string& type);
-            void SetContentLength(int length);
-            HttpResponse* getResponse() const;
+            void SetStatus(const std::string& status) ;
+            void SetContent(const std::string& type) ;
+            void SetContentLength(int length) ;
+            HttpResponse* getResponse() const ;
     };
 }
 

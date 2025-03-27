@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/18 19:14:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/03/27 18:47:39 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,14 +224,30 @@ namespace Webserv
 		std::cout << "Time to write to the client " << eventList.data.fd << std::endl;
 		std::stringstream format;
 		const Request *req = this->_clientPool[eventList.data.fd];
-
-		format << "HTTP/1.1 " << req->getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << req->getResourceSize() << "\r\n"
-			   << "\r\n"
-			   << req->getResourceContent();
-
-		std::string response = format.str();
+		// *----CAMBIO----//
+		HttpResponse Hresp;
+		std::string response;
+		Director director;
+		ConcreteBuilder builder;
+		director.SetBuilder(&builder);
+		
+		/* format << "HTTP/1.1 " << req->getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << req->getResourceSize() << "\r\n"
+		<< "\r\n"
+		<< req->getResourceContent(); */
+		if (req->getResCode() == 200)
+		{
+			
+			director.BuildOkResponse();
+			response = Hresp.Print();
+		}
+		else if (req->getResCode() == 404)
+		{
+			director.BuildNotFoundResponse();
+			response = Hresp.Print();
+		}
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
+		// *----------//
 		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
 			throw Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
