@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/20 15:25:41 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:16:26 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <sstream>
 #include <iostream>
 #include <sys/stat.h>
+#include "Request.hpp"
 
 namespace Webserv
 {
@@ -34,7 +35,7 @@ namespace Webserv
             HttpResponse(HttpResponse &toCopy);
             HttpResponse &operator=(const HttpResponse &other);
             ~HttpResponse();
-            std::string Print() const;
+            std::string Print(const Request *req) const;
             // Getters
             std::string getStatus() const;
             std::string getContent() const;

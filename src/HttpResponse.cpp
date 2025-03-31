@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/20 18:23:22 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:16:58 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ namespace Webserv
 {
     HttpResponse::HttpResponse(void)
     {
-        this->status = 200;
-        this->content = "htpp://localhost:3000/";
-        this->contentLength = getFileSize("../html/index.html");
+        this->status = "200";
+        this->content = "text/html";
+        this->contentLength = getFileSize("./html/index.html");
     }
 
 
@@ -53,12 +53,14 @@ namespace Webserv
     }
 
 
-    std::string HttpResponse::Print() const
+    std::string HttpResponse::Print(const Request *req) const
     {
         std::stringstream ss;
-        ss << "HTTP/1.1 " << status << "\n"
-        << "Content-Type: " << content << "\n"
-        << "Content-Length: " << contentLength << "\n\n";
+        ss << "HTTP/1.1 " << status << "\r\n"
+        << "Content-Type: " << content << "\r\n"
+        << "Content-Length: " << contentLength << "\r\n"
+        << "\r\n"
+        << req->getResourceContent();
         std::string header = ss.str();
         return header;
     }

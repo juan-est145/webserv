@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/03/27 18:47:39 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:17:56 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,14 +236,13 @@ namespace Webserv
 		<< req->getResourceContent(); */
 		if (req->getResCode() == 200)
 		{
-			
 			director.BuildOkResponse();
-			response = Hresp.Print();
+			response = Hresp.Print(req);
 		}
 		else if (req->getResCode() == 404)
 		{
 			director.BuildNotFoundResponse();
-			response = Hresp.Print();
+			response = Hresp.Print(req);
 		}
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
