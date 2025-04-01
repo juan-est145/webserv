@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/20 17:33:12 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:26:08 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ namespace Webserv
             ~Director();
             void SetBuilder(Builder *builder);
             void BuildOkResponse(); //CODE 200
-            void BuildOkUploadResponse(std::string archive, int size); //CODE 201        
+            void BuildOkUploadResponse(int size); //CODE 201        
             void BuildNotFoundResponse(); //CODE 404
         
     };

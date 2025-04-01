@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/03/31 18:17:56 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:40:06 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,8 +228,8 @@ namespace Webserv
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
-		ConcreteBuilder builder;
-		director.SetBuilder(&builder);
+		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp);
+		director.SetBuilder(builder);
 		
 		/* format << "HTTP/1.1 " << req->getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << req->getResourceSize() << "\r\n"
 		<< "\r\n"
