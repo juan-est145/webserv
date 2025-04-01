@@ -8,7 +8,7 @@
             "name": "test",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/testCgi/a.out",
+            "program": "${workspaceRoot}/webserv",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/testCgi",

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/03/04 18:29:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/01 17:07:58 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@
 #include "Logger.hpp"
 #include "AuxFunc.hpp"
 #include "Request.hpp"
+#include "Director.hpp"
+#include "ConcreteBuilder.hpp"
+#include "HttpResponse.hpp"
 
 namespace Webserv
 {

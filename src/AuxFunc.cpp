@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   AuxFunc.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/28 13:22:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:24:10 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,48 @@ namespace Webserv
 	}
 
 	AuxFunc::~AuxFunc(void) {}
+
+	bool isxdigit(char c) {
+		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))  {
+			return true;
+		}
+		return false;
+	}
+	
+	std::string urldecode(const char *url)
+	{
+		char a, b;
+		std::string dst;
+		while (*url) {
+				if ((*url == '%') &&
+					((a = url[1]) && (b = url[2])) &&
+					(isxdigit(a) && isxdigit(b))) {
+						//Convert the firts character in hexadecimal
+						if (a >= 'a')
+							a -= 32;  
+						//Transform in decimal
+						if (a >= 'A')
+							a -= ('A' - 10);
+						else
+							a -= '0';
+						//The same with the second character
+						if (b >= 'a')
+							b -= 'a' - 'A';
+						if (b >= 'A')
+							b -= ('A' - 10);
+						else
+							b -= '0';
+						//Convert the number in hexadecimal
+						dst += 16 * a + b;
+						url += 3;
+				}
+				else if (*url == '+') {
+					dst += ' ';
+					url++;
+				} else {
+					dst += *url++;
+				}
+			}
+			return dst;
+	}
 }

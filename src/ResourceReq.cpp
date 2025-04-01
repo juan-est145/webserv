@@ -45,10 +45,10 @@ namespace Webserv
 
 	int ResourceReq::mapUriToResource(const std::string &uri)
 	{
-		// TO DO: Once we have a working configuration file, we should use that information instead
+		// TODO: Once we have a working configuration file, we should use that information instead
 		int responseCode = 200;
 
-		// TO DO: Later on I need to distinguish between type of files
+		// TODO: Later on I need to distinguish between type of files
 		this->_resourceType = ResourceReq::REG_FILE;
 		if (uri == "/")
 			this->_path = "./html/index.html";
