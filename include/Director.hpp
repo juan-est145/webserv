@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/01 12:26:08 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:28:22 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ namespace Webserv
             Director &operator=(const Director& other);
             ~Director();
             void SetBuilder(Builder *builder);
-            void BuildOkResponse(); //CODE 200
+            void BuildOkResponse(const char* path); //CODE 200
             void BuildOkUploadResponse(int size); //CODE 201        
             void BuildNotFoundResponse(); //CODE 404
         

@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/01 12:38:39 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/04 17:16:57 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,25 @@ namespace Webserv
         this->builder = builder;   
     }
     //CODE 200
-    void Director::BuildOkResponse()
+    void Director::BuildOkResponse(const char* path)
     {
         builder->SetStatus("200");
         builder->SetContent("text/html");
-        builder->SetContentLength(getFileSize("chtml/index.html"));
+
+        char result[std::strlen(path) + std::strlen("html")];
+        std::strcpy(result, "html");
+        if (std::strcmp(path, "/") != 0)
+        {
+            std::strcat(result, path);
+            std::strcat(result, ".html");
+        }
+        else
+            std::strcat(result, "/index.html");
+        std::cout << result << std::endl;
+        builder->SetContentLength(getFileSize(result));
     }
     //CODE 201
-    void Director::BuildOkUploadResponse(int size)
+    void Director::BuildOkUploadResponse(int size) //toco content_length
     {
         this->builder->SetStatus("201");
         this->builder->SetContent("text/html");

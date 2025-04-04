@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/01 17:32:54 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/04 16:59:06 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,15 +253,19 @@ namespace Webserv
 		Director director;
 		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp);
 		director.SetBuilder(builder);
-		
-		/* format << "HTTP/1.1 " << req->getResCode() << " \r\nContent-Type: text/html\r\nContent-Length:" << req->getResourceSize() << "\r\n"
-		<< "\r\n"
-		<< req->getResourceContent(); */
+
+		std::cout << req->getResCode() << std::endl;
 		if (req->getResCode() == 200)
 		{
-			director.BuildOkResponse();
+			std::cout << req->getPath() << std::endl;
+			director.BuildOkResponse(req->getPath().c_str());
 			response = Hresp.Print(req);
 		}
+/* 		else if (req->getResCode() == 201)
+		{
+			director.BuildOkUploadResponse(req->getResourceSize());
+			response = Hresp.Print(req);
+		} */
 		else if (req->getResCode() == 404)
 		{
 			director.BuildNotFoundResponse();
