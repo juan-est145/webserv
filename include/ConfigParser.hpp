@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <sys/stat.h>
-#include <sys/epoll.h>
 #include <exception>
 #include "ConfigFile.hpp"
 
@@ -44,14 +43,34 @@ namespace Webserv
 		 * Finds the first character of the server
 		 * @return index of the 1st char if found, -1 if not found.
 		 */
-		size_t findStartServer(size_t start,
-							   std::string &content);
+		size_t findStartServer(size_t start, std::string &content);
 		/**
 		 * Finds the last character of the server
 		 * @return index of the last char if found, -1 if not found.
 		 */
-		size_t findEndServer(size_t start,
-							 std::string &content);
+		size_t findEndServer(size_t start, std::string &content);
+		/**
+		 * Splits a string into a vector of strings separated by
+		 * a delimitator
+		 * @return a vector of strings
+		 */
+		std::vector<std::string> splitParameters(std::string line, std::string del);
+		/**
+		 * Compare str1 and str2 until pos
+		 * @return 0 if equal, anything if not
+		 */
+		int strnCompare(std::string str1, std::string str2, size_t pos);
+
+		/**
+		 * Creates a servers and fills values with config
+		 */
+		void ConfigParser::createServer(std::string &config, ConfigServer &server);
+
+		/**
+		 * Checks if there are repeated parameters
+		 * @throw if repeated parameter, throws an exception
+		 */
+		void checkServers();
 
 	public:
 		ConfigParser();
@@ -66,36 +85,9 @@ namespace Webserv
 		int initConfigParser(const std::string &config_file);
 
 		/**
-		 * Splits a string into a vector of strings separated by
-		 * a delimitator
-		 * @return a vector of strings
-		 */
-		static std::vector<std::string> splitParameters(std::string line,
-														std::string del);
-
-		/**
-		 * Compare str1 and str2 until pos
-		 * @return 0 if equal, anything if not
-		 */
-		static int strnCompare(std::string str1,
-							   std::string str2, size_t pos);
-
-		/**
-		 * Creates a servers and fills values with config
-		 */
-		static void ConfigParser::createServer(std::string &config,
-											   ConfigServer &server);
-
-		/**
-		 * Checks if there are repeated parameters
-		 * @throw if repeated parameter, throws an exception
-		 */
-		void checkServers();
-
-		/**
 		 * @return a vector of servers
 		 */
-		std::vector<ConfigServer> getServers();
+		const std::vector<ConfigServer> &getServers();
 
 		/**
 		 * Prints everything

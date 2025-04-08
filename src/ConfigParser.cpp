@@ -180,7 +180,7 @@ namespace Webserv
 		}
 	}
 
-	std::vector<ConfigServer> ConfigParser::getServers()
+	const std::vector<ConfigServer> &ConfigParser::getServers()
 	{
 		return (this->_servers);
 	}
