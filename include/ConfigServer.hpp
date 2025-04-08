@@ -22,12 +22,14 @@
 namespace Webserv
 {
 	static std::string serverParameters[] =
-		{"server_name",
-		 "listen",
-		 "root",
-		 "index",
-		 "allow_methods",
-		 "client_body_buffer_size"};
+		{
+			"server_name",
+			"listen",
+			"root",
+			"index",
+			"allow_methods",
+			"client_body_buffer_size"
+		};
 
 	class Location;
 
@@ -63,7 +65,7 @@ namespace Webserv
 		 * Sets the server name attribute
 		 * @throw exception if token is invalid
 		 */
-		void setServerName(std::string server_name);
+		void setServerName(std::string serverName);
 
 		/**
 		 * Sets the host attribute
@@ -79,10 +81,10 @@ namespace Webserv
 		 */
 		void setRoot(std::string root);
 
-		/**
-		 * Sets the fd attribute
-		 */
-		void setFd(int fd);
+		// /**
+		//  * Sets the fd attribute
+		//  */
+		// void setFd(int fd);
 
 		/**
 		 * Sets the port attribute
@@ -121,8 +123,7 @@ namespace Webserv
 		 * @throw exception if any attribute is duplicated
 		 * or any token is invalid
 		 */
-		void setLocation(std::string nameLocation,
-						 std::vector<std::string> parameter);
+		void setLocation(std::string nameLocation, std::vector<std::string> parameter);
 
 		/**
 		 * Sets the autoindex

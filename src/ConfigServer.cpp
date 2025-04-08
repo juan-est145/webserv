@@ -7,11 +7,10 @@ namespace	Webserv{
 	{
 		this->_port = 0;
 		this->_host = 0;
-		this->_server_name = "";
+		this->_serverName = "";
 		this->_root = "";
 		this->_client_max_body_size = MAX_CONTENT_LENGTH;
 		this->_index = "";
-		this->_listen_fd = 0;
 		this->_autoindex = false;
 		this->initErrorPages();
 	}
@@ -61,27 +60,27 @@ namespace	Webserv{
 
 	void	ConfigServer::initErrorPages(void)
 	{
-		_error_pages[301] = "";
-		_error_pages[302] = "";
-		_error_pages[400] = "";
-		_error_pages[401] = "";
-		_error_pages[402] = "";
-		_error_pages[403] = "";
-		_error_pages[404] = "";
-		_error_pages[405] = "";
-		_error_pages[406] = "";
-		_error_pages[500] = "";
-		_error_pages[501] = "";
-		_error_pages[502] = "";
-		_error_pages[503] = "";
-		_error_pages[504] = "";
-		_error_pages[505] = "";
+		this->_errorPages[301] = "";
+		this->_errorPages[302] = "";
+		this->_errorPages[400] = "";
+		this->_errorPages[401] = "";
+		this->_errorPages[402] = "";
+		this->_errorPages[403] = "";
+		this->_errorPages[404] = "";
+		this->_errorPages[405] = "";
+		this->_errorPages[406] = "";
+		this->_errorPages[500] = "";
+		this->	_errorPages[501] = "";
+		this->_errorPages[502] = "";
+		this->_errorPages[503] = "";
+		this->_errorPages[504] = "";
+		this->_errorPages[505] = "";
 	}
 
-	void	ConfigServer::setServerName(std::string server_name)
+	void	ConfigServer::setServerName(std::string serverName)
 	{
-		checkToken(server_name);
-		this->_server_name = server_name;
+		checkToken(serverName);
+		this->_serverName = serverName;
 	}
 
 	void	ConfigServer::setHost(std::string parameter)
@@ -113,10 +112,10 @@ namespace	Webserv{
 		this->_root = full_root;
 	}
 
-	void	ConfigServer::setFd(int fd)
-	{
-		this->_listen_fd = fd;
-	}
+	// void	ConfigServer::setFd(int fd)
+	// {
+	// 	this->_listen_fd = fd;
+	// }
 
 	void	ConfigServer::setPort(std::string parameter)
 	{
