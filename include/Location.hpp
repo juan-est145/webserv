@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../include/AuxFunc.hpp"
 
 namespace Webserv
 {
