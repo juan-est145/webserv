@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "../include/AuxFunc.hpp"
+#include "AuxFunc.hpp"
 
 namespace Webserv
 {
@@ -12,6 +12,12 @@ namespace Webserv
     {
     public:
         std::map<std::string, std::string> _extPath;
+        enum E_Methods
+        {
+            GET = 0,
+            POST = 1,
+            DELETE = 2,
+        };
 
         Location();
         Location(const Location &other);
@@ -52,6 +58,7 @@ namespace Webserv
         std::vector<std::string> _cgiPath;
         std::vector<std::string> _cgiExt;
         unsigned long _clientMaxBodySize;
+        std::map<E_Methods, bool> _allowedMethods;
     };
 }
 
