@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/04 16:59:06 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:20:42 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,21 +251,20 @@ namespace Webserv
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
-		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp);
+		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp);//hay que borrar este objeto
 		director.SetBuilder(builder);
-
-		std::cout << req->getResCode() << std::endl;
+		
 		if (req->getResCode() == 200)
 		{
-			std::cout << req->getPath() << std::endl;
 			director.BuildOkResponse(req->getPath().c_str());
 			response = Hresp.Print(req);
+			
 		}
-/* 		else if (req->getResCode() == 201)
+		else if (req->getResCode() == 201)
 		{
 			director.BuildOkUploadResponse(req->getResourceSize());
 			response = Hresp.Print(req);
-		} */
+		}
 		else if (req->getResCode() == 404)
 		{
 			director.BuildNotFoundResponse();
@@ -273,6 +272,7 @@ namespace Webserv
 		}
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
+		delete builder;
 		// *----------//
 		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
 			throw Server::ServerException();

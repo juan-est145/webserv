@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:30:19 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/03/27 18:27:19 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:20:21 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ namespace Webserv
     }
     ConcreteBuilder::~ConcreteBuilder()
     {
-        delete this->response;
+        //delete this->response;
     }
 
     //*****GETTERS*****//

@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/04 17:16:57 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/08 13:03:20 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ namespace Webserv
         }
         else
             std::strcat(result, "/index.html");
-        std::cout << result << std::endl;
+
         builder->SetContentLength(getFileSize(result));
     }
     //CODE 201
@@ -80,16 +80,3 @@ namespace Webserv
         return -1;
     }
 }
-
-
-
-
-/* Director(void);
-Director(Builder *builder);
-Director(Director &toCopy);
-Director &operator=(const Director& other);
-~Director();
-void SetBuilder(Builder *builder);
-void BuildOkResponse();
-void BuildOkUploadResponse();        
-void BuildNotFoundResponse(); */
