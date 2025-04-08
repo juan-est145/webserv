@@ -1,6 +1,10 @@
 #ifndef CONFIGSERVER_HPP
 #define CONFIGSERVER_HPP
 
+#ifndef MAX_CONTENT_LENGTH
+#define MAX_CONTENT_LENGTH 35000000
+#endif
+
 #include <fstream>
 #include <sstream>
 #include <string>

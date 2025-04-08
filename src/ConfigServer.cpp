@@ -15,26 +15,21 @@ namespace	Webserv{
 		this->initErrorPages();
 	}
 
-	ConfigServer::~ConfigServer()
-	{
-
-	}
-
 	ConfigServer::ConfigServer(const ConfigServer &copy)
 	{
 		if (this != &copy)
 		{
-			this->_server_name = copy._server_name;
+			this->_serverName = copy._serverName;
 			this->_root = copy._root;
 			this->_host = copy._host;
 			this->_port = copy._port;
 			this->_client_max_body_size = copy._client_max_body_size;
 			this->_index = copy._index;
-			this->_error_pages = copy._error_pages;
+			this->_errorPages = copy._errorPages;
 			this->_locations = copy._locations;
-			this->_listen_fd = copy._listen_fd;
+			//this->_listen_fd = copy._listen_fd;
 			this->_autoindex = copy._autoindex;
-			this->_server_address = copy._server_address;
+			//this->_serverName = copy._server_address;
 		}
 		return ;
 	}
@@ -43,17 +38,17 @@ namespace	Webserv{
 	{
 		if (this != &copy)
 		{
-			this->_server_name = copy._server_name;
+			this->_serverName= copy._serverName;
 			this->_root = copy._root;
 			this->_host = copy._host;
 			this->_port = copy._port;
 			this->_client_max_body_size = copy._client_max_body_size;
 			this->_index = copy._index;
-			this->_error_pages = copy._error_pages;
+			this->_errorPages = copy._errorPages;
 			this->_locations = copy._locations;
-			this->_listen_fd = copy._listen_fd;
+			//this->_listen_fd = copy._listen_fd;
 			this->_autoindex = copy._autoindex;
-			this->_server_address = copy._server_address;
+			//this->_server_address = copy._server_address;
 		}
 		return (*this);
 	}
@@ -466,5 +461,7 @@ namespace	Webserv{
 		}
 		return (false);
 	}
+
+	ConfigServer::~ConfigServer() {}
 
 }
