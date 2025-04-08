@@ -78,6 +78,36 @@ namespace Webserv
             throw ConfigServer::ErrorException("Wrong autoindex");
     }
 
+    void Location::setReturn(std::string parameter)
+    {
+        this->_return = parameter;
+    }
+
+    void Location::setAlias(std::string parameter)
+    {
+        this->_alias = parameter;
+    }
+
+    void Location::setAlias(std::string parameter)
+    {
+        this->_alias = parameter;
+    }
+
+    void Location::setCgiPath(std::vector<std::string> path)
+    {
+        this->_cgiPath = path;
+    }
+
+    void Location::setCgiPath(std::vector<std::string> path)
+    {
+        this->_cgiPath = path;
+    }
+
+    void Location::setCgiExtension(std::vector<std::string> extension)
+    {
+        this->_cgiExt = extension;
+    }
+
     Location::~Location() {}
 
 }
