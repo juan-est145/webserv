@@ -24,16 +24,16 @@ namespace Webserv
 		content = file.readFile(config_file);
 		if (content.empty())
 			throw ErrorException("File is empty");
-		removeComments(content);
-		removeSpaces(content);
-		initServersConfig(content);
+		this->removeComments(content);
+		this->removeSpaces(content);
+		this->initServersConfig(content);
 		if (this->_servers_config.size() != this->_n_servers)
 			throw ErrorException("Sizes don't match");
 		for (size_t i = 0; i < this->_n_servers; i++)
 		{
 			ConfigServer	server;
 
-			createServer(this->_servers_config[i], server);
+			this->createServer(this->_servers_config[i], server);
 			this->_servers.push_back(server);
 		}
 		return (0);
