@@ -88,13 +88,7 @@ namespace Webserv
 		 * @return a vector of servers
 		 */
 		const std::vector<ConfigServer> &getServers();
-
-		/**
-		 * Prints everything
-		 * @return 0 if ok, -1 if not ok
-		 */
-		static int print();
-
+		
 		class ErrorException : public std::exception
 		{
 		private:
