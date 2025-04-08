@@ -191,7 +191,7 @@ namespace Webserv
 				server.setLocation(path, codes);
 				if (i < parameters.size() && parameters[i] != "}")
 					throw ErrorException("Wrong character in server scope{}");
-				flag_loc = 0;
+				flagLoc = 0;
 			}
 			else if (parameters[i] == "host" && (i + 1) < parameters.size() && flagLoc)
 			{

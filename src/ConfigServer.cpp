@@ -309,10 +309,15 @@ namespace Webserv
 		}
 	}
 
-	void ConfigServer::setLocation(std::string nameLocation,
-								   std::vector<std::string> parameter)
+	void ConfigServer::setLocation(std::string nameLocation, std::vector<std::string> parameter)
 	{
-		// TO DO
+		Location newLocation;
+		std::vector<std::string> methods;
+		bool flagMethods = false;
+		bool flagMaxSize = false;
+		int valid;
+
+		
 	}
 
 	bool ConfigServer::isValidHost(std::string host) const
