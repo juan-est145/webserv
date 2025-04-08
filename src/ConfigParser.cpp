@@ -166,6 +166,7 @@ namespace Webserv
 		bool flagAutoindex = false;
 		bool flagMaxSize = false;
 
+		parameters = this->splitParameters(config += ' ', std::string(" \n\t"));
 		for (size_t i = 0; i < parameters.size(); i++)
 		{
 			if (parameters[i] == "listen" && (i + 1) < parameters.size() && flagLoc)
