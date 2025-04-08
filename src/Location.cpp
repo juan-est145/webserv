@@ -53,6 +53,13 @@ namespace Webserv
         this->_path = parameter;
     }
 
+    void Location::setRootLocation(std::string parameter)
+    {
+        if (ConfigFile::getPathType(parameter) != ConfigFile::PATH_FOLDER)
+            throw ConfigServer::ErrorException("root of location");
+        this->_root = parameter;
+    }
+
     Location::~Location() {}
 
 }

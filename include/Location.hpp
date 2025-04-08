@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 #include "AuxFunc.hpp"
+#include "ConfigFile.hpp"
+#include "ConfigServer.hpp"
 
 namespace Webserv
 {
