@@ -16,6 +16,7 @@
 #include "ConfigFile.hpp"
 #include "ConfigParser.hpp"
 #include "Logger.hpp"
+#include "AuxFunc.hpp"
 
 namespace Webserv
 {

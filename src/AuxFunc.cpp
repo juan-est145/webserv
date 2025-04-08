@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   AuxFunc.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: angcampo <angcampo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/03/19 18:16:42 by angcampo         ###   ########.fr       */
+/*   Updated: 2025/04/08 19:09:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,21 @@ namespace Webserv
 			return (false);
 		}
 		return (true);
+	}
+
+	int AuxFunc::itoa(std::string str)
+	{
+		std::stringstream ss(str);
+		if (str.length() > 10)
+			throw std::exception();
+		for (size_t i = 0; i < str.length(); ++i)
+		{
+			if (!isdigit(str[i]))
+				throw std::exception();
+		}
+		int res;
+		ss >> res;
+		return (res);
 	}
 
 	AuxFunc::~AuxFunc(void) {}

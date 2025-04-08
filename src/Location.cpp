@@ -108,6 +108,21 @@ namespace Webserv
         this->_cgiExt = extension;
     }
 
+    void Location::setMaxBodySize(std::string parametr)
+    {
+        unsigned long body_size = 0;
+
+        for (size_t i = 0; i < parametr.length(); i++)
+        {
+            if (parametr[i] < '0' || parametr[i] > '9')
+                throw ConfigServer::ErrorException("Wrong syntax: clientMaxBodySize");
+        }
+        if (!Webserv::AuxFunc::itoa(parametr))
+            throw ConfigServer::ErrorException("Wrong syntax: clientMaxBodySize");
+        body_size = Webserv::AuxFunc::itoa(parametr);
+        this->_clientMaxBodySize = body_size;
+    }
+
     Location::~Location() {}
 
 }
