@@ -43,7 +43,7 @@ namespace Webserv
 		std::string _serverName;
 		std::string _root;
 		std::string _index;
-		unsigned long _client_max_body_size;
+		unsigned long _clientMaxBodySize;
 		bool _autoindex;
 		std::map<short, std::string> _errorPages;
 		std::vector<Location> _locations;

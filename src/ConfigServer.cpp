@@ -9,7 +9,7 @@ namespace Webserv
 		this->_host = 0;
 		this->_serverName = "";
 		this->_root = "";
-		this->_client_max_body_size = MAX_CONTENT_LENGTH;
+		this->_clientMaxBodySize = MAX_CONTENT_LENGTH;
 		this->_index = "";
 		this->_autoindex = false;
 		this->initErrorPages();
@@ -23,7 +23,7 @@ namespace Webserv
 			this->_root = copy._root;
 			this->_host = copy._host;
 			this->_port = copy._port;
-			this->_client_max_body_size = copy._client_max_body_size;
+			this->_clientMaxBodySize = copy._clientMaxBodySize;
 			this->_index = copy._index;
 			this->_errorPages = copy._errorPages;
 			this->_locations = copy._locations;
@@ -42,7 +42,7 @@ namespace Webserv
 			this->_root = copy._root;
 			this->_host = copy._host;
 			this->_port = copy._port;
-			this->_client_max_body_size = copy._client_max_body_size;
+			this->_clientMaxBodySize = copy._clientMaxBodySize;
 			this->_index = copy._index;
 			this->_errorPages = copy._errorPages;
 			this->_locations = copy._locations;
@@ -143,7 +143,7 @@ namespace Webserv
 		body_size = stoi(parameter);
 		if (!body_size)
 			throw ErrorException("Wrong syntax: client_max_body_size");
-		this->_client_max_body_size = body_size;
+		this->_clientMaxBodySize = body_size;
 	}
 
 	void ConfigServer::setIndex(std::string index)
@@ -301,11 +301,11 @@ namespace Webserv
 					throw ErrorException("Error page file: " + this->_root + path + " is not accesible");
 			}
 			std::map<short, std::string>::iterator it =
-				this->_error_pages.find(code_error);
-			if (it != _error_pages.end())
-				this->_error_pages[code_error] = path;
+				this->_errorPages.find(code_error);
+			if (it != this->_errorPages.end())
+				this->_errorPages[code_error] = path;
 			else
-				this->_error_pages.insert(std::make_pair(code_error, path));
+				this->_errorPages.insert(std::make_pair(code_error, path));
 		}
 	}
 
@@ -319,17 +319,14 @@ namespace Webserv
 	{
 		struct sockaddr_in sockaddr;
 
-		return (inet_pton(AF_INET, host.c_str(),
-						  &(sockaddr.sin_addr))
-					? true
-					: false);
+		return (inet_pton(AF_INET, host.c_str(), &(sockaddr.sin_addr)) ? true : false);
 	}
 
 	bool ConfigServer::isValidErrorPages()
 	{
 		std::map<short, std::string>::const_iterator it;
-		for (it = this->_error_pages.begin();
-			 it != this->_error_pages.end(); it++)
+		for (it = this->_errorPages.begin();
+			 it != this->_errorPages.end(); it++)
 		{
 			if (it->first < 100 || it->first > 599)
 				return (false);
@@ -351,7 +348,7 @@ namespace Webserv
 
 	const std::string &ConfigServer::getServerName() const
 	{
-		return (this->_server_name);
+		return (this->_serverName);
 	}
 
 	const uint16_t &ConfigServer::getPort() const
@@ -366,7 +363,7 @@ namespace Webserv
 
 	const size_t &ConfigServer::getClientMaxBodySize() const
 	{
-		return (this->_client_max_body_size);
+		return (this->_clientMaxBodySize);
 	}
 
 	const std::vector<Location> &ConfigServer::getLocations() const
@@ -381,7 +378,7 @@ namespace Webserv
 
 	const std::map<short, std::string> &ConfigServer::getErrorPages() const
 	{
-		return (this->_error_pages);
+		return (this->_errorPages);
 	}
 
 	const std::string &ConfigServer::getIndex() const
@@ -397,8 +394,8 @@ namespace Webserv
 	const std::string &ConfigServer::getPathErrorPage(short key) const
 	{
 		std::map<short, std::string>::const_iterator
-			it = this->_error_pages.find(key);
-		if (it == this->_error_pages.end())
+			it = this->_errorPages.find(key);
+		if (it == this->_errorPages.end())
 			throw ErrorException("Error_page does not exist");
 		return (it->second);
 	}
