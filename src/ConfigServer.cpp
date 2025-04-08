@@ -1,7 +1,7 @@
 #include "ConfigServer.hpp"
 
-
-namespace	Webserv{
+namespace Webserv
+{
 
 	ConfigServer::ConfigServer()
 	{
@@ -27,18 +27,18 @@ namespace	Webserv{
 			this->_index = copy._index;
 			this->_errorPages = copy._errorPages;
 			this->_locations = copy._locations;
-			//this->_listen_fd = copy._listen_fd;
+			// this->_listen_fd = copy._listen_fd;
 			this->_autoindex = copy._autoindex;
-			//this->_serverName = copy._server_address;
+			// this->_serverName = copy._server_address;
 		}
-		return ;
+		return;
 	}
 
 	ConfigServer &ConfigServer::operator=(const ConfigServer &copy)
 	{
 		if (this != &copy)
 		{
-			this->_serverName= copy._serverName;
+			this->_serverName = copy._serverName;
 			this->_root = copy._root;
 			this->_host = copy._host;
 			this->_port = copy._port;
@@ -46,14 +46,14 @@ namespace	Webserv{
 			this->_index = copy._index;
 			this->_errorPages = copy._errorPages;
 			this->_locations = copy._locations;
-			//this->_listen_fd = copy._listen_fd;
+			// this->_listen_fd = copy._listen_fd;
 			this->_autoindex = copy._autoindex;
-			//this->_server_address = copy._server_address;
+			// this->_server_address = copy._server_address;
 		}
 		return (*this);
 	}
 
-	void	ConfigServer::initErrorPages(void)
+	void ConfigServer::initErrorPages(void)
 	{
 		this->_errorPages[301] = "";
 		this->_errorPages[302] = "";
@@ -65,20 +65,20 @@ namespace	Webserv{
 		this->_errorPages[405] = "";
 		this->_errorPages[406] = "";
 		this->_errorPages[500] = "";
-		this->	_errorPages[501] = "";
+		this->_errorPages[501] = "";
 		this->_errorPages[502] = "";
 		this->_errorPages[503] = "";
 		this->_errorPages[504] = "";
 		this->_errorPages[505] = "";
 	}
 
-	void	ConfigServer::setServerName(std::string serverName)
+	void ConfigServer::setServerName(std::string serverName)
 	{
 		checkToken(serverName);
 		this->_serverName = serverName;
 	}
 
-	void	ConfigServer::setHost(std::string parameter)
+	void ConfigServer::setHost(std::string parameter)
 	{
 		checkToken(parameter);
 		if (parameter == "localhost")
@@ -88,14 +88,14 @@ namespace	Webserv{
 		this->_host = inet_addr(parameter.data());
 	}
 
-	void	ConfigServer::setRoot(std::string root)
+	void ConfigServer::setRoot(std::string root)
 	{
 		checkToken(root);
 		if (ConfigFile::getPathType(root) ==
 			ConfigFile::PATH_OTHER)
 		{
 			this->_root = root;
-			return ;
+			return;
 		}
 
 		char dir[1024];
@@ -112,9 +112,9 @@ namespace	Webserv{
 	// 	this->_listen_fd = fd;
 	// }
 
-	void	ConfigServer::setPort(std::string parameter)
+	void ConfigServer::setPort(std::string parameter)
 	{
-		unsigned int	port;
+		unsigned int port;
 
 		port = 0;
 		checkToken(parameter);
@@ -126,36 +126,33 @@ namespace	Webserv{
 		port = stoi(parameter);
 		if (port < 1 || port > 65636)
 			throw ErrorException("Wrong syntax: port");
-		this->_port = (uint16_t) port;
+		this->_port = (uint16_t)port;
 	}
 
-	void	ConfigServer::setClientMaxBodySize
-		(std::string parameter)
+	void ConfigServer::setClientMaxBodySize(std::string parameter)
 	{
-		unsigned long int	body_size;
+		unsigned long int body_size;
 
 		body_size = 0;
 		checkToken(parameter);
 		for (size_t i = 0; i < parameter.length(); i++)
 		{
 			if (!std::isdigit(parameter[i]))
-				throw ErrorException
-					("Wrong syntax: client_max_body_size");
+				throw ErrorException("Wrong syntax: client_max_body_size");
 		}
 		body_size = stoi(parameter);
 		if (!body_size)
-			throw ErrorException
-				("Wrong syntax: client_max_body_size");
+			throw ErrorException("Wrong syntax: client_max_body_size");
 		this->_client_max_body_size = body_size;
 	}
 
-	void	ConfigServer::setIndex(std::string index)
+	void ConfigServer::setIndex(std::string index)
 	{
 		checkToken(index);
 		this->_index = index;
 	}
 
-	void	ConfigServer::setAutoindex(std::string autoindex)
+	void ConfigServer::setAutoindex(std::string autoindex)
 	{
 		checkToken(autoindex);
 		if (autoindex != "on" && autoindex != "off")
@@ -167,121 +164,120 @@ namespace	Webserv{
 	{
 		switch (statusCode)
 		{
-			case 100:
-				return "Continue";
-			case 101:
-				return "Switching Protocol";
-			case 200:
-				return "OK";
-			case 201:
-				return "Created";
-			case 202:
-				return "Accepted";
-			case 203:
-				return "Non-Authoritative Information";
-			case 204:
-				return "No Content";
-			case 205:
-				return "Reset Content";
-			case 206:
-				return "Partial Content";
-			case 300:
-				return "Multiple Choice";
-			case 301:
-				return "Moved Permanently";
-			case 302:
-				return "Moved Temporarily";
-			case 303:
-				return "See Other";
-			case 304:
-				return "Not Modified";
-			case 307:
-				return "Temporary Redirect";
-			case 308:
-				return "Permanent Redirect";
-			case 400:
-				return "Bad Request";
-			case 401:
-				return "Unauthorized";
-			case 403:
-				return "Forbidden";
-			case 404:
-				return "Not Found";
-			case 405:
-				return "Method Not Allowed";
-			case 406:
-				return "Not Acceptable";
-			case 407:
-				return "Proxy Authentication Required";
-			case 408:
-				return "Request Timeout";
-			case 409:
-				return "Conflict";
-			case 410:
-				return "Gone";
-			case 411:
-				return "Length Required";
-			case 412:
-				return "Precondition Failed";
-			case 413:
-				return "Payload Too Large";
-			case 414:
-				return "URI Too Long";
-			case 415:
-				return "Unsupported Media Type";
-			case 416:
-				return "Requested Range Not Satisfiable";
-			case 417:
-				return "Expectation Failed";
-			case 418:
-				return "I'm a teapot";
-			case 421:
-				return "Misdirected Request";
-			case 425:
-				return "Too Early";
-			case 426:
-				return "Upgrade Required";
-			case 428:
-				return "Precondition Required";
-			case 429:
-				return "Too Many Requests";
-			case 431:
-				return "Request Header Fields Too Large";
-			case 451:
-				return "Unavailable for Legal Reasons";
-			case 500:
-				return "Internal Server Error";
-			case 501:
-				return "Not Implemented";
-			case 502:
-				return "Bad Gateway";
-			case 503:
-				return "Service Unavailable";
-			case 504:
-				return "Gateway Timeout";
-			case 505:
-				return "HTTP Version Not Supported";
-			case 506:
-				return "Variant Also Negotiates";
-			case 507:
-				return "Insufficient Storage";
-			case 510:
-				return "Not Extended";
-			case 511:
-				return "Network Authentication Required";
-			default:
-				return "Undefined";
+		case 100:
+			return "Continue";
+		case 101:
+			return "Switching Protocol";
+		case 200:
+			return "OK";
+		case 201:
+			return "Created";
+		case 202:
+			return "Accepted";
+		case 203:
+			return "Non-Authoritative Information";
+		case 204:
+			return "No Content";
+		case 205:
+			return "Reset Content";
+		case 206:
+			return "Partial Content";
+		case 300:
+			return "Multiple Choice";
+		case 301:
+			return "Moved Permanently";
+		case 302:
+			return "Moved Temporarily";
+		case 303:
+			return "See Other";
+		case 304:
+			return "Not Modified";
+		case 307:
+			return "Temporary Redirect";
+		case 308:
+			return "Permanent Redirect";
+		case 400:
+			return "Bad Request";
+		case 401:
+			return "Unauthorized";
+		case 403:
+			return "Forbidden";
+		case 404:
+			return "Not Found";
+		case 405:
+			return "Method Not Allowed";
+		case 406:
+			return "Not Acceptable";
+		case 407:
+			return "Proxy Authentication Required";
+		case 408:
+			return "Request Timeout";
+		case 409:
+			return "Conflict";
+		case 410:
+			return "Gone";
+		case 411:
+			return "Length Required";
+		case 412:
+			return "Precondition Failed";
+		case 413:
+			return "Payload Too Large";
+		case 414:
+			return "URI Too Long";
+		case 415:
+			return "Unsupported Media Type";
+		case 416:
+			return "Requested Range Not Satisfiable";
+		case 417:
+			return "Expectation Failed";
+		case 418:
+			return "I'm a teapot";
+		case 421:
+			return "Misdirected Request";
+		case 425:
+			return "Too Early";
+		case 426:
+			return "Upgrade Required";
+		case 428:
+			return "Precondition Required";
+		case 429:
+			return "Too Many Requests";
+		case 431:
+			return "Request Header Fields Too Large";
+		case 451:
+			return "Unavailable for Legal Reasons";
+		case 500:
+			return "Internal Server Error";
+		case 501:
+			return "Not Implemented";
+		case 502:
+			return "Bad Gateway";
+		case 503:
+			return "Service Unavailable";
+		case 504:
+			return "Gateway Timeout";
+		case 505:
+			return "HTTP Version Not Supported";
+		case 506:
+			return "Variant Also Negotiates";
+		case 507:
+			return "Insufficient Storage";
+		case 510:
+			return "Not Extended";
+		case 511:
+			return "Network Authentication Required";
+		default:
+			return "Undefined";
 		}
 	}
 
-	void	ConfigServer::setErrorPages(
+	void ConfigServer::setErrorPages(
 		std::vector<std::string> &parameter)
 	{
 		if (parameter.empty())
-			return ;
+			return;
 		if (parameter.size() % 2 == 1)
-			throw ErrorException
-				("Error_page initialization failed");
+			throw ErrorException("Error_page initialization failed");
 		for (size_t i = 0; i < parameter.size() - 1; i++)
 		{
 			for (size_t j = 0; j < parameter[i].size(); j++)
@@ -291,130 +287,114 @@ namespace	Webserv{
 			}
 			if (parameter[i].size() != 3)
 				throw ErrorException("Error code is invalid");
-			short	code_error = stoi(parameter[i]);
-			if (statusCodeString(code_error) == "Undefined"
-					|| code_error < 400)
-				throw ErrorException("Incorrect error code: "
-					+ parameter[i]);
+			short code_error = stoi(parameter[i]);
+			if (statusCodeString(code_error) == "Undefined" || code_error < 400)
+				throw ErrorException("Incorrect error code: " + parameter[i]);
 			i++;
 			std::string path = parameter[i];
 			checkToken(path);
-			if (ConfigFile::getPathType(path)
-				!= ConfigFile::PATH_OTHER)
+			if (ConfigFile::getPathType(path) != ConfigFile::PATH_OTHER)
 			{
-				if (ConfigFile::getPathType(this->_root + path)
-					!= ConfigFile::PATH_FOLDER)
-					throw ErrorException
-						("Incorrect path for error page file: "
-						+ this->_root + path);
-				if (ConfigFile::fileOk
-						(this->_root + path) == -1
-					|| ConfigFile::fileOk
-						(this->_root + path) == -1)
-					throw ErrorException
-						("Error page file: "
-						+ this->_root + path
-						+ " is not accesible");
+				if (ConfigFile::getPathType(this->_root + path) != ConfigFile::PATH_FOLDER)
+					throw ErrorException("Incorrect path for error page file: " + this->_root + path);
+				if (ConfigFile::fileOk(this->_root + path) == -1 || ConfigFile::fileOk(this->_root + path) == -1)
+					throw ErrorException("Error page file: " + this->_root + path + " is not accesible");
 			}
 			std::map<short, std::string>::iterator it =
 				this->_error_pages.find(code_error);
 			if (it != _error_pages.end())
 				this->_error_pages[code_error] = path;
 			else
-				this->_error_pages.insert
-					(std::make_pair(code_error, path));
+				this->_error_pages.insert(std::make_pair(code_error, path));
 		}
 	}
 
-	void	ConfigServer::setLocation(std::string nameLocation,
-		std::vector<std::string> parameter)
+	void ConfigServer::setLocation(std::string nameLocation,
+								   std::vector<std::string> parameter)
 	{
-		//TO DO
+		// TO DO
 	}
 
-	bool	ConfigServer::isValidHost(std::string host) const
+	bool ConfigServer::isValidHost(std::string host) const
 	{
-		struct	sockaddr_in	sockaddr;
+		struct sockaddr_in sockaddr;
 
 		return (inet_pton(AF_INET, host.c_str(),
-			&(sockaddr.sin_addr)) ? true : false);
+						  &(sockaddr.sin_addr))
+					? true
+					: false);
 	}
 
-	bool	ConfigServer::isValidErrorPages()
+	bool ConfigServer::isValidErrorPages()
 	{
-		std::map<short, std::string>::const_iterator	it;
+		std::map<short, std::string>::const_iterator it;
 		for (it = this->_error_pages.begin();
-			it != this->_error_pages.end(); it++)
+			 it != this->_error_pages.end(); it++)
 		{
 			if (it->first < 100 || it->first > 599)
 				return (false);
-			if (ConfigFile::fileOk
-				(getRoot() + it->second) < 0)
+			if (ConfigFile::fileOk(getRoot() + it->second) < 0)
 				return (false);
 		}
 		return (true);
 	}
 
-	int		ConfigServer::isValidLocation
-		(Location &location)
+	int ConfigServer::isValidLocation(Location &location)
 	{
-		//TO DO
+		// TO DO
 	}
 
-	int		ConfigServer::getFd()
+	int ConfigServer::getFd()
 	{
 		return (this->_listen_fd);
 	}
 
-	const std::string	&ConfigServer::getServerName() const
+	const std::string &ConfigServer::getServerName() const
 	{
 		return (this->_server_name);
 	}
 
-	const uint16_t	&ConfigServer::getPort() const
+	const uint16_t &ConfigServer::getPort() const
 	{
 		return (this->_port);
 	}
 
-	const in_addr_t	&ConfigServer::getHost() const
+	const in_addr_t &ConfigServer::getHost() const
 	{
 		return (this->_host);
 	}
 
-	const size_t	&ConfigServer::getClientMaxBodySize() const
+	const size_t &ConfigServer::getClientMaxBodySize() const
 	{
 		return (this->_client_max_body_size);
 	}
 
-	const std::vector<Location>
-		&ConfigServer::getLocations() const
+	const std::vector<Location> &ConfigServer::getLocations() const
 	{
 		return (this->_locations);
 	}
 
-	const std::string	&ConfigServer::getRoot() const
+	const std::string &ConfigServer::getRoot() const
 	{
 		return (this->_root);
 	}
 
-	const std::map<short, std::string>
-		&ConfigServer::getErrorPages() const
+	const std::map<short, std::string> &ConfigServer::getErrorPages() const
 	{
 		return (this->_error_pages);
 	}
 
-	const std::string	&ConfigServer::getIndex() const
+	const std::string &ConfigServer::getIndex() const
 	{
 		return (this->_index);
 	}
 
-	const bool	&ConfigServer::getAutoindex() const
+	const bool &ConfigServer::getAutoindex() const
 	{
 		return (this->_autoindex);
 	}
 
-	const std::string	&ConfigServer::getPathErrorPage
-		(short key) const
+	const std::string &ConfigServer::getPathErrorPage(short key) const
 	{
 		std::map<short, std::string>::const_iterator
 			it = this->_error_pages.find(key);
@@ -424,11 +404,11 @@ namespace	Webserv{
 	}
 
 	const std::vector<Location>::const_iterator
-		ConfigServer::getLocationKey(std::string key) const
+	ConfigServer::getLocationKey(std::string key) const
 	{
-		std::vector<Location>::const_iterator	it;
+		std::vector<Location>::const_iterator it;
 		for (it = this->_locations.begin();
-			it != this->_locations.end(); it++)
+			 it != this->_locations.end(); it++)
 		{
 			if (it->getPath() == key)
 				return (it);
@@ -436,10 +416,9 @@ namespace	Webserv{
 		throw ErrorException("Error: path to location not found");
 	}
 
-	void ConfigServer::checkToken
-		(std::string &parameter)
+	void ConfigServer::checkToken(std::string &parameter)
 	{
-		size_t	pos = parameter.rfind(';');
+		size_t pos = parameter.rfind(';');
 		if (pos != parameter.size() - 1)
 			throw ErrorException("Token is invalid");
 		parameter.erase(pos);
@@ -452,9 +431,11 @@ namespace	Webserv{
 		if (this->_locations.size() < 2)
 			return (false);
 		for (it1 = this->_locations.begin();
-			it1 != this->_locations.end() - 1; it1++) {
+			 it1 != this->_locations.end() - 1; it1++)
+		{
 			for (it2 = it1 + 1;
-				it2 != this->_locations.end(); it2++) {
+				 it2 != this->_locations.end(); it2++)
+			{
 				if (it1->getPath() == it2->getPath())
 					return (true);
 			}
