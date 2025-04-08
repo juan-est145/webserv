@@ -20,8 +20,8 @@ namespace Webserv
         };
 
         Location();
-        Location(const Location &other);
-        Location &operator=(const Location &rhs);
+        Location(const Location &toCopy);
+        Location &operator=(const Location &toCopy);
         void setPath(std::string parametr);
         void setRootLocation(std::string parametr);
         void setMethods(std::vector<std::string> methods);
