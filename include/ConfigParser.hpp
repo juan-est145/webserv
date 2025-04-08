@@ -23,8 +23,8 @@ namespace Webserv
 	{
 	private:
 		std::vector<ConfigServer> _servers;
-		std::vector<std::string> _servers_config;
-		size_t _n_servers;
+		std::vector<std::string> _serversConfig;
+		size_t _nServers;
 		/**
 		 * Removes the comments from '#' to '\n'
 		 */

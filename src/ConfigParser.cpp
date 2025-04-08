@@ -2,20 +2,15 @@
 
 namespace Webserv
 {
-	ConfigParser::ConfigParser(): _n_servers(0)
+	ConfigParser::ConfigParser()
 	{
-
+		this->_nServers = 0;
 	}
 
-	ConfigParser::~ConfigParser()
+	int ConfigParser::initConfigParser(const std::string &config_file)
 	{
-
-	}
-
-	int	ConfigParser::initConfigParser(const std::string &config_file)
-	{
-		std::string	content;
-		ConfigFile	file(config_file);
+		std::string content;
+		ConfigFile file(config_file);
 
 		if (file.getPathType(file.getPath()) != ConfigFile::PATH_FILE)
 			throw ErrorException("File is invalid");
@@ -27,22 +22,22 @@ namespace Webserv
 		this->removeComments(content);
 		this->removeSpaces(content);
 		this->initServersConfig(content);
-		if (this->_servers_config.size() != this->_n_servers)
+		if (this->_serversConfig.size() != this->_nServers)
 			throw ErrorException("Sizes don't match");
-		for (size_t i = 0; i < this->_n_servers; i++)
+		for (size_t i = 0; i < this->_nServers; i++)
 		{
-			ConfigServer	server;
+			ConfigServer server;
 
-			this->createServer(this->_servers_config[i], server);
+			this->createServer(this->_serversConfig[i], server);
 			this->_servers.push_back(server);
 		}
 		return (0);
 	}
 
-	void	ConfigParser::removeComments(std::string &content)
+	void ConfigParser::removeComments(std::string &content)
 	{
-		size_t	pos;
-		size_t	pos_end;
+		size_t pos;
+		size_t pos_end;
 
 		pos = content.find('#');
 		while (pos != std::string::npos)
@@ -55,7 +50,7 @@ namespace Webserv
 
 	void ConfigParser::removeSpaces(std::string &content)
 	{
-		size_t	i = 0;
+		size_t i = 0;
 
 		while (content[i] && isspace(content[i]))
 			i++;
@@ -66,10 +61,10 @@ namespace Webserv
 		content = content.substr(0, i + 1);
 	}
 
-	void	ConfigParser::initServersConfig(std::string &content)
+	void ConfigParser::initServersConfig(std::string &content)
 	{
-		size_t	start = 0;
-		size_t	end = 1;
+		size_t start = 0;
+		size_t end = 1;
 
 		if (content.find("server", 0) == std::string::npos)
 			throw ErrorException("Server not found");
@@ -79,17 +74,15 @@ namespace Webserv
 			end = findEndServer(start, content);
 			if (start == end)
 				throw ErrorException("Server is size 0");
-			this->_servers_config.push_back(content.substr(start,
-				end - start + 1));
-			this->_n_servers++;
+			this->_serversConfig.push_back(content.substr(start, end - start + 1));
+			this->_nServers++;
 			start = end + 1;
 		}
 	}
 
-	size_t	ConfigParser::findStartServer(size_t start,
-		std::string &content)
+	size_t ConfigParser::findStartServer(size_t start, std::string &content)
 	{
-		size_t	i;
+		size_t i;
 
 		i = start;
 		while (content[i] && (content[i] != 's'))
@@ -110,11 +103,10 @@ namespace Webserv
 		return (i);
 	}
 
-	size_t	ConfigParser::findEndServer(size_t start,
-		std::string &content)
+	size_t ConfigParser::findEndServer(size_t start, std::string &content)
 	{
-		size_t	i;
-		size_t	scope;
+		size_t i;
+		size_t scope;
 
 		i = start + 1;
 		scope = 0;
@@ -130,12 +122,11 @@ namespace Webserv
 		return (start);
 	}
 
-	static std::vector<std::string>	splitParameters(std::string line,
-		std::string del)
+	static std::vector<std::string> splitParameters(std::string line, std::string del)
 	{
-		std::vector<std::string>	strs;
-		std::string					temp;
-		size_t						start, end;
+		std::vector<std::string> strs;
+		std::string temp;
+		size_t start, end;
 
 		start = 0;
 		end = 0;
@@ -153,59 +144,51 @@ namespace Webserv
 		return (strs);
 	}
 
-	int	ConfigParser::strnCompare(std::string str1,
-		std::string str2, size_t pos)
+	int ConfigParser::strnCompare(std::string str1, std::string str2, size_t pos)
 	{
-		size_t	i;
+		size_t i;
 
 		i = 0;
-		while (pos < str1.length()
-			&& i < str2.length()
-			&& str1[pos] == str2[pos])
+		while (pos < str1.length() && i < str2.length() && str1[pos] == str2[pos])
 		{
 			pos++;
 			i++;
 		}
-		if (i == str2.length()
-			&& pos <= str1.length()
-			&& (str1.length() == pos || isspace(str1[pos])))
+		if (i == str2.length() && pos <= str1.length() && (str1.length() == pos || isspace(str1[pos])))
 			return (0);
 		return (1);
 	}
 
-	void	ConfigParser::createServer(std::string &config,
-		ConfigServer &server)
+	void ConfigParser::createServer(std::string &config, ConfigServer &server)
 	{
-
 	}
 
-	void	ConfigParser::checkServers()
+	void ConfigParser::checkServers()
 	{
-		std::vector<ConfigServer>::iterator	it1;
-		std::vector<ConfigServer>::iterator	it2;
+		std::vector<ConfigServer>::iterator it1;
+		std::vector<ConfigServer>::iterator it2;
 
 		for (it1 = this->_servers.begin();
-			it1 != this->_servers.end() - 1; it1++)
+			 it1 != this->_servers.end() - 1; it1++)
 		{
 			for (it2 = it1 + 1;
-				it2 != this->_servers.end(); it2++)
+				 it2 != this->_servers.end(); it2++)
 			{
-				if (it1->getPort() == it2->getPort()
-					&& it1->getHost() == it2->getHost()
-					&& it1->getServerName() == it2->getServerName())
+				if (it1->getPort() == it2->getPort() && it1->getHost() == it2->getHost() && it1->getServerName() == it2->getServerName())
 					throw ErrorException("Failed server validation");
 			}
 		}
 	}
 
-	std::vector<ConfigServer>	ConfigParser::getServers()
+	std::vector<ConfigServer> ConfigParser::getServers()
 	{
 		return (this->_servers);
 	}
 
-	int	ConfigParser::print()
+	int ConfigParser::print()
 	{
-
 	}
+
+	ConfigParser::~ConfigParser() {}
 
 }
