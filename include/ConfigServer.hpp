@@ -47,6 +47,11 @@ namespace Webserv
 		bool _autoindex;
 		std::map<short, std::string> _errorPages;
 		std::vector<Location> _locations;
+		/**
+		 * Check if parameter is properly ended
+		 * @throw exception if token is invalid
+		 */
+		void checkToken(std::string &parameter);
 
 	public:
 		// Default constructor
@@ -215,12 +220,6 @@ namespace Webserv
 		 */
 		const std::vector<Location>::const_iterator
 		getLocationKey(std::string key) const;
-
-		/**
-		 * Check if parameter is properly ended
-		 * @throw exception if token is invalid
-		 */
-		static void checkToken(std::string &parameter);
 
 		/**
 		 * Checks if there's a duplicate location

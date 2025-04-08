@@ -74,13 +74,13 @@ namespace Webserv
 
 	void ConfigServer::setServerName(std::string serverName)
 	{
-		checkToken(serverName);
+		this->checkToken(serverName);
 		this->_serverName = serverName;
 	}
 
 	void ConfigServer::setHost(std::string parameter)
 	{
-		checkToken(parameter);
+		this->checkToken(parameter);
 		if (parameter == "localhost")
 			parameter = "127.0.0.1";
 		if (!isValidHost(parameter))
@@ -90,7 +90,7 @@ namespace Webserv
 
 	void ConfigServer::setRoot(std::string root)
 	{
-		checkToken(root);
+		this->checkToken(root);
 		if (ConfigFile::getPathType(root) ==
 			ConfigFile::PATH_OTHER)
 		{
@@ -117,7 +117,7 @@ namespace Webserv
 		unsigned int port;
 
 		port = 0;
-		checkToken(parameter);
+		this->checkToken(parameter);
 		for (size_t i = 0; i < parameter.length(); i++)
 		{
 			if (!std::isdigit(parameter[i]))
@@ -134,7 +134,7 @@ namespace Webserv
 		unsigned long int body_size;
 
 		body_size = 0;
-		checkToken(parameter);
+		this->checkToken(parameter);
 		for (size_t i = 0; i < parameter.length(); i++)
 		{
 			if (!std::isdigit(parameter[i]))
@@ -148,13 +148,13 @@ namespace Webserv
 
 	void ConfigServer::setIndex(std::string index)
 	{
-		checkToken(index);
+		this->checkToken(index);
 		this->_index = index;
 	}
 
 	void ConfigServer::setAutoindex(std::string autoindex)
 	{
-		checkToken(autoindex);
+		this->checkToken(autoindex);
 		if (autoindex != "on" && autoindex != "off")
 			throw ErrorException("Wrong syntax: autoindex");
 		this->_autoindex = (autoindex == "on" ? true : false);
@@ -292,7 +292,7 @@ namespace Webserv
 				throw ErrorException("Incorrect error code: " + parameter[i]);
 			i++;
 			std::string path = parameter[i];
-			checkToken(path);
+			this->checkToken(path);
 			if (ConfigFile::getPathType(path) != ConfigFile::PATH_OTHER)
 			{
 				if (ConfigFile::getPathType(this->_root + path) != ConfigFile::PATH_FOLDER)
