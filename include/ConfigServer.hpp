@@ -1,9 +1,6 @@
 #ifndef CONFIGSERVER_HPP
 #define CONFIGSERVER_HPP
 
-#include "ConfigFile.hpp"
-#include "ConfigParser.hpp"
-#include "Logger.hpp"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -13,11 +10,12 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <sys/stat.h>
-#include <sys/epoll.h>
 #include <exception>
-#include <arpa/inet.h>
 #include <vector>
 #include <map>
+#include "ConfigFile.hpp"
+#include "ConfigParser.hpp"
+#include "Logger.hpp"
 
 namespace Webserv
 {
