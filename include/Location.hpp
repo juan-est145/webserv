@@ -14,19 +14,19 @@ namespace Webserv
     {
     public:
         std::map<std::string, std::string> _extPath;
-        enum E_Methods
-        {
-            GET = 0,
-            POST = 1,
-            DELETE = 2,
-        };
+        // enum E_Methods
+        // {
+        //     GET = 0,
+        //     POST = 1,
+        //     DELETE = 2,
+        // };
 
         Location();
         Location(const Location &toCopy);
         Location &operator=(const Location &toCopy);
         void setPath(std::string parametr);
         void setRootLocation(std::string parametr);
-        void setMethods(std::vector<std::string> methods);
+        void setMethods(const std::vector<std::string> &methods);
         void setAutoindex(std::string parametr);
         void setIndexLocation(std::string parametr);
         void setReturn(std::string parametr);
@@ -60,7 +60,7 @@ namespace Webserv
         std::vector<std::string> _cgiPath;
         std::vector<std::string> _cgiExt;
         unsigned long _clientMaxBodySize;
-        std::map<E_Methods, bool> _allowedMethods;
+        std::map<std::string, bool> _allowedMethods;
     };
 }
 

@@ -11,9 +11,9 @@ namespace Webserv
         this->_return = "";
         this->_alias = "";
         this->_clientMaxBodySize = MAX_CONTENT_LENGTH;
-        this->_allowedMethods[E_Methods::GET] = false;
-        this->_allowedMethods[E_Methods::POST] = false;
-        this->_allowedMethods[E_Methods::DELETE] = false;
+        this->_allowedMethods["GET"] = false;
+        this->_allowedMethods["POST"] = false;
+        this->_allowedMethods["DELETE"] = false;
     }
 
     Location::Location(const Location &toCopy)
@@ -58,6 +58,24 @@ namespace Webserv
         if (ConfigFile::getPathType(parameter) != ConfigFile::PATH_FOLDER)
             throw ConfigServer::ErrorException("root of location");
         this->_root = parameter;
+    }
+
+    void Location::setMethods(const std::vector<std::string> &methods)
+    {
+        for (size_t i = 0; i < methods.size(); i++)
+        {
+            if (methods[i] != "GET" || methods[i] != "POST" || methods[i] != "DELETE")
+                throw ConfigServer::ErrorException("Allow method not supported " + methods[i]);
+            this->_allowedMethods[methods[i]] = true;
+        }
+    }
+
+    void Location::setAutoindex(std::string parameter)
+    {
+        if (parameter == "on" || parameter == "off")
+            this->_autoindex = parameter == "on" ? true : false;
+        else
+            throw ConfigServer::ErrorException("Wrong autoindex");
     }
 
     Location::~Location() {}
