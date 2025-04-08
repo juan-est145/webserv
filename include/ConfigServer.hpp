@@ -34,17 +34,15 @@ namespace Webserv
 	class ConfigServer
 	{
 	private:
-		int _listen_fd;
 		uint16_t _port;
 		in_addr_t _host;
-		std::string _server_name;
+		std::string _serverName;
 		std::string _root;
 		std::string _index;
 		unsigned long _client_max_body_size;
 		bool _autoindex;
-		std::map<short, std::string> _error_pages;
+		std::map<short, std::string> _errorPages;
 		std::vector<Location> _locations;
-		struct sockaddr_in _server_address;
 
 	public:
 		// Default constructor

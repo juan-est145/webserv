@@ -7,7 +7,7 @@ namespace Webserv
 		this->_nServers = 0;
 	}
 
-	int ConfigParser::initConfigParser(const std::string &config_file)
+	void ConfigParser::initConfigParser(const std::string &config_file)
 	{
 		std::string content;
 		ConfigFile file(config_file);
@@ -31,7 +31,6 @@ namespace Webserv
 			this->createServer(this->_serversConfig[i], server);
 			this->_servers.push_back(server);
 		}
-		return (0);
 	}
 
 	void ConfigParser::removeComments(std::string &content)
@@ -161,6 +160,110 @@ namespace Webserv
 
 	void ConfigParser::createServer(std::string &config, ConfigServer &server)
 	{
+		std::vector<std::string> parameters;
+		std::vector<std::string> errorCodes;
+		bool flagLoc = true;
+		bool flagAutoindex = false;
+		bool flagMaxSize = false;
+
+		for (size_t i = 0; i < parameters.size(); i++)
+		{
+			if (parameters[i] == "listen" && (i + 1) < parameters.size() && flagLoc)
+			{
+				if (server.getPort())
+					throw ErrorException("Port is duplicated");
+				server.setPort(parameters[++i]);
+			}
+			else if (parameters[i] == "location" && (i + 1) < parameters.size())
+			{
+				std::string path;
+				i++;
+				if (parameters[i] == "{" || parameters[i] == "}")
+					throw ErrorException("Wrong character in server scope{}");
+				path = parameters[i];
+				std::vector<std::string> codes;
+				if (parameters[++i] != "{")
+					throw ErrorException("Wrong character in server scope{}");
+				i++;
+				while (i < parameters.size() && parameters[i] != "}")
+					codes.push_back(parameters[i++]);
+				server.setLocation(path, codes);
+				if (i < parameters.size() && parameters[i] != "}")
+					throw ErrorException("Wrong character in server scope{}");
+				flag_loc = 0;
+			}
+			else if (parameters[i] == "host" && (i + 1) < parameters.size() && flagLoc)
+			{
+				if (server.getHost())
+					throw ErrorException("Host is duplicated");
+				server.setHost(parameters[++i]);
+			}
+			else if (parameters[i] == "root" && (i + 1) < parameters.size() && flagLoc)
+			{
+				if (!server.getRoot().empty())
+					throw ErrorException("Root is duplicated");
+				server.setRoot(parametrs[++i]);
+			}
+			else if (parameters[i] == "error_page" && (i + 1) < parameters.size() && flagLocs)
+			{
+				while (++i < parameters.size())
+				{
+					errorCodes.push_back(parameters[i]);
+					if (parameters[i].find(';') != std::string::npos)
+						break;
+					if (i + 1 >= parameters.size())
+						throw ErrorException("Wrong character out of server scope{}");
+				}
+			}
+			else if (parameters[i] == "client_max_body_size" && (i + 1) < parameters.size() && flagLoc)
+			{
+				if (flagMaxSize)
+					throw ErrorException("Client_max_body_size is duplicated");
+				server.setClientMaxBodySize(parameters[++i]);
+				flagMaxSize = true;
+			}
+			else if (parameters[i] == "server_name" && (i + 1) < parameters.size() && flagLoc)
+			{
+				if (!server.getServerName().empty())
+					throw ErrorException("Server_name is duplicated");
+				server.setServerName(parameters[++i]);
+			}
+			else if (parameters[i] == "index" && (i + 1) < parametrs.size() && flag_loc)
+			{
+				if (!server.getIndex().empty())
+					throw ErrorException("Index is duplicated");
+				server.setIndex(parametrs[++i]);
+			}
+			else if (parametrs[i] == "autoindex" && (i + 1) < parametrs.size() && flagLoc)
+			{
+				if (flagAutoindex)
+					throw ErrorException("Autoindex of server is duplicated");
+				server.setAutoindex(parametrs[++i]);
+				flagAutoindex = true;
+			}
+			else if (parametrs[i] != "}" && parametrs[i] != "{")
+			{
+				if (!flag_loc)
+					throw ErrorException("Parametrs after location");
+				else
+					throw ErrorException("Unsupported directive");
+			}
+		}
+		if (server.getRoot().empty())
+			server.setRoot("/;");
+		if (server.getHost() == 0)
+			server.setHost("localhost;");
+		if (server.getIndex().empty())
+			server.setIndex("index.html;");
+		if (ConfigFile::isFileExistAndReadable(server.getRoot(), server.getIndex()))
+			throw ErrorException("Index from config file not found or unreadable");
+		if (server.checkLocaitons())
+			throw ErrorException("Locaition is duplicated");
+		if (!server.getPort())
+			throw ErrorException("Port not found");
+		server.setErrorPages(errorCodes);
+		if (!server.isValidErrorPages())
+			throw ErrorException("Incorrect path for error page or number of error");
 	}
 
 	void ConfigParser::checkServers()
@@ -168,11 +271,9 @@ namespace Webserv
 		std::vector<ConfigServer>::iterator it1;
 		std::vector<ConfigServer>::iterator it2;
 
-		for (it1 = this->_servers.begin();
-			 it1 != this->_servers.end() - 1; it1++)
+		for (it1 = this->_servers.begin(); it1 != this->_servers.end() - 1; it1++)
 		{
-			for (it2 = it1 + 1;
-				 it2 != this->_servers.end(); it2++)
+			for (it2 = it1 + 1; it2 != this->_servers.end(); it2++)
 			{
 				if (it1->getPort() == it2->getPort() && it1->getHost() == it2->getHost() && it1->getServerName() == it2->getServerName())
 					throw ErrorException("Failed server validation");

@@ -82,7 +82,7 @@ namespace Webserv
 		 * @throw error if anything fails
 		 * @return 0 if it doesn't throw anything
 		 */
-		int initConfigParser(const std::string &config_file);
+		void initConfigParser(const std::string &config_file);
 
 		/**
 		 * @return a vector of servers
