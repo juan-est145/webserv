@@ -50,13 +50,8 @@ namespace Webserv
 		void checkToken(std::string &parameter);
 
 	public:
-		// Default constructor
 		ConfigServer();
-		// Default destructor
-		~ConfigServer();
-		// Copy constructor
 		ConfigServer(const ConfigServer &copy);
-		// ConfigServer assignation operator overload
 		ConfigServer &operator=(const ConfigServer &copy);
 
 		/**
@@ -243,6 +238,7 @@ namespace Webserv
 			}
 			virtual ~ErrorException() throw() {}
 		};
+		~ConfigServer();
 	};
 };
 
