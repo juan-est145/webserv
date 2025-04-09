@@ -343,10 +343,10 @@ namespace Webserv
 		// TO DO
 	}
 
-	int ConfigServer::getFd()
-	{
-		return (this->_listen_fd);
-	}
+	// int ConfigServer::getFd()
+	// {
+	// 	return (this->_listen_fd);
+	// }
 
 	const std::string &ConfigServer::getServerName() const
 	{
