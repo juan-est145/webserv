@@ -38,7 +38,7 @@ namespace Webserv
 
         const std::string &getPath() const;
         const std::string &getRootLocation() const;
-        const std::vector<short> &getMethods() const;
+        const std::map<std::string, bool> &getMethods() const;
         const bool &getAutoindex() const;
         const std::string &getIndexLocation() const;
         const std::string &getReturn() const;

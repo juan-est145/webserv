@@ -128,6 +128,61 @@ namespace Webserv
         this->_clientMaxBodySize = parameter;
     }
 
+    const std::string &Location::getPath() const
+    {
+        return (this->_path);
+    }
+
+    const std::string &Location::getRootLocation() const
+    {
+        return (this->_root);
+    }
+
+    const std::string &Location::getIndexLocation() const
+    {
+        return (this->_index);
+    }
+
+    const std::map<std::string, bool> &Location::getMethods() const
+    {
+        return (this->_allowedMethods);
+    }
+
+    const std::vector<std::string> &Location::getCgiPath() const
+    {
+        return (this->_cgiPath);
+    }
+
+    const std::vector<std::string> &Location::getCgiExtension() const
+    {
+        return (this->_cgiExt);
+    }
+
+    const bool &Location::getAutoindex() const
+    {
+        return (this->_autoindex);
+    }
+
+    const std::string &Location::getReturn() const
+    {
+        return (this->_return);
+    }
+
+    const std::string &Location::getAlias() const
+    {
+        return (this->_alias);
+    }
+
+    const std::map<std::string, std::string> &Location::getExtensionPath() const
+    {
+        return (this->_extPath);
+    }
+
+    const unsigned long &Location::getMaxBodySize() const
+    {
+        return (this->_clientMaxBodySize);
+    }
+
     Location::~Location() {}
 
 }
