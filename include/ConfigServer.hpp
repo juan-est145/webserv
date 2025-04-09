@@ -27,8 +27,7 @@ namespace Webserv
 			"root",
 			"index",
 			"allow_methods",
-			"client_body_buffer_size"
-		};
+			"client_body_buffer_size"};
 
 	class Location;
 
@@ -224,7 +223,6 @@ namespace Webserv
 		 */
 		bool checkLocations();
 
-	public:
 		class ErrorException : public std::exception
 		{
 		private:

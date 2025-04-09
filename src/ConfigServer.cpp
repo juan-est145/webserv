@@ -313,10 +313,148 @@ namespace Webserv
 		Location newLocation;
 		std::vector<std::string> methods;
 		bool flagMethods = false;
+		bool flagAutoIndex = false;
 		bool flagMaxSize = false;
 		int valid;
 
 		newLocation.setPath(nameLocation);
+		for (size_t i = 0; i < parameter.size(); i++)
+		{
+			if (parameter[i] == "root" && (i + 1) < parameter.size())
+			{
+				if (!newLocation.getRootLocation().empty())
+					throw ErrorException("Root location is duplicated");
+				checkToken(parameter[++i]);
+				if (ConfigFile::getPathType(parameter[i]) == 2)
+					newLocation.setRootLocation(parameter[i]);
+				else
+					newLocation.setRootLocation(this->_root + parameter[i]);
+			}
+			else if ((parameter[i] == "allow_methods" || parameter[i] == "methods") && (i + 1) < parameter.size())
+			{
+				if (flagMethods)
+					throw ErrorException("Allow_methods of location is duplicated");
+				std::vector<std::string> methods;
+				while (++i < parameter.size())
+				{
+					if (parameter[i].find(";") != std::string::npos)
+					{
+						checkToken(parameter[i]);
+						methods.push_back(parameter[i]);
+						break;
+					}
+					else
+					{
+						methods.push_back(parameter[i]);
+						if (i + 1 >= parameter.size())
+							throw ErrorException("Token is invalid");
+					}
+				}
+				newLocation.setMethods(methods);
+				flagMethods = true;
+			}
+			else if (parameter[i] == "autoindex" && (i + 1) < parameter.size())
+			{
+				if (nameLocation == "/cgi-bin")
+					throw ErrorException("Parametr autoindex not allow for CGI");
+				if (flagAutoIndex)
+					throw ErrorException("Autoindex of location is duplicated");
+				checkToken(parameter[++i]);
+				newLocation.setAutoindex(parameter[i]);
+				flagAutoIndex = true;
+			}
+			else if (parameter[i] == "index" && (i + 1) < parameter.size())
+			{
+				if (!newLocation.getIndexLocation().empty())
+					throw ErrorException("Index of location is duplicated");
+				checkToken(parameter[++i]);
+				newLocation.setIndexLocation(parameter[i]);
+			}
+			else if (parameter[i] == "return" && (i + 1) < parameter.size())
+			{
+				if (nameLocation == "/cgi-bin")
+					throw ErrorException("Parametr return not allow for CGI");
+				if (!newLocation.getReturn().empty())
+					throw ErrorException("Return of location is duplicated");
+				checkToken(parameter[++i]);
+				newLocation.setReturn(parameter[i]);
+			}
+			else if (parameter[i] == "alias" && (i + 1) < parameter.size())
+			{
+				if (nameLocation == "/cgi-bin")
+					throw ErrorException("Parametr alias not allow for CGI");
+				if (!newLocation.getAlias().empty())
+					throw ErrorException("Alias of location is duplicated");
+				checkToken(parameter[++i]);
+				newLocation.setAlias(parameter[i]);
+			}
+			else if (parameter[i] == "cgi_ext" && (i + 1) < parameter.size())
+			{
+				std::vector<std::string> extension;
+				while (++i < parameter.size())
+				{
+					if (parameter[i].find(";") != std::string::npos)
+					{
+						checkToken(parameter[i]);
+						extension.push_back(parameter[i]);
+						break;
+					}
+					else
+					{
+						extension.push_back(parameter[i]);
+						if (i + 1 >= parameter.size())
+							throw ErrorException("Token is invalid");
+					}
+				}
+				newLocation.setCgiExtension(extension);
+			}
+			else if (parameter[i] == "cgi_path" && (i + 1) < parameter.size())
+			{
+				std::vector<std::string> path;
+				while (++i < parameter.size())
+				{
+					if (parameter[i].find(";") != std::string::npos)
+					{
+						checkToken(parameter[i]);
+						path.push_back(parameter[i]);
+						break;
+					}
+					else
+					{
+						path.push_back(parameter[i]);
+						if (i + 1 >= parameter.size())
+							throw ErrorException("Token is invalid");
+					}
+					if (parameter[i].find("/python") == std::string::npos && parameter[i].find("/bash") == std::string::npos)
+						throw ErrorException("cgi_path is invalid");
+				}
+				newLocation.setCgiPath(path);
+			}
+			else if (parameter[i] == "client_max_body_size" && (i + 1) < parameter.size())
+			{
+				if (flagMaxSize)
+					throw ErrorException("Maxbody_size of location is duplicated");
+				checkToken(parameter[++i]);
+				newLocation.setMaxBodySize(parameter[i]);
+				flagMaxSize = true;
+			}
+			else if (i < parameter.size())
+				throw ErrorException("Parametr in a location is invalid");
+		}
+		if (newLocation.getPath() != "/cgi-bin" && newLocation.getIndexLocation().empty())
+			newLocation.setIndexLocation(this->_index);
+		if (!flagMaxSize)
+			newLocation.setMaxBodySize(this->_clientMaxBodySize);
+		valid = isValidLocation(newLocation);
+		if (valid == 1)
+			throw ErrorException("Failed CGI validation");
+		else if (valid == 2)
+			throw ErrorException("Failed path in locaition validation");
+		else if (valid == 3)
+			throw ErrorException("Failed redirection file in locaition validation");
+		else if (valid == 4)
+			throw ErrorException("Failed alias file in locaition validation");
+		this->_locations.push_back(newLocation);
 	}
 
 	bool ConfigServer::isValidHost(std::string host) const
