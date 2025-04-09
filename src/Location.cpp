@@ -123,6 +123,11 @@ namespace Webserv
         this->_clientMaxBodySize = body_size;
     }
 
+    void Location::setMaxBodySize(unsigned long parameter)
+    {
+        this->_clientMaxBodySize = parameter;
+    }
+
     Location::~Location() {}
 
 }
