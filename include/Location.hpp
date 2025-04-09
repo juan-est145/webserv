@@ -5,7 +5,6 @@
 #include <vector>
 #include <map>
 #include "AuxFunc.hpp"
-#include "ConfigFile.hpp"
 #include "ConfigServer.hpp"
 
 namespace Webserv
@@ -47,7 +46,7 @@ namespace Webserv
         const std::vector<std::string> &getCgiExtension() const;
         const std::map<std::string, std::string> &getExtensionPath() const;
         const unsigned long &getMaxBodySize() const;
-        //std::string getPrintMethods() const; // for checking only
+        // std::string getPrintMethods() const; // for checking only
         ~Location();
 
     private:

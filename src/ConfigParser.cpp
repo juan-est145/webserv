@@ -203,9 +203,9 @@ namespace Webserv
 			{
 				if (!server.getRoot().empty())
 					throw ErrorException("Root is duplicated");
-				server.setRoot(parametrs[++i]);
+				server.setRoot(parameters[++i]);
 			}
-			else if (parameters[i] == "error_page" && (i + 1) < parameters.size() && flagLocs)
+			else if (parameters[i] == "error_page" && (i + 1) < parameters.size() && flagLoc)
 			{
 				while (++i < parameters.size())
 				{
@@ -229,22 +229,22 @@ namespace Webserv
 					throw ErrorException("Server_name is duplicated");
 				server.setServerName(parameters[++i]);
 			}
-			else if (parameters[i] == "index" && (i + 1) < parametrs.size() && flag_loc)
+			else if (parameters[i] == "index" && (i + 1) < parameters.size() && flagLoc)
 			{
 				if (!server.getIndex().empty())
 					throw ErrorException("Index is duplicated");
-				server.setIndex(parametrs[++i]);
+				server.setIndex(parameters[++i]);
 			}
-			else if (parametrs[i] == "autoindex" && (i + 1) < parametrs.size() && flagLoc)
+			else if (parameters[i] == "autoindex" && (i + 1) < parameters.size() && flagLoc)
 			{
 				if (flagAutoindex)
 					throw ErrorException("Autoindex of server is duplicated");
-				server.setAutoindex(parametrs[++i]);
+				server.setAutoindex(parameters[++i]);
 				flagAutoindex = true;
 			}
-			else if (parametrs[i] != "}" && parametrs[i] != "{")
+			else if (parameters[i] != "}" && parameters[i] != "{")
 			{
-				if (!flag_loc)
+				if (!flagLoc)
 					throw ErrorException("Parametrs after location");
 				else
 					throw ErrorException("Unsupported directive");
