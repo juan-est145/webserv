@@ -315,6 +315,8 @@ namespace Webserv
 		bool flagMethods = false;
 		bool flagMaxSize = false;
 		int valid;
+
+		newLocation.setPath(nameLocation);
 	}
 
 	bool ConfigServer::isValidHost(std::string host) const
