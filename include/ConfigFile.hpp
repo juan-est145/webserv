@@ -29,12 +29,8 @@ namespace Webserv
 			PATH_FOLDER = 1,
 			PATH_OTHER = 2
 		};
-		// Default constructor
 		ConfigFile();
-		// Constructor that takes a string as an argument
 		ConfigFile(const std::string &path);
-		// Destructor
-		~ConfigFile();
 		/**
 		 * @return -1 if error, 0 if file, 1 if folder,
 		 * 2 if other
@@ -51,8 +47,7 @@ namespace Webserv
 		 * Checks if index or path + index are valid files
 		 * @return -1 if not, 0 if ok
 		 */
-		static int fileReadable(const std::string &path,
-								const std::string &index);
+		static int fileReadable(const std::string &path, const std::string &index);
 
 		/**
 		 * @return string if path ok, NULL if path not ok
@@ -63,6 +58,7 @@ namespace Webserv
 		 * @return _path
 		 */
 		std::string getPath();
+		~ConfigFile();
 	};
 }
 

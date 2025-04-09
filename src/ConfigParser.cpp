@@ -256,9 +256,9 @@ namespace Webserv
 			server.setHost("localhost;");
 		if (server.getIndex().empty())
 			server.setIndex("index.html;");
-		if (ConfigFile::isFileExistAndReadable(server.getRoot(), server.getIndex()))
+		if (ConfigFile::fileReadable(server.getRoot(), server.getIndex()))
 			throw ErrorException("Index from config file not found or unreadable");
-		if (server.checkLocaitons())
+		if (server.checkLocations())
 			throw ErrorException("Locaition is duplicated");
 		if (!server.getPort())
 			throw ErrorException("Port not found");
@@ -285,10 +285,6 @@ namespace Webserv
 	const std::vector<ConfigServer> &ConfigParser::getServers()
 	{
 		return (this->_servers);
-	}
-
-	int ConfigParser::print()
-	{
 	}
 
 	ConfigParser::~ConfigParser() {}

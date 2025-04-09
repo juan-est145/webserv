@@ -32,14 +32,11 @@ namespace Webserv
 		return (access(path.c_str(), R_OK | F_OK));
 	}
 
-	int ConfigFile::fileReadable(const std::string &path,
-								 const std::string &index)
+	int ConfigFile::fileReadable(const std::string &path, const std::string &index)
 	{
-		if (getPathType(index) == PATH_FILE &&
-			!fileOk(index))
+		if (getPathType(index) == PATH_FILE && !fileOk(index))
 			return (0);
-		if (getPathType(path + index) == PATH_FILE &&
-			!fileOk(path + index))
+		if (getPathType(path + index) == PATH_FILE && !fileOk(path + index))
 			return (0);
 		return (-1);
 	}
