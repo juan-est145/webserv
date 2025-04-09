@@ -271,8 +271,7 @@ namespace Webserv
 		}
 	}
 
-	void ConfigServer::setErrorPages(
-		std::vector<std::string> &parameter)
+	void ConfigServer::setErrorPages(std::vector<std::string> &parameter)
 	{
 		if (parameter.empty())
 			return;
@@ -316,8 +315,6 @@ namespace Webserv
 		bool flagMethods = false;
 		bool flagMaxSize = false;
 		int valid;
-
-		
 	}
 
 	bool ConfigServer::isValidHost(std::string host) const
