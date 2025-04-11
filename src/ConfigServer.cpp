@@ -88,20 +88,9 @@ namespace Webserv
 	void ConfigServer::setRoot(std::string root)
 	{
 		this->checkToken(root);
-		if (ConfigFile::getPathType(root) ==
-			ConfigFile::PATH_OTHER)
-		{
-			this->_root = root;
-			return;
-		}
-
-		char dir[1024];
-		getcwd(dir, 1024);
-		std::string full_root = dir + root;
-		if (ConfigFile::getPathType(full_root) !=
-			ConfigFile::PATH_OTHER)
+		if (ConfigFile::getPathType(root) != ConfigFile::PATH_FOLDER)
 			throw ErrorException("Wrong syntax: root");
-		this->_root = full_root;
+		this->_root = root;
 	}
 
 	// void	ConfigServer::setFd(int fd)
