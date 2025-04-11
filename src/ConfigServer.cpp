@@ -6,7 +6,7 @@ namespace Webserv
 	ConfigServer::ConfigServer()
 	{
 		this->_port = 0;
-		this->_host = 0;
+		this->_host = "";
 		this->_serverName = "";
 		this->_root = "";
 		this->_clientMaxBodySize = MAX_CONTENT_LENGTH;
@@ -83,9 +83,7 @@ namespace Webserv
 		this->checkToken(parameter);
 		if (parameter == "localhost")
 			parameter = "127.0.0.1";
-		if (!isValidHost(parameter))
-			throw ErrorException("Wrong syntax: host");
-		this->_host = inet_addr(parameter.data());
+		this->_host = parameter;
 	}
 
 	void ConfigServer::setRoot(std::string root)
@@ -457,13 +455,6 @@ namespace Webserv
 		this->_locations.push_back(newLocation);
 	}
 
-	bool ConfigServer::isValidHost(std::string host) const
-	{
-		struct sockaddr_in sockaddr;
-
-		return (inet_pton(AF_INET, host.c_str(), &(sockaddr.sin_addr)) ? true : false);
-	}
-
 	bool ConfigServer::isValidErrorPages()
 	{
 		std::map<short, std::string>::const_iterator it;
@@ -498,7 +489,7 @@ namespace Webserv
 		return (this->_port);
 	}
 
-	const in_addr_t &ConfigServer::getHost() const
+	const std::string &ConfigServer::getHost() const
 	{
 		return (this->_host);
 	}

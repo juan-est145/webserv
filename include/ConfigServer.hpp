@@ -35,7 +35,7 @@ namespace Webserv
 	{
 	private:
 		uint16_t _port;
-		in_addr_t _host;
+		std::string _host;
 		std::string _serverName;
 		std::string _root;
 		std::string _index;
@@ -131,12 +131,6 @@ namespace Webserv
 		void setAutoindex(std::string autoindex);
 
 		/**
-		 * Checks host
-		 * @return true if host is valid, false if invalid
-		 */
-		bool isValidHost(std::string host) const;
-
-		/**
 		 * Valid error pages
 		 * @return true if error pages are valid, false if
 		 * invalid
@@ -167,7 +161,7 @@ namespace Webserv
 		/**
 		 * Gets host
 		 */
-		const in_addr_t &getHost() const;
+		const std::string &getHost() const;
 
 		/**
 		 * Gets client_max_body_size
