@@ -1,5 +1,4 @@
 #include "../include/ConfigFile.hpp"
-
 namespace Webserv
 {
 	ConfigFile::ConfigFile() : _path(NULL)
