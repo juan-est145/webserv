@@ -88,16 +88,6 @@ namespace Webserv
         this->_alias = parameter;
     }
 
-    void Location::setAlias(std::string parameter)
-    {
-        this->_alias = parameter;
-    }
-
-    void Location::setCgiPath(std::vector<std::string> path)
-    {
-        this->_cgiPath = path;
-    }
-
     void Location::setCgiPath(std::vector<std::string> path)
     {
         this->_cgiPath = path;
