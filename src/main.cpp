@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/02/08 12:15:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/11 16:33:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,17 @@ void intSigHandler(int signum)
         g_stop = true;
 }
 
-int main(void)
+int main(int argc, char *argv[])
 {
+    std::string confFile = argc < 2 ? "./config/default.conf" : argv[1];
     std::string host = "127.0.0.1";
     std::string port = "3000";
     Webserv::Server *server = NULL;
     signal(SIGINT, &intSigHandler);
     try
     {
+        Webserv::ConfigParser parser;
+        parser.initConfigParser(confFile);
         server = new Webserv::Server(host, port);
         server->initServer();
     }

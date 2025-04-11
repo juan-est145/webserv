@@ -104,12 +104,9 @@ namespace Webserv
 
 	size_t ConfigParser::findEndServer(size_t start, std::string &content)
 	{
-		size_t i;
-		size_t scope;
+		size_t scope = 0;
 
-		i = start + 1;
-		scope = 0;
-		while (content[i])
+		for (size_t i = start + 1; content[i]; i++)
 		{
 			if (content[i] == '{')
 				scope++;
