@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   AuxFunc.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/01 16:24:10 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/11 12:05:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,23 +53,36 @@ namespace Webserv
 		close(eventList.data.fd);
 	}
 
-	AuxFunc::~AuxFunc(void) {}
+	int AuxFunc::itoa(std::string str)
+	{
+		std::stringstream ss(str);
+		if (str.length() > 10)
+			throw std::exception();
+		for (size_t i = 0; i < str.length(); ++i)
+		{
+			if (!isdigit(str[i]))
+				throw std::exception();
+		}
+		int res;
+		ss >> res;
+		return (res);
+	}
 
-	bool isxdigit(char c) {
+	bool AuxFunc::isDigit(char c) {
 		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))  {
 			return true;
 		}
 		return false;
 	}
 	
-	std::string urldecode(const char *url)
+	std::string AuxFunc::urldecode(const char *url)
 	{
 		char a, b;
 		std::string dst;
 		while (*url) {
 				if ((*url == '%') &&
 					((a = url[1]) && (b = url[2])) &&
-					(isxdigit(a) && isxdigit(b))) {
+					(AuxFunc::isDigit(a) && AuxFunc::isDigit(b))) {
 						//Convert the firts character in hexadecimal
 						if (a >= 'a')
 							a -= 32;  
@@ -98,4 +111,6 @@ namespace Webserv
 			}
 			return dst;
 	}
+
+	AuxFunc::~AuxFunc(void) {}
 }
