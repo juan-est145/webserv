@@ -121,7 +121,7 @@ namespace Webserv
 		return (start);
 	}
 
-	std::vector<std::string> splitParameters(std::string line, std::string del)
+	std::vector<std::string> ConfigParser::splitParameters(std::string line, std::string del)
 	{
 		std::vector<std::string> strs;
 		std::string temp;

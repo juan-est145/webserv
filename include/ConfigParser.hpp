@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <exception>
 #include "ConfigFile.hpp"
+#include "ConfigServer.hpp"
 
 class ConfigServer;
 
@@ -88,7 +89,7 @@ namespace Webserv
 		 * @return a vector of servers
 		 */
 		const std::vector<ConfigServer> &getServers();
-		
+
 		class ErrorException : public std::exception
 		{
 		private:

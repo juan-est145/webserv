@@ -78,6 +78,11 @@ namespace Webserv
             throw ConfigServer::ErrorException("Wrong autoindex");
     }
 
+    void Location::setIndexLocation(std::string parameter)
+    {
+        this->_index = parameter;
+    }
+
     void Location::setReturn(std::string parameter)
     {
         this->_return = parameter;

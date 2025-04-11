@@ -2,7 +2,6 @@
 
 namespace Webserv
 {
-
 	ConfigServer::ConfigServer()
 	{
 		this->_port = 0;
