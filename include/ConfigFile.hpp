@@ -54,6 +54,8 @@ namespace Webserv
 		 */
 		std::string readFile(const std::string &path);
 
+		static int checkFile(const std::string &path, int mode);
+
 		/**
 		 * @return _path
 		 */

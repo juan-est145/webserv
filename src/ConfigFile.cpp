@@ -55,6 +55,11 @@ namespace Webserv
 		return (stream_save.str());
 	}
 
+	int ConfigFile::checkFile(const std::string &path, int mode)
+	{
+		return (access(path.c_str(), mode));
+	}
+
 	std::string ConfigFile::getPath()
 	{
 		return (this->_path);

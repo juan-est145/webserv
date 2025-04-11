@@ -471,7 +471,76 @@ namespace Webserv
 
 	int ConfigServer::isValidLocation(Location &location)
 	{
-		// TO DO
+		if (location.getPath() == "/cgi-bin")
+		{
+			if (location.getCgiPath().empty() || location.getCgiExtension().empty() || location.getIndexLocation().empty())
+				return (1);
+			if (ConfigFile::checkFile(location.getIndexLocation(), R_OK) < 0)
+			{
+				std::string path = location.getRootLocation() + location.getPath() + "/" + location.getIndexLocation();
+				// if (ConfigFile::getTypePath(path) != 1)
+				// {
+				// 	std::string root = getcwd(NULL, 0);
+				// 	location.setRootLocation(root);
+				// 	path = root + location.getPath() + "/" + location.getIndexLocation();
+				// }
+				if (path.empty() || ConfigFile::getPathType(path) != 1 || ConfigFile::checkFile(path, 4) < 0)
+					return (1);
+			}
+			if (location.getCgiPath().size() != location.getCgiExtension().size())
+				return (1);
+			std::vector<std::string>::const_iterator it;
+			for (it = location.getCgiPath().begin(); it != location.getCgiPath().end(); ++it)
+			{
+				if (ConfigFile::getPathType(*it) < 0)
+					return (1);
+			}
+			std::vector<std::string>::const_iterator it_path;
+			for (it = location.getCgiExtension().begin(); it != location.getCgiExtension().end(); ++it)
+			{
+				std::string tmp = *it;
+				if (tmp != ".py" && tmp != ".sh" && tmp != "*.py" && tmp != "*.sh")
+					return (1);
+				for (it_path = location.getCgiPath().begin(); it_path != location.getCgiPath().end(); ++it_path)
+				{
+					std::string tmp_path = *it_path;
+					if (tmp == ".py" || tmp == "*.py")
+					{
+						if (tmp_path.find("python") != std::string::npos)
+							location._extPath.insert(std::make_pair(".py", tmp_path));
+					}
+					else if (tmp == ".sh" || tmp == "*.sh")
+					{
+						if (tmp_path.find("bash") != std::string::npos)
+							location._extPath[".sh"] = tmp_path;
+					}
+				}
+			}
+			if (location.getCgiPath().size() != location.getExtensionPath().size())
+				return (1);
+		}
+		else
+		{
+			if (location.getPath()[0] != '/')
+				return (2);
+			if (location.getRootLocation().empty())
+			{
+				location.setRootLocation(this->_root);
+			}
+			if (ConfigFile::fileReadable(location.getRootLocation() + location.getPath() + "/", location.getIndexLocation()))
+				return (5);
+			if (!location.getReturn().empty())
+			{
+				if (ConfigFile::fileReadable(location.getRootLocation(), location.getReturn()))
+					return (3);
+			}
+			if (!location.getAlias().empty())
+			{
+				if (ConfigFile::fileReadable(location.getRootLocation(), location.getAlias()))
+					return (4);
+			}
+		}
+		return (0);
 	}
 
 	// int ConfigServer::getFd()
