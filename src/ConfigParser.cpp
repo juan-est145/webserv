@@ -1,4 +1,4 @@
-#include "ConfigParser.hpp"
+#include "../include/ConfigParser.hpp"
 
 namespace Webserv
 {
@@ -121,7 +121,7 @@ namespace Webserv
 		return (start);
 	}
 
-	static std::vector<std::string> splitParameters(std::string line, std::string del)
+	std::vector<std::string> splitParameters(std::string line, std::string del)
 	{
 		std::vector<std::string> strs;
 		std::string temp;
@@ -195,7 +195,7 @@ namespace Webserv
 			}
 			else if (parameters[i] == "host" && (i + 1) < parameters.size() && flagLoc)
 			{
-				if (server.getHost())
+				if (server.getHost() != "")
 					throw ErrorException("Host is duplicated");
 				server.setHost(parameters[++i]);
 			}
@@ -252,7 +252,7 @@ namespace Webserv
 		}
 		if (server.getRoot().empty())
 			server.setRoot("/;");
-		if (server.getHost() == 0)
+		if (server.getHost() == "")
 			server.setHost("localhost;");
 		if (server.getIndex().empty())
 			server.setIndex("index.html;");

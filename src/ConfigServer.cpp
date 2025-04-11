@@ -1,4 +1,4 @@
-#include "ConfigServer.hpp"
+#include "../include/ConfigServer.hpp"
 
 namespace Webserv
 {
@@ -121,7 +121,7 @@ namespace Webserv
 			if (!std::isdigit(parameter[i]))
 				throw ErrorException("Wrong syntax: port");
 		}
-		port = stoi(parameter);
+		port = AuxFunc::itoa(parameter);
 		if (port < 1 || port > 65636)
 			throw ErrorException("Wrong syntax: port");
 		this->_port = (uint16_t)port;
@@ -138,7 +138,7 @@ namespace Webserv
 			if (!std::isdigit(parameter[i]))
 				throw ErrorException("Wrong syntax: client_max_body_size");
 		}
-		body_size = stoi(parameter);
+		body_size = AuxFunc::itoa(parameter);
 		if (!body_size)
 			throw ErrorException("Wrong syntax: client_max_body_size");
 		this->_clientMaxBodySize = body_size;
@@ -284,7 +284,7 @@ namespace Webserv
 			}
 			if (parameter[i].size() != 3)
 				throw ErrorException("Error code is invalid");
-			short code_error = stoi(parameter[i]);
+			short code_error = AuxFunc::itoa(parameter[i]);
 			if (statusCodeString(code_error) == "Undefined" || code_error < 400)
 				throw ErrorException("Incorrect error code: " + parameter[i]);
 			i++;

@@ -8,6 +8,10 @@ SRCS = $(SRC-PATH)/main.cpp\
 $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/Logger.cpp\
 $(SRC-PATH)/Request.cpp\
+$(SRC-PATH)/ConfigParser.cpp\
+$(SRC-PATH)/ConfigServer.cpp\
+$(SRC-PATH)/Location.cpp\
+$(SRC-PATH)/ConfigFile.cpp\
 $(SRC-PATH)/HtmlFile.cpp\
 $(SRC-PATH)/AuxFunc.cpp\
 
@@ -17,6 +21,10 @@ HEADER = $(HEADER-PATH)/main.hpp\
 $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/Logger.hpp\
 $(HEADER-PATH)/Request.hpp\
+$(HEADER-PATH)/ConfigParser.hpp\
+$(HEADER-PATH)/ConfigServer.hpp\
+$(HEADER-PATH)/Location.hpp\
+$(HEADER-PATH)/ConfigFile.hpp\
 $(HEADER-PATH)/HtmlFile.hpp\
 $(HEADER-PATH)/AuxFunc.hpp\
 

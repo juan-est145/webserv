@@ -64,7 +64,7 @@ namespace Webserv
 		/**
 		 * Creates a servers and fills values with config
 		 */
-		void ConfigParser::createServer(std::string &config, ConfigServer &server);
+		void createServer(std::string &config, ConfigServer &server);
 
 		/**
 		 * Checks if there are repeated parameters
