@@ -280,13 +280,12 @@ namespace Webserv
 			this->checkToken(path);
 			if (ConfigFile::getPathType(path) != ConfigFile::PATH_OTHER)
 			{
-				if (ConfigFile::getPathType(this->_root + path) != ConfigFile::PATH_FOLDER)
+				if (ConfigFile::getPathType(this->_root + path) != ConfigFile::PATH_FILE)
 					throw ErrorException("Incorrect path for error page file: " + this->_root + path);
 				if (ConfigFile::fileOk(this->_root + path) == -1 || ConfigFile::fileOk(this->_root + path) == -1)
 					throw ErrorException("Error page file: " + this->_root + path + " is not accesible");
 			}
-			std::map<short, std::string>::iterator it =
-				this->_errorPages.find(code_error);
+			std::map<short, std::string>::iterator it = this->_errorPages.find(code_error);
 			if (it != this->_errorPages.end())
 				this->_errorPages[code_error] = path;
 			else
