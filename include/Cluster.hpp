@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 16:57:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:10:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <vector>
 #include <sys/socket.h>
 #include <sys/socket.h>
 #include "Server.hpp"
+#include "ConfigServer.hpp"
 
 namespace Webserv
 {
@@ -38,12 +40,14 @@ namespace Webserv
 
 		static Cluster *cluster;
 		static Cluster *getInstance();
+		const std::vector<ConfigServer> &getConfigurations(void) const;
 		~Cluster();
 
 	private:
 		int _epollFd;
 		struct addrinfo *_address;
 		std::map<int, SocketData> _sockets;
+		const std::vector<ConfigServer> &_configurations;
 		Cluster(void);
 		Cluster(const Cluster &toCopy);
 		Cluster &operator=(const Cluster &toCopy);
