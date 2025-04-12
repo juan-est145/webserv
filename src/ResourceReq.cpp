@@ -51,12 +51,12 @@ namespace Webserv
 		// TODO: Later on I need to distinguish between type of files
 		this->_resourceType = ResourceReq::REG_FILE;
 		if (uri == "/")
-			this->_path = "./html/index.html";
+			this->_path = "./www/index.html";
 		else if (uri == "/upload")
-			this->_path = "./html/upload.html";
+			this->_path = "./www/upload.html";
 		else
 		{
-			this->_path = "./html/error404.html";
+			this->_path = "./www/error404.html";
 			responseCode = 404;
 		}
 		return (responseCode);
