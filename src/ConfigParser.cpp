@@ -256,7 +256,7 @@ namespace Webserv
 		if (ConfigFile::fileReadable(server.getRoot(), server.getIndex()))
 			throw ErrorException("Index from config file not found or unreadable");
 		if (server.checkLocations())
-			throw ErrorException("Locaition is duplicated");
+			throw ErrorException("Location is duplicated");
 		if (!server.getPort())
 			throw ErrorException("Port not found");
 		server.setErrorPages(errorCodes);
