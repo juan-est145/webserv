@@ -425,7 +425,7 @@ namespace Webserv
 				flagMaxSize = true;
 			}
 			else if (i < parameter.size())
-				throw ErrorException("Parametr in a location is invalid");
+				throw ErrorException("Parameter in a location is invalid");
 		}
 		if (newLocation.getPath() != "/cgi-bin" && newLocation.getIndexLocation().empty())
 			newLocation.setIndexLocation(this->_index);
