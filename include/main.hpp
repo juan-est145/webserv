@@ -4,7 +4,8 @@
 #include <string>
 #include <iostream>
 #include <signal.h>
-#include "Cluster.hpp"
+//#include "Cluster.hpp"
+#include "Server.hpp"
 #include "ConfigParser.hpp"
 
 #endif
