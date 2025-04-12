@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 18:10:17 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:54:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ namespace Webserv
 		for (configurationIter it = this->_configurations.begin(); it != this->_configurations.end(); it++)
 		{
 			struct addrinfo *address = new struct addrinfo;
-			if (int errorCode = getaddrinfo(NULL, it->getPort(), &hints, &address) != 0)
+			if (int errorCode = getaddrinfo(NULL, AuxFunc::ft_itoa(it->getPort()).c_str(), &hints, &address) != 0)
 			{
 				delete (address);
 				Webserv::Logger::errorLog(errorCode, gai_strerror, false);
