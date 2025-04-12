@@ -242,7 +242,7 @@ namespace Webserv
 			else if (parameters[i] != "}" && parameters[i] != "{")
 			{
 				if (!flagLoc)
-					throw ErrorException("Parametrs after location");
+					throw ErrorException("Parameters after location");
 				else
 					throw ErrorException("Unsupported directive");
 			}
