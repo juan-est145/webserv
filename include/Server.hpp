@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/01 17:07:58 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:18:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace Webserv
 	private:
 		int _listenFd;
 		int _epollFd;
-		std::map<int, Request*> _clientPool;
+		std::map<int, Request *> _clientPool;
 		struct addrinfo *_address;
 		const std::string _host;
 		const std::string _port;
@@ -74,6 +74,5 @@ namespace Webserv
 		~Server();
 	};
 }
-std::ostream &operator<<(std::ostream &out, const Webserv::Server &Server);
 
 #endif
