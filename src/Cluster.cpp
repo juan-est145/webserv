@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 16:56:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:59:53 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,15 @@ namespace Webserv
 		return (*this);
 	}
 
-	Cluster::~Cluster() {}
+	Cluster *Cluster::getInstance(void)
+	{
+		if (cluster == NULL)
+			cluster = new Cluster();
+		return (cluster);
+	}
+
+	Cluster::~Cluster() 
+	{
+		delete (cluster);
+	}
 }

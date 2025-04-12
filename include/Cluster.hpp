@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 16:31:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 16:57:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ namespace Webserv
 		} t_SocketData;
 
 		static Cluster *cluster;
+		static Cluster *getInstance();
 		~Cluster();
 
 	private:
