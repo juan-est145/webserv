@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:10:32 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:17:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ namespace Webserv
 		} t_SocketData;
 
 		static Cluster *cluster;
-		static Cluster *getInstance();
+		static Cluster *getInstance(const std::vector<ConfigServer> &configurations);
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		~Cluster();
 
@@ -49,6 +49,7 @@ namespace Webserv
 		std::map<int, SocketData> _sockets;
 		const std::vector<ConfigServer> &_configurations;
 		Cluster(void);
+		Cluster(const std::vector<ConfigServer> &configurations);
 		Cluster(const Cluster &toCopy);
 		Cluster &operator=(const Cluster &toCopy);
 	};
