@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:20:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:47:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ namespace Webserv
 	Cluster::Cluster(void): _configurations(std::vector<ConfigServer>())
 	{
 		this->_epollFd = -1;
-		memset(&this->_address, 0, sizeof(this->_address));
 	}
 
 	Cluster::Cluster(const std::vector<ConfigServer> &configurations): _configurations(std::vector<ConfigServer>(configurations)) 
@@ -45,18 +44,31 @@ namespace Webserv
 		return (cluster);
 	}
 
+	void Cluster::initVirtualServers(void)
+	{
+		this->obtainAddrInfo();
+	}
+
+	void Cluster::obtainAddrInfo(void)
+	{
+		struct addrinfo hints;
+		std::map<std::string, struct addrinfo *> serverList;
+	
+		memset(&hints, 0, sizeof(hints));
+		hints.ai_family = AF_UNSPEC;
+		hints.ai_socktype = SOCK_STREAM;
+		hints.ai_flags = AI_PASSIVE;
+	}
+
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
 	{
-		return (Cluster::cluster->getConfigurations());	
+		return (Cluster::cluster->_configurations);	
 	}
 
 	int Cluster::getEpollFd(void) const
 	{
-		return (this->_epollFd);
+		return (Cluster::cluster->_epollFd);
 	}
 
-	Cluster::~Cluster() 
-	{
-		delete (cluster);
-	}
+	Cluster::~Cluster() {}
 }

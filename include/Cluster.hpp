@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:20:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:47:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <sys/socket.h>
-#include <sys/socket.h>
 #include "Server.hpp"
 #include "ConfigServer.hpp"
 
@@ -42,16 +40,17 @@ namespace Webserv
 		static Cluster *getInstance(const std::vector<ConfigServer> &configurations);
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		int getEpollFd(void) const;
+		void initVirtualServers(void);
 		~Cluster();
 
 	private:
 		int _epollFd;
-		struct addrinfo *_address;
 		std::map<int, SocketData> _sockets;
 		const std::vector<ConfigServer> &_configurations;
 		Cluster(void);
 		Cluster(const std::vector<ConfigServer> &configurations);
 		Cluster(const Cluster &toCopy);
+		void obtainAddrInfo(void);
 		Cluster &operator=(const Cluster &toCopy);
 	};
 }

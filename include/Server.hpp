@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 16:24:09 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:23:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@
 #include <unistd.h>
 #include <cerrno>
 #include <netdb.h>
+#include <sys/types.h>
 #include <sys/epoll.h>
+#include <sys/socket.h>
 #include <exception>
 #include <cstdio>
 #include <sstream>

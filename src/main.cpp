@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/11 16:33:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:46:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,11 @@ int main(int argc, char *argv[])
     try
     {
         Webserv::ConfigParser parser;
+        Webserv::Cluster *cluster = NULL;
         parser.initConfigParser(confFile);
+        cluster = Webserv::Cluster::cluster->getInstance(parser.getServers());
+        cluster->initVirtualServers();
+        // TO DO: When cluster has been fully implemented, delete the old methods like creating an standalone server
         server = new Webserv::Server(host, port);
         server->initServer();
     }
@@ -42,6 +46,8 @@ int main(int argc, char *argv[])
         std::cerr << e.what() << std::endl;
         if (server)
             delete server;
+        if (Webserv::Cluster::cluster != NULL)
+            delete Webserv::Cluster::cluster;
         return (EXIT_FAILURE);
     }
     catch (const std::exception &e)
@@ -49,8 +55,12 @@ int main(int argc, char *argv[])
         std::cerr << e.what() << std::endl;
         if (server)
             delete server;
+        if (Webserv::Cluster::cluster != NULL)
+            delete Webserv::Cluster::cluster;
         return (EXIT_FAILURE);
     }
     delete server;
+    if (Webserv::Cluster::cluster != NULL)
+        delete Webserv::Cluster::cluster;
     return (EXIT_SUCCESS);
 }
