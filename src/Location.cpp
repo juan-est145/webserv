@@ -112,9 +112,9 @@ namespace Webserv
             if (parametr[i] < '0' || parametr[i] > '9')
                 throw ConfigServer::ErrorException("Wrong syntax: clientMaxBodySize");
         }
-        if (!Webserv::AuxFunc::itoa(parametr))
+        if (!atoi(parametr.c_str()))
             throw ConfigServer::ErrorException("Wrong syntax: clientMaxBodySize");
-        body_size = Webserv::AuxFunc::itoa(parametr);
+        body_size = atoi(parametr.c_str());
         this->_clientMaxBodySize = body_size;
     }
 

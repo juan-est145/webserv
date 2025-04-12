@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/11 12:05:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:17:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,21 +51,6 @@ namespace Webserv
 			throw Webserv::Server::ServerException();
 		}
 		close(eventList.data.fd);
-	}
-
-	int AuxFunc::itoa(std::string str)
-	{
-		std::stringstream ss(str);
-		if (str.length() > 10)
-			throw std::exception();
-		for (size_t i = 0; i < str.length(); ++i)
-		{
-			if (!isdigit(str[i]))
-				throw std::exception();
-		}
-		int res;
-		ss >> res;
-		return (res);
 	}
 
 	bool AuxFunc::isDigit(char c) {

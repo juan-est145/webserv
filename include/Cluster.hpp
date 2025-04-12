@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:47:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:07:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,15 @@ namespace Webserv
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		int getEpollFd(void) const;
 		void initVirtualServers(void);
+		class ClusterException : std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
 		~Cluster();
 
 	private:
+		typedef std::vector<ConfigServer>::const_iterator configurationIter;
 		int _epollFd;
 		std::map<int, SocketData> _sockets;
 		const std::vector<ConfigServer> &_configurations;

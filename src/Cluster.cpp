@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:47:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:10:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,17 @@ namespace Webserv
 		hints.ai_family = AF_UNSPEC;
 		hints.ai_socktype = SOCK_STREAM;
 		hints.ai_flags = AI_PASSIVE;
+		for (configurationIter it = this->_configurations.begin(); it != this->_configurations.end(); it++)
+		{
+			struct addrinfo *address = new struct addrinfo;
+			if (int errorCode = getaddrinfo(NULL, it->getPort(), &hints, &address) != 0)
+			{
+				delete (address);
+				Webserv::Logger::errorLog(errorCode, gai_strerror, false);
+				throw Cluster::ClusterException();
+			}
+		}
+		
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
@@ -68,6 +79,11 @@ namespace Webserv
 	int Cluster::getEpollFd(void) const
 	{
 		return (Cluster::cluster->_epollFd);
+	}
+	
+	const char *Cluster::ClusterException::what(void) const throw ()
+	{
+		return ("There was an error starting the virtual servers and the program must stop");
 	}
 
 	Cluster::~Cluster() {}
