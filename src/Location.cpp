@@ -64,7 +64,7 @@ namespace Webserv
     {
         for (size_t i = 0; i < methods.size(); i++)
         {
-            if (methods[i] != "GET" || methods[i] != "POST" || methods[i] != "DELETE")
+            if (methods[i] != "GET" && methods[i] != "POST" && methods[i] != "DELETE")
                 throw ConfigServer::ErrorException("Allow method not supported " + methods[i]);
             this->_allowedMethods[methods[i]] = true;
         }
