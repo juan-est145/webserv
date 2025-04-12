@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:17:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:20:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ namespace Webserv
 		memset(&this->_address, 0, sizeof(this->_address));
 	}
 
-	Cluster::Cluster(const std::vector<ConfigServer> &configurations): _configurations(std::vector<ConfigServer>(configurations)) {}
+	Cluster::Cluster(const std::vector<ConfigServer> &configurations): _configurations(std::vector<ConfigServer>(configurations)) 
+	{
+		this->_epollFd = -1;
+	}
 
 	Cluster::Cluster(const Cluster &toCopy): _configurations(toCopy.getConfigurations())
 	{
@@ -45,6 +48,11 @@ namespace Webserv
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
 	{
 		return (Cluster::cluster->getConfigurations());	
+	}
+
+	int Cluster::getEpollFd(void) const
+	{
+		return (this->_epollFd);
 	}
 
 	Cluster::~Cluster() 

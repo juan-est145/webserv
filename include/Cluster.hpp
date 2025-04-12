@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:17:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 17:20:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ namespace Webserv
 		static Cluster *cluster;
 		static Cluster *getInstance(const std::vector<ConfigServer> &configurations);
 		const std::vector<ConfigServer> &getConfigurations(void) const;
+		int getEpollFd(void) const;
 		~Cluster();
 
 	private:
