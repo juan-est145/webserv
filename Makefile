@@ -18,6 +18,7 @@ $(SRC-PATH)/PostUpload.cpp\
 $(SRC-PATH)/HttpResponse.cpp\
 $(SRC-PATH)/ConcreteBuilder.cpp\
 $(SRC-PATH)/Director.cpp\
+$(SRC-PATH)/Cluster.cpp\
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -36,6 +37,7 @@ $(HEADER-PATH)/HttpResponse.hpp\
 $(HEADER-PATH)/Builder.hpp\
 $(HEADER-PATH)/ConcreteBuilder.hpp\
 $(HEADER-PATH)/Director.hpp\
+$(HEADER-PATH)/Cluster.hpp\
 
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project

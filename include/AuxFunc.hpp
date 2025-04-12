@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 18:37:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 19:12:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ namespace Webserv
 		static std::string urldecode(const char *url);
 		static bool isDigit(char c);
 		static std::string ft_itoa(int number);
+		static std::string ft_itoa(unsigned int number);
 	};
 
 }

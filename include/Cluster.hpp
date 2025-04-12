@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 18:07:19 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/12 22:10:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <bitset>
+#include <sstream>
 #include "Server.hpp"
 #include "ConfigServer.hpp"
 
@@ -37,6 +39,7 @@ namespace Webserv
 		} t_SocketData;
 
 		static Cluster *cluster;
+
 		static Cluster *getInstance(const std::vector<ConfigServer> &configurations);
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		int getEpollFd(void) const;
@@ -52,11 +55,13 @@ namespace Webserv
 		typedef std::vector<ConfigServer>::const_iterator configurationIter;
 		int _epollFd;
 		std::map<int, SocketData> _sockets;
-		const std::vector<ConfigServer> &_configurations;
+		const std::vector<ConfigServer> _configurations;
+
 		Cluster(void);
 		Cluster(const std::vector<ConfigServer> &configurations);
 		Cluster(const Cluster &toCopy);
 		void obtainAddrInfo(void);
+		void addressKey(struct addrinfo *address, std::map<std::string, struct addrinfo *> &serverList);
 		Cluster &operator=(const Cluster &toCopy);
 	};
 }
