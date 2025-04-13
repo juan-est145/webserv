@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 22:10:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 10:19:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ namespace Webserv
 		Cluster(const Cluster &toCopy);
 		void obtainAddrInfo(void);
 		void addressKey(struct addrinfo *address, std::map<std::string, struct addrinfo *> &serverList);
+		void bindSocket(void);
 		Cluster &operator=(const Cluster &toCopy);
 	};
 }

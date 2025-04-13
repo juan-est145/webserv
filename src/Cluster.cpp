@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 22:11:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 10:19:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ namespace Webserv
 	void Cluster::initVirtualServers(void)
 	{
 		this->obtainAddrInfo();
+		this->bindSocket();
 	}
 
 	void Cluster::obtainAddrInfo(void)
@@ -97,6 +98,11 @@ namespace Webserv
 			return;
 		}
 		serverList[key] = address;
+	}
+
+	void Cluster::bindSocket(void)
+	{
+		
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
