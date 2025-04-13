@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 11:09:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 11:33:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ namespace Webserv
 			// TO DO: Later on, we need to store the socket somewhere and associate it to
 			// server instance
 			struct addrinfo *addrinfo = it->second.addrinfo;
+			t_SocketData socketData;
 			int listenFd;
 
 			if (listenFd = socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol) < 0)
@@ -119,6 +120,10 @@ namespace Webserv
 				Webserv::Logger::errorLog(errno, strerror, false);
 				throw Cluster::ClusterException();
 			}
+			socketData.socketType = LISTEN_SOCKET;
+			// TO DO: Change the type of constructor
+			socketData.server = new Server();
+			this->_sockets[listenFd] = socketData;
 			if (setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optVal, sizeof(optVal) == -1))
 			{
 				freeaddrinfo(addrinfo);
