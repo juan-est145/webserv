@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 11:33:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 11:42:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ namespace Webserv
 	{
 		std::map<std::string, t_AddressData> serverList = this->obtainAddrInfo();
 		this->bindSocket(serverList);
+		this->listenConnection();
 	}
 
 	std::map<std::string, Cluster::t_AddressData> Cluster::obtainAddrInfo(void)
@@ -144,6 +145,11 @@ namespace Webserv
 				throw Server::ServerException();
 			}
 		}
+	}
+
+	void Cluster::listenConnection(void)
+	{
+		
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
