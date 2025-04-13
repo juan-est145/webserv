@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 10:48:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 10:57:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ namespace Webserv
 
 	private:
 		typedef std::vector<ConfigServer>::const_iterator configurationIter;
+		typedef std::map<std::string, t_AddressData>::iterator addressDataIter;
 		int _epollFd;
 		std::map<int, SocketData> _sockets;
 		const std::vector<ConfigServer> _configurations;
@@ -67,7 +68,7 @@ namespace Webserv
 		Cluster(const Cluster &toCopy);
 		std::map<std::string, t_AddressData> obtainAddrInfo(void);
 		void addressKey(t_AddressData address, std::map<std::string, t_AddressData> &serverList);
-		void bindSocket(void);
+		void bindSocket(std::map<std::string, t_AddressData> &serverList);
 		Cluster &operator=(const Cluster &toCopy);
 	};
 }

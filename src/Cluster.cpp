@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 10:53:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 11:09:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ namespace Webserv
 	void Cluster::initVirtualServers(void)
 	{
 		std::map<std::string, t_AddressData> serverList = this->obtainAddrInfo();
-		this->bindSocket();
+		this->bindSocket(serverList);
 	}
 
 	std::map<std::string, Cluster::t_AddressData> Cluster::obtainAddrInfo(void)
@@ -103,9 +103,42 @@ namespace Webserv
 		serverList[key] = address;
 	}
 
-	void Cluster::bindSocket(void)
+	void Cluster::bindSocket(std::map<std::string, t_AddressData> &serverList)
 	{
 		int optVal = 1;
+		for (addressDataIter it = serverList.begin(); it != serverList.end(); it++)
+		{
+			// TO DO: Later on, we need to store the socket somewhere and associate it to
+			// server instance
+			struct addrinfo *addrinfo = it->second.addrinfo;
+			int listenFd;
+
+			if (listenFd = socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol) < 0)
+			{
+				freeaddrinfo(addrinfo);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Cluster::ClusterException();
+			}
+			if (setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optVal, sizeof(optVal) == -1))
+			{
+				freeaddrinfo(addrinfo);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Cluster::ClusterException();
+			}
+			if (bind(listenFd, addrinfo->ai_addr, addrinfo->ai_addrlen) < 0)
+			{
+				freeaddrinfo(addrinfo);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Cluster::ClusterException();
+			}
+			freeaddrinfo(it->second.addrinfo);
+			addrinfo = NULL;
+			if (listen(listenFd, 20) < 0)
+			{
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Server::ServerException();
+			}
+		}
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
