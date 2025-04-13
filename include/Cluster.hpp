@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 10:19:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 10:48:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ namespace Webserv
 			LISTEN_SOCKET,
 			ACCEPT_SOCKET,
 		};
+		typedef struct AddressData
+		{
+			struct addrinfo *addrinfo;
+			std::vector<ConfigServer> _configurations;
+		} t_AddressData;
 		typedef struct SocketData
 		{
 			enum SocketType socketType;
@@ -60,8 +65,8 @@ namespace Webserv
 		Cluster(void);
 		Cluster(const std::vector<ConfigServer> &configurations);
 		Cluster(const Cluster &toCopy);
-		void obtainAddrInfo(void);
-		void addressKey(struct addrinfo *address, std::map<std::string, struct addrinfo *> &serverList);
+		std::map<std::string, t_AddressData> obtainAddrInfo(void);
+		void addressKey(t_AddressData address, std::map<std::string, t_AddressData> &serverList);
 		void bindSocket(void);
 		Cluster &operator=(const Cluster &toCopy);
 	};

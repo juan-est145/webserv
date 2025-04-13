@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 10:19:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/13 10:53:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ namespace Webserv
 
 	void Cluster::initVirtualServers(void)
 	{
-		this->obtainAddrInfo();
+		std::map<std::string, t_AddressData> serverList = this->obtainAddrInfo();
 		this->bindSocket();
 	}
 
-	void Cluster::obtainAddrInfo(void)
+	std::map<std::string, Cluster::t_AddressData> Cluster::obtainAddrInfo(void)
 	{
 		struct addrinfo hints;
-		std::map<std::string, struct addrinfo *> serverList;
+		std::map<std::string, t_AddressData> serverList;
 
 		memset(&hints, 0, sizeof(hints));
 		hints.ai_family = AF_UNSPEC;
@@ -61,29 +61,31 @@ namespace Webserv
 		hints.ai_flags = AI_PASSIVE;
 		for (configurationIter it = this->_configurations.begin(); it != this->_configurations.end(); it++)
 		{
-			struct addrinfo *address;
-			if (int errorCode = getaddrinfo(NULL, AuxFunc::ft_itoa(it->getPort()).c_str(), &hints, &address) != 0)
+			t_AddressData address;
+			address._configurations.push_back(*it);
+			if (int errorCode = getaddrinfo(NULL, AuxFunc::ft_itoa(it->getPort()).c_str(), &hints, &address.addrinfo) != 0)
 			{
-				if (address != NULL)
-					delete (address);
+				if (address.addrinfo != NULL)
+					freeaddrinfo(address.addrinfo);
 				Webserv::Logger::errorLog(errorCode, gai_strerror, false);
 				throw Cluster::ClusterException();
 			}
 			this->addressKey(address, serverList);
 		}
+		return (serverList);
 	}
 
-	void Cluster::addressKey(struct addrinfo *address, std::map<std::string, struct addrinfo *> &serverList)
+	void Cluster::addressKey(t_AddressData address, std::map<std::string, t_AddressData> &serverList)
 	{
 		std::string key = "";
-		if (address->ai_family == AF_INET)
+		if (address.addrinfo->ai_family == AF_INET)
 		{
-			struct sockaddr_in *ipv4 = reinterpret_cast<struct sockaddr_in *>(address->ai_addr);
+			struct sockaddr_in *ipv4 = reinterpret_cast<struct sockaddr_in *>(address.addrinfo->ai_addr);
 			key = std::bitset<32>(ipv4->sin_addr.s_addr).to_string() + std::bitset<16>(ipv4->sin_port).to_string();
 		}
 		else
 		{
-			struct sockaddr_in6 *ipv6 = reinterpret_cast<struct sockaddr_in6 *>(address->ai_addr);
+			struct sockaddr_in6 *ipv6 = reinterpret_cast<struct sockaddr_in6 *>(address.addrinfo->ai_addr);
 			std::ostringstream oss;
 			for (int i = 0; i < 4; i++)
 			{
@@ -94,7 +96,8 @@ namespace Webserv
 		}
 		if (serverList.find(key) != serverList.end())
 		{
-			freeaddrinfo(address);
+			serverList[key]._configurations.push_back(address._configurations[0]);
+			freeaddrinfo(address.addrinfo);
 			return;
 		}
 		serverList[key] = address;
@@ -102,7 +105,7 @@ namespace Webserv
 
 	void Cluster::bindSocket(void)
 	{
-		
+		int optVal = 1;
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
