@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 12:50:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:02:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ namespace Webserv
 				if (this->_sockets[socketFd].socketType == LISTEN_SOCKET)
 					this->addConnectionToQueue(socketFd);
 				else
-					this->_sockets[socketFd].server->processClientConn();
+					this->_sockets[socketFd].server->processClientConn(socketFd);
 			}
 		}
 	}

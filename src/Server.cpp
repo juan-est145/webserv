@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 12:42:59 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:07:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,21 +127,20 @@ namespace Webserv
 	// 		throw Server::ServerException();
 	// }
 
-	void Server::processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf)
+	void Server::processClientConn(int socketFd)
 	{
-		Cluster *cluster = Cluster::getInstance();
-		if (eventList.events & EPOLLIN)
-			this->readOperations(eventList, eventConf);
+		const struct epoll_event *eventList = Cluster::cluster->getEventList();
+		if (eventList[socketFd].events & EPOLLIN)
+			this->readOperations(socketFd);
 		else
 			this->writeOperations(eventList, eventConf);
 	}
 
-	void Server::readOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
+	void Server::readOperations(int socketFd)
 	{
 		struct stat statbuf;
-		if (fstat(eventList.data.fd, &statbuf) == -1)
+		if (fstat(socketFd, &statbuf) == -1)
 		{
-			close(this->_epollFd);
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Server::ServerException();
 		}
