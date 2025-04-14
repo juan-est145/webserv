@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 11:47:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:22:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,10 +180,8 @@ namespace Webserv
 				if (this->_sockets[i].socketType == LISTEN_SOCKET)
 					this->addConnectionToQueue(socketFd);
 			}
-			
 		}
-		
-		
+		// TO DO: Implement cleanup function for each LISTEN_SOCKET and it's server class
 	}
 
 	void Cluster::addConnectionToQueue(int listenSocket)
