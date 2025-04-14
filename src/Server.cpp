@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:34:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:37:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ namespace Webserv
 		if (eventList[eventListIndex].events & EPOLLIN)
 			this->readOperations(socketFd, eventList[eventListIndex]);
 		else
-			this->writeOperations();
+			this->writeOperations(eventList[eventListIndex]);
 	}
 
 	void Server::readOperations(int socketFd, const struct epoll_event &eventList)
@@ -136,7 +136,7 @@ namespace Webserv
 	// 		throw Server::ServerException();
 	// }
 
-	void Server::writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf)
+	void Server::writeOperations(const struct epoll_event &eventList)
 	{
 		std::cout << "Time to write to the client " << eventList.data.fd << std::endl;
 		std::stringstream format;
@@ -168,7 +168,7 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;
 		// *----------//
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 			throw Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:33:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:37:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace Webserv
 		void readOperations(int socketFd, const struct epoll_event &eventList);
 		void readSocket(const struct epoll_event &eventList);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
-		void writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf);
+		void writeOperations(const struct epoll_event &eventList);
 
 	public:
 		Server(void);
