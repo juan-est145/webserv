@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 12:40:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:42:59 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ namespace Webserv
 	void Server::processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf)
 	{
 		Cluster *cluster = Cluster::getInstance();
-		if ( eventList.events & EPOLLIN)
+		if (eventList.events & EPOLLIN)
 			this->readOperations(eventList, eventConf);
 		else
 			this->writeOperations(eventList, eventConf);

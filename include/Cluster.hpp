@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 11:39:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:48:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,16 @@ namespace Webserv
 		static Cluster *cluster;
 
 		static Cluster *getInstance(const std::vector<ConfigServer> &configurations);
+		static Cluster *getInstance(void);
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		int getEpollFd(void) const;
+		const std::map<int, SocketData> &getSockets(void) const;
+		const std::vector<ConfigServer> &getConfigurations(void) const;
+		const struct epoll_event *getEventList(void) const;
+		const struct epoll_event &getEvent(void) const;
+
 		void initVirtualServers(void);
+
 		class ClusterException : std::exception
 		{
 		public:

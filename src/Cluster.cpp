@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 12:39:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:50:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ namespace Webserv
 	{
 		if (cluster == NULL)
 			cluster = new Cluster(configurations);
+		return (cluster);
+	}
+
+	Cluster *Cluster::getInstance(void)
+	{
+		if (cluster == NULL)
+			throw Cluster::ClusterException();
 		return (cluster);
 	}
 
@@ -214,6 +221,26 @@ namespace Webserv
 	int Cluster::getEpollFd(void) const
 	{
 		return (Cluster::cluster->_epollFd);
+	}
+
+	const std::map<int, Cluster::SocketData> &Cluster::getSockets(void) const
+	{
+		return (Cluster::cluster->_sockets);
+	}
+
+	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
+	{
+		return (Cluster::cluster->_configurations);
+	}
+
+	const struct epoll_event *Cluster::getEventList(void) const
+	{
+		return (Cluster::cluster->_eventList);
+	}
+
+	const struct epoll_event &Cluster::getEvent(void) const
+	{
+		return (Cluster::cluster->_event);
 	}
 
 	const char *Cluster::ClusterException::what(void) const throw()
