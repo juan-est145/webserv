@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 14:27:44 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 14:50:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,5 +242,14 @@ namespace Webserv
 		return ("There was an error starting the virtual servers and the program must stop");
 	}
 
-	Cluster::~Cluster() {}
+	Cluster::~Cluster() 
+	{
+		for (socketIter it = this->_sockets.begin(); it != this->_sockets.end(); it++)
+		{
+			if (it->second.server == NULL)
+				continue;
+			delete (it->second.server);
+			it->second.server = NULL;
+		}
+	}
 }

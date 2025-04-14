@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:40:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 14:44:10 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@ void intSigHandler(int signum)
 int main(int argc, char *argv[])
 {
     std::string confFile = argc < 2 ? "./config/default.conf" : argv[1];
-    std::string host = "127.0.0.1";
-    std::string port = "3000";
-    Webserv::Server *server = NULL;
     signal(SIGINT, &intSigHandler);
     try
     {
@@ -42,8 +39,6 @@ int main(int argc, char *argv[])
     catch (const Webserv::Server::ServerException &e)
     {
         std::cerr << e.what() << std::endl;
-        if (server)
-            delete server;
         if (Webserv::Cluster::cluster != NULL)
             delete Webserv::Cluster::cluster;
         return (EXIT_FAILURE);
@@ -51,13 +46,10 @@ int main(int argc, char *argv[])
     catch (const std::exception &e)
     {
         std::cerr << e.what() << std::endl;
-        if (server)
-            delete server;
         if (Webserv::Cluster::cluster != NULL)
             delete Webserv::Cluster::cluster;
         return (EXIT_FAILURE);
     }
-    delete server;
     if (Webserv::Cluster::cluster != NULL)
         delete Webserv::Cluster::cluster;
     return (EXIT_SUCCESS);
