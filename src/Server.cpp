@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:07:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:11:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ namespace Webserv
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
 		{
-			AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
+			AuxFunc::handleRecvError(eventConf, eventList, bufRead, Cluster::cluster->getEpollFd());
 			return;
 		}
 		buffer[bufRead] = '\0';
@@ -188,7 +188,7 @@ namespace Webserv
 					bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 					if (bufRead <= 0)
 					{
-						AuxFunc::handleRecvError(eventConf, eventList, bufRead, this->_epollFd);
+						AuxFunc::handleRecvError(eventConf, eventList, bufRead, Cluster::cluster->getEpollFd());
 						return;
 					}
 					buffer[bufRead] = '\0';
@@ -199,7 +199,7 @@ namespace Webserv
 		}
 		req->handleReq();
 		this->_clientPool[eventList.data.fd] = req;
-		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, eventConf))
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, eventConf))
 			throw Webserv::Server::ServerException();
 	}
 
@@ -256,7 +256,7 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;
 		// *----------//
-		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, eventConf))
 			throw Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);
