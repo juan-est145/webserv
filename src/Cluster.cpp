@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 12:22:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:39:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ namespace Webserv
 		std::map<std::string, t_AddressData> serverList = this->obtainAddrInfo();
 		this->bindSocket(serverList);
 		this->listenConnection();
+		// TO DO: Implement cleanup function for each LISTEN_SOCKET and it's server class
 	}
 
 	std::map<std::string, Cluster::t_AddressData> Cluster::obtainAddrInfo(void)
@@ -177,11 +178,12 @@ namespace Webserv
 			for (int i = 0; i < eventCount; i++)
 			{
 				int socketFd = this->_eventList[i].data.fd;
-				if (this->_sockets[i].socketType == LISTEN_SOCKET)
+				if (this->_sockets[socketFd].socketType == LISTEN_SOCKET)
 					this->addConnectionToQueue(socketFd);
+				else
+					this->_sockets[socketFd].server->processClientConn();
 			}
 		}
-		// TO DO: Implement cleanup function for each LISTEN_SOCKET and it's server class
 	}
 
 	void Cluster::addConnectionToQueue(int listenSocket)

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 11:18:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:40:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <cstdio>
 #include <sstream>
 #include <map>
+#include <vector>
 #include <algorithm>
 #include "Logger.hpp"
 #include "AuxFunc.hpp"
@@ -34,6 +35,8 @@
 #include "Director.hpp"
 #include "ConcreteBuilder.hpp"
 #include "HttpResponse.hpp"
+#include "ConfigServer.hpp"
+#include "Cluster.hpp"
 
 namespace Webserv
 {
@@ -41,14 +44,10 @@ namespace Webserv
 	{
 	private:
 		int _listenFd;
-		int _epollFd;
+		const std::vector<ConfigServer> _configurations;
 		std::map<int, Request *> _clientPool;
-		struct addrinfo *_address;
-		const std::string _host;
-		const std::string _port;
-		void listenConnection(void);
+		// void listenConnection(void);
 		void addConnectionToQueue(struct epoll_event &event) const;
-		void processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void readOperations(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void readSocket(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
@@ -56,10 +55,12 @@ namespace Webserv
 
 	public:
 		Server(void);
-		Server(const std::string &host, const std::string &port);
+		Server(const std::vector<ConfigServer> &configurations);
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
-		void initServer(void);
+		void processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf);
+		//void initServer(void);
+
 		class ServerException : std::exception
 		{
 		public:
