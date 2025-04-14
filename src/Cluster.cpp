@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 11:45:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:47:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 			throw Cluster::ClusterException();
 		}
-		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, newSocket, this->_))
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, newSocket, this->_event))
 			throw Cluster::ClusterException();
 		socketDesc.socketType = ACCEPT_SOCKET;
 		socketDesc.server = this->_sockets[listenSocket].server;
