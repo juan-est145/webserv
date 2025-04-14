@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:29:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 14:01:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ namespace Webserv
 			t_SocketData socketData;
 			int listenFd;
 
-			if (listenFd = socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol) < 0)
+			if ((listenFd = socket(addrinfo->ai_family, addrinfo->ai_socktype, addrinfo->ai_protocol)) < 0)
 			{
 				freeaddrinfo(addrinfo);
 				Webserv::Logger::errorLog(errno, strerror, false);
@@ -226,11 +226,6 @@ namespace Webserv
 	const std::map<int, Cluster::SocketData> &Cluster::getSockets(void) const
 	{
 		return (Cluster::cluster->_sockets);
-	}
-
-	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
-	{
-		return (Cluster::cluster->_configurations);
 	}
 
 	const struct epoll_event *Cluster::getEventList(void) const

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 18:20:12 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:40:30 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ int main(int argc, char *argv[])
         cluster = Webserv::Cluster::cluster->getInstance(parser.getServers());
         cluster->initVirtualServers();
         // TO DO: When cluster has been fully implemented, delete the old methods like creating an standalone server
-        server = new Webserv::Server(host, port);
-        server->initServer();
     }
     catch (const Webserv::Server::ServerException &e)
     {

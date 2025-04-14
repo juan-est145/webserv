@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:19:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:57:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@
 
 namespace Webserv
 {
+	class Server;
+	class ConfigServer;
+
 	class Cluster
 	{
 	public:
@@ -57,7 +60,6 @@ namespace Webserv
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		int getEpollFd(void) const;
 		const std::map<int, SocketData> &getSockets(void) const;
-		const std::vector<ConfigServer> &getConfigurations(void) const;
 		const struct epoll_event *getEventList(void) const;
 		struct epoll_event &getEvent(void) const;
 
