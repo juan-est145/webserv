@@ -64,3 +64,6 @@ re: fclean
 
 debug: CXXFLAGS += -g
 debug: $(NAME)
+
+val:
+	valgrind --track-fds=yes --leak-check=full ./$(NAME)
