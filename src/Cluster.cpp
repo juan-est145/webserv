@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 14:20:17 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 14:27:44 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ namespace Webserv
 			socketData.socketType = LISTEN_SOCKET;
 			socketData.server = new Server(it->second._configurations);
 			this->_sockets[listenFd] = socketData;
-			if (setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optVal, sizeof(optVal) == -1))
+			if (setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optVal, sizeof(optVal)) == -1)
 			{
 				freeaddrinfo(addrinfo);
 				Webserv::Logger::errorLog(errno, strerror, false);
