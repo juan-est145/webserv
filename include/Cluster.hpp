@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 11:20:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:39:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ namespace Webserv
 		int _epollFd;
 		std::map<int, SocketData> _sockets;
 		const std::vector<ConfigServer> _configurations;
-		struct epoll_event eventList[50];
-		struct epoll_event event;
+		struct epoll_event _eventList[50];
+		struct epoll_event _event;
 
 		Cluster(void);
 		Cluster(const std::vector<ConfigServer> &configurations);
@@ -82,6 +82,7 @@ namespace Webserv
 		void addressKey(t_AddressData address, std::map<std::string, t_AddressData> &serverList);
 		void bindSocket(std::map<std::string, t_AddressData> &serverList);
 		void listenConnection(void);
+		void addConnectionToQueue(int listenSocket);
 	};
 }
 

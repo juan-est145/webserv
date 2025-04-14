@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 11:31:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:45:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,12 +159,12 @@ namespace Webserv
 		}
 		for (socketIter it = this->_sockets.begin(); it != this->_sockets.end(); it++)
 		{
-			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, it->first, this->event))
+			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, it->first, this->_event))
 				throw Cluster::ClusterException();
 		}
 		while (!g_stop)
 		{
-			int eventCount = epoll_wait(this->_epollFd, eventList, sizeof(eventList), E_WAIT_TIMEOUT);
+			int eventCount = epoll_wait(this->_epollFd, this->_eventList, sizeof(this->_eventList), E_WAIT_TIMEOUT);
 			if (eventCount == -1)
 			{
 				if (g_stop)
@@ -176,13 +176,34 @@ namespace Webserv
 			}
 			for (int i = 0; i < eventCount; i++)
 			{
-				int socketFd = eventList[i].data.fd;
+				int socketFd = this->_eventList[i].data.fd;
 				if (this->_sockets[i].socketType == LISTEN_SOCKET)
+					this->addConnectionToQueue(socketFd);
 			}
 			
 		}
 		
 		
+	}
+
+	void Cluster::addConnectionToQueue(int listenSocket)
+	{
+		struct sockaddr_storage clientAddr;
+		t_SocketData socketDesc;
+		socklen_t addrSize = sizeof(clientAddr);
+		std::cout << "We have a connection" << std::endl;
+		int newSocket = accept(listenSocket, (sockaddr *)&clientAddr, &addrSize);
+		if (newSocket < 0)
+		{
+			close(this->_epollFd);
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Cluster::ClusterException();
+		}
+		if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, newSocket, this->_))
+			throw Cluster::ClusterException();
+		socketDesc.socketType = ACCEPT_SOCKET;
+		socketDesc.server = this->_sockets[listenSocket].server;
+		this->_sockets[newSocket] = socketDesc;
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
