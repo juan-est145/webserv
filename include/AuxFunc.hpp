@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 11:11:12 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:20:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ namespace Webserv
 
 	public:
 		static bool handle_ctl(int epollFd, int op, int event, int watchFd, struct epoll_event &eventConf);
-		static void handleRecvError(struct epoll_event &eventConf, struct epoll_event &eventList, ssize_t bufRead, int epollFd);
+		static void handleRecvError(struct epoll_event &eventConf, const struct epoll_event &eventList, ssize_t bufRead, int epollFd);
 		static std::string urldecode(const char *url);
 		static bool isDigit(char c);
 		static std::string ft_itoa(int number);

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:02:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:19:47 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ namespace Webserv
 		const std::map<int, SocketData> &getSockets(void) const;
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		const struct epoll_event *getEventList(void) const;
-		const struct epoll_event &getEvent(void) const;
+		struct epoll_event &getEvent(void) const;
 
 		void initVirtualServers(void);
 
