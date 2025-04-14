@@ -6,11 +6,13 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/13 11:42:56 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:31:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Cluster.hpp"
+
+extern bool g_stop;
 
 namespace Webserv
 {
@@ -149,6 +151,37 @@ namespace Webserv
 
 	void Cluster::listenConnection(void)
 	{
+		this->_epollFd = epoll_create(NUMBER_EPOLL);
+		if (this->_epollFd == -1)
+		{
+			Webserv::Logger::errorLog(errno, strerror, false);
+			throw Server::ServerException();
+		}
+		for (socketIter it = this->_sockets.begin(); it != this->_sockets.end(); it++)
+		{
+			if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLIN, it->first, this->event))
+				throw Cluster::ClusterException();
+		}
+		while (!g_stop)
+		{
+			int eventCount = epoll_wait(this->_epollFd, eventList, sizeof(eventList), E_WAIT_TIMEOUT);
+			if (eventCount == -1)
+			{
+				if (g_stop)
+					break;
+				std::cout << "Failed here" << std::endl;
+				close(this->_epollFd);
+				Webserv::Logger::errorLog(errno, strerror, false);
+				throw Cluster::ClusterException();
+			}
+			for (int i = 0; i < eventCount; i++)
+			{
+				int socketFd = eventList[i].data.fd;
+				if (this->_sockets[i].socketType == LISTEN_SOCKET)
+			}
+			
+		}
+		
 		
 	}
 

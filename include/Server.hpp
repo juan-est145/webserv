@@ -6,18 +6,12 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:23:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:18:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
-#ifndef NUMBER_EPOLL
-#define NUMBER_EPOLL 1
-#endif
-#ifndef E_WAIT_TIMEOUT
-#define E_WAIT_TIMEOUT 100
-#endif
 
 #include <cstdlib>
 #include <cstring>
