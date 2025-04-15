@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/15 11:22:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:26:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,5 +252,6 @@ namespace Webserv
 			delete (it->second.server);
 			it->second.server = NULL;
 		}
+		close(this->_epollFd);
 	}
 }
