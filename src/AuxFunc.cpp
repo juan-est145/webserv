@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 18:17:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/14 13:20:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ namespace Webserv
 		return (true);
 	}
 
-	void AuxFunc::handleRecvError(struct epoll_event &eventConf, struct epoll_event &eventList, ssize_t bufRead, int epollFd)
+	void AuxFunc::handleRecvError(struct epoll_event &eventConf, const struct epoll_event &eventList, ssize_t bufRead, int epollFd)
 	{
 		eventConf.events = EPOLLIN;
 		eventConf.data.fd = eventList.data.fd;
@@ -95,6 +95,38 @@ namespace Webserv
 				}
 			}
 			return dst;
+	}
+
+	std::string AuxFunc::ft_itoa(int number)
+	{
+		std::string result = "";
+
+		if (number == INT32_MIN)
+			result = "-2" + ft_itoa(147483648);
+		else if (number < 0)
+			result = "-" + ft_itoa(number * -1);
+		else if (number > 9)
+		{
+			result += ft_itoa(number / 10);
+			result += ft_itoa(number % 10);
+		}
+		else
+			result = number + 48;
+		return (result);
+	}
+
+	std::string AuxFunc::ft_itoa(unsigned int number)
+	{
+		std::string result = "";
+
+		if (number > 9)
+		{
+			result += ft_itoa(number / 10);
+			result += ft_itoa(number % 10);
+		}
+		else
+			result = number + 48;
+		return (result);
 	}
 
 	AuxFunc::~AuxFunc(void) {}

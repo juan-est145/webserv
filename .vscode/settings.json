@@ -52,6 +52,6 @@
 		"map": "cpp",
 		"sstream": "cpp",
 		"fstream": "cpp",
-        "fstream": "cpp"
+		"bitset": "cpp"
 	}
 }

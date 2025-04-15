@@ -6,18 +6,12 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/12 17:23:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:21:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
-#ifndef NUMBER_EPOLL
-#define NUMBER_EPOLL 1
-#endif
-#ifndef E_WAIT_TIMEOUT
-#define E_WAIT_TIMEOUT 100
-#endif
 
 #include <cstdlib>
 #include <cstring>
@@ -33,6 +27,7 @@
 #include <cstdio>
 #include <sstream>
 #include <map>
+#include <vector>
 #include <algorithm>
 #include "Logger.hpp"
 #include "AuxFunc.hpp"
@@ -40,32 +35,32 @@
 #include "Director.hpp"
 #include "ConcreteBuilder.hpp"
 #include "HttpResponse.hpp"
+#include "ConfigServer.hpp"
+#include "Cluster.hpp"
 
 namespace Webserv
 {
+	class ConfigServer;
+
 	class Server
 	{
 	private:
 		int _listenFd;
-		int _epollFd;
+		const std::vector<ConfigServer> _configurations;
 		std::map<int, Request *> _clientPool;
-		struct addrinfo *_address;
-		const std::string _host;
-		const std::string _port;
-		void listenConnection(void);
 		void addConnectionToQueue(struct epoll_event &event) const;
-		void processClientConn(struct epoll_event &eventList, struct epoll_event &eventConf);
-		void readOperations(struct epoll_event &eventList, struct epoll_event &eventConf);
-		void readSocket(struct epoll_event &eventList, struct epoll_event &eventConf);
+		void readOperations(int socketFd, const struct epoll_event &eventList);
+		void readSocket(const struct epoll_event &eventList);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
-		void writeOperations(struct epoll_event &eventList, struct epoll_event &eventConf);
+		void writeOperations(const struct epoll_event &eventList);
 
 	public:
 		Server(void);
-		Server(const std::string &host, const std::string &port);
+		Server(const std::vector<ConfigServer> &configurations, int listenFd);
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
-		void initServer(void);
+		void processClientConn(int socketFd, int eventListIndex);
+
 		class ServerException : std::exception
 		{
 		public:
