@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 14:50:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:22:53 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ namespace Webserv
 				throw Cluster::ClusterException();
 			}
 			socketData.socketType = LISTEN_SOCKET;
-			socketData.server = new Server(it->second._configurations);
+			socketData.server = new Server(it->second._configurations, listenFd);
 			this->_sockets[listenFd] = socketData;
 			if (setsockopt(listenFd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &optVal, sizeof(optVal)) == -1)
 			{
@@ -246,6 +246,7 @@ namespace Webserv
 	{
 		for (socketIter it = this->_sockets.begin(); it != this->_sockets.end(); it++)
 		{
+			close(it->first);
 			if (it->second.server == NULL)
 				continue;
 			delete (it->second.server);

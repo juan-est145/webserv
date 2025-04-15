@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:48:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:21:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ namespace Webserv
 
 	public:
 		Server(void);
-		Server(const std::vector<ConfigServer> &configurations);
+		Server(const std::vector<ConfigServer> &configurations, int listenFd);
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
 		void processClientConn(int socketFd, int eventListIndex);

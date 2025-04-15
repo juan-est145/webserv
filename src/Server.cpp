@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:37:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/15 11:22:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ namespace Webserv
 		this->_listenFd = -1;
 	}
 
-	Server::Server(const std::vector<ConfigServer> &configurations) : _configurations(configurations)
+	Server::Server(const std::vector<ConfigServer> &configurations, int listenFd) : _configurations(configurations)
 	{
-		this->_listenFd = -1;
+		this->_listenFd = listenFd;
 	}
 
 	Server::Server(const Server &copy) : _configurations(copy._configurations)
@@ -182,7 +182,7 @@ namespace Webserv
 
 	Server::~Server()
 	{
-		if (close(this->_listenFd) < 0)
-			Webserv::Logger::errorLog(errno, strerror, true);
+		// if (close(this->_listenFd) < 0)
+		// 	Webserv::Logger::errorLog(errno, strerror, true);
 	}
 }
