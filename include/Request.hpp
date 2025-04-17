@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/03/04 18:38:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/17 17:10:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,16 @@ namespace Webserv
 			DELETE = 2,
 			UNKNOWN = 3,
 		};
-		typedef std::map<std::string, std::string>::const_iterator T_reqHeadIter;		
+		typedef std::map<std::string, std::string>::const_iterator T_reqHeadIter;
+
 		Request(void);
 		Request(int socketFd);
 		Request(const Request &copy);
 		Request &operator=(const Request &assign);
+
 		void readReq(const char *buffer, size_t bufSize);
 		void handleReq(void);
+
 		const std::map<std::string, std::string> &getReqHeader(void) const;
 		enum E_Method getMethod(void) const;
 		const std::string &getPath(void) const;
@@ -50,8 +53,10 @@ namespace Webserv
 		const std::string &getReqBody(void)const;
 		long getResourceSize(void) const;
 		const std::string &getResourceContent(void) const;
+
 		void setResCode(unsigned int resCode);
 		std::size_t setReqBody(std::string &body);
+
 		class RequestException : std::exception
 		{
 			public:
@@ -68,6 +73,7 @@ namespace Webserv
 		std::string _httpVers;
 		unsigned int _resCode;
 		ResourceReq _resourceReq;
+
 		void extractHeaders(std::string &buffer);
 		void extractReqHead(std::queue<std::string> &headers);
 		void extractFirstHead(std::string &line);
