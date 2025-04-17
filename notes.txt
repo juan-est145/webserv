@@ -1,3 +1,5 @@
 By default, our Server class must use the first configuration block if there is more than one and none of the server_name matches.
 
 To determine the location directive to listen to, we must choose as a prefix the one that matches the most characters.
+
+Need to also fix length header response in webserv.
