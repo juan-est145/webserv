@@ -1,0 +1,13 @@
+services:
+  nginx:
+    build:
+      context: .
+    container_name: nginx
+    networks:
+      - lan
+    ports:
+      - "127.0.0.1:80:80"
+
+networks:
+  lan:
+    driver: bridge
