@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/03/04 18:38:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/19 13:06:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ namespace Webserv
 			this->_path = assign._path;
 			this->_resCode = assign._resCode;
 			this->_resourceReq = assign._resourceReq;
+			this->_configuration = assign._configuration;
 		}
 		return *this;
 	}
@@ -82,8 +83,19 @@ namespace Webserv
 		// this->_resCode = this->_resourceReq.obtainResource(this->_path);
 	}
 
-	void Request::handleReq(void)
+	void Request::handleReq(const std::vector<ConfigServer> &configs)
 	{
+		this->_configuration = configs[0];
+		for (std::vector<ConfigServer>::const_iterator it = configs.begin(); it != configs.end(); it++)
+		{
+			std::map<std::string, std::string>::iterator host = this->_reqHeader.find("Host");
+			if (host != this->_reqHeader.end() && host->second == it->getHost())
+			{
+				this->_configuration = *it;
+				break;
+			}
+		}
+		
 		if (this->_method == POST)
 		{
 			// TO DO: Make sure to later validate that the fields being passed exist

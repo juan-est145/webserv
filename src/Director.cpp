@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Director.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/08 13:03:20 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/19 14:22:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,25 +40,14 @@ namespace Webserv
         this->builder = builder;   
     }
     //CODE 200
-    void Director::BuildOkResponse(const char* path)
+    void Director::BuildOkResponse(long size)
     {
         builder->SetStatus("200");
         builder->SetContent("text/html");
-
-        char result[std::strlen(path) + std::strlen("html")];
-        std::strcpy(result, "html");
-        if (std::strcmp(path, "/") != 0)
-        {
-            std::strcat(result, path);
-            std::strcat(result, ".html");
-        }
-        else
-            std::strcat(result, "/index.html");
-
-        builder->SetContentLength(getFileSize(result));
+        builder->SetContentLength(size);
     }
     //CODE 201
-    void Director::BuildOkUploadResponse(int size) //toco content_length
+    void Director::BuildOkUploadResponse(long size) //toco content_length
     {
         this->builder->SetStatus("201");
         this->builder->SetContent("text/html");
