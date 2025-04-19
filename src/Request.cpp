@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/19 13:06:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/19 15:09:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ namespace Webserv
 		this->_resCode = 200;
 		this->_socketFd = -1;
 		this->_reqBody = "";
+		this->_configuration = NULL;
 	}
 
 	Request::Request(int socketFd)
@@ -32,6 +33,7 @@ namespace Webserv
 		this->_resCode = 200;
 		this->_socketFd = socketFd;
 		this->_reqBody = "";
+		this->_configuration = NULL;
 	}
 
 	Request::Request(const Request &copy)
@@ -85,13 +87,15 @@ namespace Webserv
 
 	void Request::handleReq(const std::vector<ConfigServer> &configs)
 	{
-		this->_configuration = configs[0];
+		this->_configuration = new ConfigServer(configs[0]);
 		for (std::vector<ConfigServer>::const_iterator it = configs.begin(); it != configs.end(); it++)
 		{
-			std::map<std::string, std::string>::iterator host = this->_reqHeader.find("Host");
-			if (host != this->_reqHeader.end() && host->second == it->getHost())
+			std::string hostConfig = it->getPort() == 80 ? it->getServerName() : it->getServerName() + ":" + AuxFunc::ft_itoa( it->getPort());
+			std::map<std::string, std::string>::iterator hostRequest = this->_reqHeader.find("Host");
+			if (hostRequest != this->_reqHeader.end() && hostRequest->second == hostConfig)
 			{
-				this->_configuration = *it;
+				delete this->_configuration;
+				this->_configuration = new ConfigServer(*it);
 				break;
 			}
 		}
@@ -274,5 +278,10 @@ namespace Webserv
 		return ("An invalid value was set to private member _resCode in Request class");
 	}
 
-	Request::~Request() {}
+	Request::~Request() 
+	{
+		if (this->_configuration != NULL)
+			delete this->_configuration;
+		this->_configuration = NULL;
+	}
 }

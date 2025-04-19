@@ -15,10 +15,10 @@
 #include "ConfigFile.hpp"
 #include "ConfigServer.hpp"
 
-class ConfigServer;
-
 namespace Webserv
 {
+	//class ConfigServer;
+
 	class ConfigParser
 	{
 	private:

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/19 13:29:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/19 14:57:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 
 namespace Webserv
 {
+	class ConfigServer;
+
 	class Request
 	{
 	public:
@@ -76,7 +78,7 @@ namespace Webserv
 		std::string _httpVers;
 		unsigned int _resCode;
 		ResourceReq _resourceReq;
-		ConfigServer _configuration;
+		ConfigServer *_configuration;
 
 		void extractHeaders(std::string &buffer);
 		void extractReqHead(std::queue<std::string> &headers);
