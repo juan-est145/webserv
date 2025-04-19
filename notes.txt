@@ -2,4 +2,4 @@ By default, our Server class must use the first configuration block if there is 
 
 To determine the location directive to listen to, we must choose as a prefix the one that matches the most characters.
 
-Need to also fix length header response in webserv.
+When receiving a POST request that it is not file upload or a route to a Cgi script, we should send a 405 response
