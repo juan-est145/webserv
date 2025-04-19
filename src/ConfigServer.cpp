@@ -16,19 +16,7 @@ namespace Webserv
 
 	ConfigServer::ConfigServer(const ConfigServer &copy)
 	{
-		if (this != &copy)
-		{
-			this->_serverName = copy._serverName;
-			this->_root = copy._root;
-			this->_host = copy._host;
-			this->_port = copy._port;
-			this->_clientMaxBodySize = copy._clientMaxBodySize;
-			this->_index = copy._index;
-			this->_errorPages = copy._errorPages;
-			this->_locations = copy._locations;
-			this->_autoindex = copy._autoindex;
-		}
-		return;
+		*this = copy;
 	}
 
 	ConfigServer &ConfigServer::operator=(const ConfigServer &copy)

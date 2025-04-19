@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/19 15:09:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/19 17:29:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,32 +87,20 @@ namespace Webserv
 
 	void Request::handleReq(const std::vector<ConfigServer> &configs)
 	{
-		this->_configuration = new ConfigServer(configs[0]);
-		for (std::vector<ConfigServer>::const_iterator it = configs.begin(); it != configs.end(); it++)
-		{
-			std::string hostConfig = it->getPort() == 80 ? it->getServerName() : it->getServerName() + ":" + AuxFunc::ft_itoa( it->getPort());
-			std::map<std::string, std::string>::iterator hostRequest = this->_reqHeader.find("Host");
-			if (hostRequest != this->_reqHeader.end() && hostRequest->second == hostConfig)
-			{
-				delete this->_configuration;
-				this->_configuration = new ConfigServer(*it);
-				break;
-			}
-		}
-		
+		this->selectConfiguration(configs);
 		if (this->_method == POST)
 		{
 			// TO DO: Make sure to later validate that the fields being passed exist
-			PostUpload upload(this->_reqBody ,this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
+			PostUpload upload(this->_reqBody, this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
 			try
 			{
 				upload.uploadFile();
 			}
-			catch(const Webserv::PostUpload::BodyParseError& e)
+			catch (const Webserv::PostUpload::BodyParseError &e)
 			{
 				this->_resCode = 400;
 			}
-			catch(const Webserv::PostUpload::UploadError& e)
+			catch (const Webserv::PostUpload::UploadError &e)
 			{
 				this->_resCode = 500;
 			}
@@ -220,6 +208,22 @@ namespace Webserv
 		return (UNKNOWN);
 	}
 
+	void Request::selectConfiguration(const std::vector<ConfigServer> &configs)
+	{
+		std::vector<ConfigServer>::const_iterator configuration = configs.begin();
+		for (std::vector<ConfigServer>::const_iterator it = configs.begin(); it != configs.end(); it++)
+		{
+			std::string hostConfig = it->getPort() == 80 ? it->getServerName() : it->getServerName() + ":" + AuxFunc::ft_itoa(it->getPort());
+			std::map<std::string, std::string>::iterator hostRequest = this->_reqHeader.find("Host");
+			if (hostRequest != this->_reqHeader.end() && hostRequest->second == hostConfig)
+			{
+				configuration = it;
+				break;
+			}
+		}
+		this->_configuration = new ConfigServer(*configuration);
+	}
+
 	const std::map<std::string, std::string> &Request::getReqHeader(void) const
 	{
 		return (this->_reqHeader);
@@ -278,7 +282,7 @@ namespace Webserv
 		return ("An invalid value was set to private member _resCode in Request class");
 	}
 
-	Request::~Request() 
+	Request::~Request()
 	{
 		if (this->_configuration != NULL)
 			delete this->_configuration;

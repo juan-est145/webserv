@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/19 14:57:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/19 17:25:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ namespace Webserv
 		void extractReqHead(std::queue<std::string> &headers);
 		void extractFirstHead(std::string &line);
 		enum E_Method selectMethod(std::string &method);
+		void selectConfiguration(const std::vector<ConfigServer> &configs);
 	};
 }
 
