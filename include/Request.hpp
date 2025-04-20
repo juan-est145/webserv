@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/19 17:25:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:24:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ namespace Webserv
 		enum E_Method _method;
 		std::string _path;
 		std::string _httpVers;
-		unsigned int _resCode;
-		ResourceReq _resourceReq;
+		AServerAction  *_serverAction;
 		ConfigServer *_configuration;
 
 		void extractHeaders(std::string &buffer);

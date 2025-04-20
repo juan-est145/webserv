@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/19 17:36:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:44:10 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ namespace Webserv
 		this->_method = UNKNOWN;
 		this->_path = "";
 		this->_httpVers = "";
-		this->_resCode = 200;
 		this->_socketFd = -1;
 		this->_reqBody = "";
 		this->_configuration = NULL;
@@ -30,7 +29,6 @@ namespace Webserv
 		this->_method = UNKNOWN;
 		this->_path = "";
 		this->_httpVers = "";
-		this->_resCode = 200;
 		this->_socketFd = socketFd;
 		this->_reqBody = "";
 		this->_configuration = NULL;
@@ -50,8 +48,7 @@ namespace Webserv
 			this->_method = assign._method;
 			this->_httpVers = assign._httpVers;
 			this->_path = assign._path;
-			this->_resCode = assign._resCode;
-			this->_resourceReq = assign._resourceReq;
+			this->_serverAction = assign._serverAction;
 			this->_configuration = assign._configuration;
 		}
 		return *this;
@@ -79,15 +76,16 @@ namespace Webserv
 			}
 			catch (const Webserv::PostUpload::BodyParseError &e)
 			{
-				this->_resCode = 400;
+				//this->_resCode = 400;
 			}
 			catch (const Webserv::PostUpload::UploadError &e)
 			{
-				this->_resCode = 500;
+				//this->_resCode = 500;
 			}
 			return;
 		}
-		this->_resCode = this->_resourceReq.obtainResource(this->_path);
+		this->_serverAction = new Webserv::ResourceReq(this->_path);
+		this->_serverAction->processRequest(this->_configuration);
 	}
 
 	void Request::extractHeaders(std::string &buffer)
@@ -112,7 +110,8 @@ namespace Webserv
 		}
 		catch (const std::out_of_range &e)
 		{
-			this->_resCode = 400;
+			// TO DO: Properly implement this
+			//this->_resCode = 400;
 			buffer = "";
 			return;
 		}
@@ -227,12 +226,16 @@ namespace Webserv
 
 	unsigned int Request::getResCode(void) const
 	{
-		return (this->_resCode);
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getResCode());
 	}
 
 	long Request::getResourceSize(void) const
 	{
-		return (this->_resourceReq.getSize());
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getSize());
 	}
 
 	const std::string &Request::getReqBody(void) const
@@ -242,15 +245,17 @@ namespace Webserv
 
 	const std::string &Request::getResourceContent(void) const
 	{
-		return (this->_resourceReq.getContent());
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getContent());
 	}
 
-	void Request::setResCode(unsigned int resCode)
-	{
-		if (resCode < 100 || resCode > 511)
-			throw Webserv::Request::RequestException();
-		this->_resCode = resCode;
-	}
+	// void Request::setResCode(unsigned int resCode)
+	// {
+	// 	if (resCode < 100 || resCode > 511)
+	// 		throw Webserv::Request::RequestException();
+	// 	this->_resCode = resCode;
+	// }
 
 	std::size_t Request::setReqBody(std::string &body)
 	{
@@ -268,5 +273,8 @@ namespace Webserv
 		if (this->_configuration != NULL)
 			delete this->_configuration;
 		this->_configuration = NULL;
+		if (this->_serverAction != NULL)
+			delete this->_serverAction;
+		this->_serverAction = NULL;
 	}
 }
