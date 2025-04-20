@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 18:29:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:32:52 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ namespace Webserv
 
 	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
 	{
-		//std::string reqPath = this->_path.size() <= 1 ? "" : this->_path.substr(1);
 		std::string reqPath = this->_path;
 		std::string path = locationFile.getPath().size() <= 1 ? "" : locationFile.getPath().substr(1);
 		std::string resourcePath;
