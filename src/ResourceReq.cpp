@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 18:32:52 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:45:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ namespace Webserv
 				break;
 		}
 		reqPath.erase(0, breakIndex);
-		resourcePath = locationFile.getRootLocation() + path + reqPath;
+		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
 		return (resourcePath);
 	}
 
