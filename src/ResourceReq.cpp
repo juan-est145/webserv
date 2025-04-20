@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 16:57:52 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:29:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ namespace Webserv
 		{
 			if (locationFile.getAutoindex() == true)
 				std::cout << "Nothing yet, will implement later" << std::endl;
-			localPath += locationFile.getIndexLocation();
+			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
 			stat(localPath.c_str(), &fileStat);
 		}
 		else
@@ -104,9 +104,19 @@ namespace Webserv
 
 	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
 	{
-		std::string reqPath = this->_path.size() <= 1 ? "" : this->_path.substr(1);
+		//std::string reqPath = this->_path.size() <= 1 ? "" : this->_path.substr(1);
+		std::string reqPath = this->_path;
 		std::string path = locationFile.getPath().size() <= 1 ? "" : locationFile.getPath().substr(1);
-		std::string resourcePath = locationFile.getRootLocation() + path + reqPath;
+		std::string resourcePath;
+		unsigned int breakIndex = 0;
+
+		for (; breakIndex < std::min(this->_path.size(), locationFile.getPath().size()); breakIndex++)
+		{
+			if (this->_path[breakIndex] != locationFile.getPath()[breakIndex])
+				break;
+		}
+		reqPath.erase(0, breakIndex);
+		resourcePath = locationFile.getRootLocation() + path + reqPath;
 		return (resourcePath);
 	}
 
