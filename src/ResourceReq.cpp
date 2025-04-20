@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 15:59:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:57:52 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,17 @@ namespace Webserv
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = this->mapPathToResource(locationFile);
 
+		if (access(localPath.c_str(), F_OK) == -1)
+		{
+			this->_resCode = 404;
+			localPath = config->getRoot() + config->getErrorPages().find(this->_resCode)->second;
+		}
 		// TO DO: Handle somehow 500 error codes later on
-		if (access(this->_path.c_str(), R_OK) == -1)
+		else if (access(localPath.c_str(), R_OK) == -1)
 			this->_resCode = 500;
 		// TO DO: Implement exception here if stat fails
 		// TO DO: Implement 404 if stat does not find anything
-		stat(this->_path.c_str(), &fileStat);
+		stat(localPath.c_str(), &fileStat);
 		if (fileStat.st_mode & S_IFDIR)
 		{
 			if (locationFile.getAutoindex() == true)
@@ -99,8 +104,9 @@ namespace Webserv
 
 	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
 	{
+		std::string reqPath = this->_path.size() <= 1 ? "" : this->_path.substr(1);
 		std::string path = locationFile.getPath().size() <= 1 ? "" : locationFile.getPath().substr(1);
-		std::string resourcePath = locationFile.getRootLocation() + path;
+		std::string resourcePath = locationFile.getRootLocation() + path + reqPath;
 		return (resourcePath);
 	}
 
