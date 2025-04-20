@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 13:44:10 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 13:45:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ namespace Webserv
 		this->_socketFd = -1;
 		this->_reqBody = "";
 		this->_configuration = NULL;
+		this->_serverAction = NULL;
 	}
 
 	Request::Request(int socketFd)
@@ -32,6 +33,7 @@ namespace Webserv
 		this->_socketFd = socketFd;
 		this->_reqBody = "";
 		this->_configuration = NULL;
+		this->_serverAction = NULL;
 	}
 
 	Request::Request(const Request &copy)
