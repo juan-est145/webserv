@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 14:15:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 14:49:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,19 @@ namespace Webserv
 
 		for (unsigned int i = 0; i < locations.size(); i++)
 		{
-			for (unsigned int letter = 0; letter < locations[i].getRootLocation().size(); i++)
+			matchingChars = 0;
+			std::string path = locations[i].getPath();
+			for (unsigned int letter = 0; letter < std::min(path.size(), this->_path.size()); letter++)
 			{
-				/* code */
+				if (path[letter] != this->_path[letter])
+					break;
+				matchingChars++;
 			}
-			
+			if (matchingChars > maxMatch)
+			{
+				maxMatch = matchingChars;
+				locIndex = i;
+			}
 		}
 		
 		

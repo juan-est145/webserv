@@ -7,6 +7,7 @@
 #include <vector>
 #include <unistd.h>
 #include <fstream>
+#include <algorithm>
 #include "AServerAction.hpp"
 #include "ConfigServer.hpp"
 
