@@ -15,7 +15,6 @@
 #include <map>
 #include "ConfigFile.hpp"
 #include "Logger.hpp"
-#include "AuxFunc.hpp"
 
 namespace Webserv
 {

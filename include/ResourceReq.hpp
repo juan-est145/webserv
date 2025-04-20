@@ -10,10 +10,12 @@
 #include <algorithm>
 #include "AServerAction.hpp"
 #include "ConfigServer.hpp"
+#include "Location.hpp"
 
 namespace Webserv
 {
 	class ConfigServer;
+	class Location;
 
 	class ResourceReq : public AServerAction
 	{

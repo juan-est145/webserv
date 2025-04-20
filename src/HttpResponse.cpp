@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/01 12:38:16 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:08:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/HttpResponse.hpp"
-
 
 namespace Webserv
 {
@@ -19,9 +18,8 @@ namespace Webserv
     {
         this->status = "200";
         this->content = "text/html";
-        this->contentLength = getFileSize("./html/index.html");
+        this->contentLength = 0;
     }
-
 
     HttpResponse::HttpResponse(std::string status, std::string content, int contentLength)
     {
@@ -34,7 +32,6 @@ namespace Webserv
         *this = toCopy;
     }
 
-
     HttpResponse &HttpResponse::operator=(const HttpResponse &other)
     {
         this->status = other.getStatus();
@@ -42,25 +39,15 @@ namespace Webserv
         this->contentLength = other.getContentLength();
         return *this;
     }
-    HttpResponse::~HttpResponse(){}
-
-    int HttpResponse::getFileSize(const char* filename) 
-    {
-        struct stat st;
-        if (stat(filename, &st) == 0)
-            return static_cast<int>(st.st_size);
-        return -1;
-    }
-
 
     std::string HttpResponse::Print(const Request *req) const
     {
         std::stringstream ss;
         ss << "HTTP/1.1 " << status << "\r\n"
-        << "Content-Type: " << content << "\r\n"
-        << "Content-Length: " << contentLength << "\r\n"
-        << "\r\n"
-        << req->getResourceContent();
+           << "Content-Type: " << content << "\r\n"
+           << "Content-Length: " << contentLength << "\r\n"
+           << "\r\n"
+           << req->getResourceContent();
         std::string header = ss.str();
         return header;
     }
@@ -85,7 +72,7 @@ namespace Webserv
         this->status = status;
     }
 
-    void HttpResponse::setContent(std::string content) 
+    void HttpResponse::setContent(std::string content)
     {
         this->content = content;
     }
@@ -94,4 +81,6 @@ namespace Webserv
     {
         this->contentLength = contentLength;
     }
+
+    HttpResponse::~HttpResponse() {}
 }

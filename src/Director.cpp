@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/19 14:22:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:09:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,10 @@ namespace Webserv
         this->builder->SetContentLength(size);
     }
     //CODE 404        
-    void Director::BuildNotFoundResponse()
+    void Director::BuildNotFoundResponse(long size)
     {
         this->builder->SetStatus("404");
         this->builder->SetContent("text/html");
-        this->builder->SetContentLength(getFileSize("html/error404.html"));
-    }
-
-    int getFileSize(const char* filename) 
-    {
-        struct stat st;
-        if (stat(filename, &st) == 0)
-            return static_cast<int>(st.st_size);
-        return -1;
+        this->builder->SetContentLength(size);
     }
 }

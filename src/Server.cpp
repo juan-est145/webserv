@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 14:29:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:10:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ namespace Webserv
 		{
 			director.BuildOkResponse(req->getResourceSize());
 			response = Hresp.Print(req);
-			
 		}
 		else if (req->getResCode() == 201)
 		{
@@ -161,7 +160,7 @@ namespace Webserv
 		}
 		else if (req->getResCode() == 404)
 		{
-			director.BuildNotFoundResponse();
+			director.BuildNotFoundResponse(req->getResourceSize());
 			response = Hresp.Print(req);
 		}
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
