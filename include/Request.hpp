@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 13:24:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 14:14:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 namespace Webserv
 {
 	class ConfigServer;
+	class AServerAction;
 
 	class Request
 	{

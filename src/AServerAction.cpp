@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 13:42:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 14:35:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,10 @@ namespace Webserv
 		return (this->_resCode);
 	}
 
-	AServerAction::AServerAction() {}
+	void AServerAction::setRescode(unsigned int resCode)
+	{
+		this->_resCode = resCode;
+	}
+
+	AServerAction::~AServerAction() {}
 }

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 13:41:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 14:15:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ namespace Webserv
 		this->_resourceType = ResourceReq::REG_FILE;
 	}
 
-	ResourceReq::ResourceReq(const std::string path): AServerAction(path)  {}
+	ResourceReq::ResourceReq(const std::string path): AServerAction(path)  
+	{
+		this->_resourceType = ResourceReq::REG_FILE;
+	}
 
 	ResourceReq::ResourceReq(const ResourceReq &copy): AServerAction(copy)
 	{
@@ -38,45 +41,62 @@ namespace Webserv
 		return (*this);
 	}
 
-	void ResourceReq::processRequest(ConfigServer *config)
+	void ResourceReq::processRequest(const ConfigServer *config)
 	{
-
+		this->obtainResource(config);
 	}
 
-	// int ResourceReq::obtainResource(const std::string &uri)
-	// {
-	// 	struct stat fileStat;
-	// 	int responseCode;
+	void ResourceReq::obtainResource(const ConfigServer *config)
+	{
+		struct stat fileStat;
 
-	// 	// TO DO: Handle somehow 500 error codes later on
-	// 	responseCode = this->mapUriToResource(uri);
-	// 	if (access(this->_path.c_str(), R_OK) == -1)
-	// 		responseCode = 500;
-	// 	// TO DO: Implement exception here if stat fails
-	// 	stat(this->_path.c_str(), &fileStat);
-	// 	this->_size = fileStat.st_size;
-	// 	this->readResource();
-	// 	return (responseCode);
-	// }
+		// TO DO: Handle somehow 500 error codes later on
+		this->mapPathToResource(config);
+		if (access(this->_path.c_str(), R_OK) == -1)
+			this->_resCode = 500;
+		// TO DO: Implement exception here if stat fails
+		stat(this->_path.c_str(), &fileStat);
+		this->_size = fileStat.st_size;
+		this->readResource();
+	}
 
-	// int ResourceReq::mapUriToResource(const std::string &uri)
-	// {
-	// 	// TODO: Once we have a working configuration file, we should use that information instead
-	// 	int responseCode = 200;
+	void ResourceReq::mapPathToResource(const ConfigServer *config)
+	{
+		// TODO: Once we have a working configuration file, we should use that information instead
+		this->_resCode = 200;
+		const std::vector<Webserv::Location> locations = config->getLocations();
+		unsigned int locIndex = 0;
+		unsigned int matchingChars = 0;
+		unsigned int maxMatch = 0;
 
-	// 	// TODO: Later on I need to distinguish between type of files
-	// 	this->_resourceType = ResourceReq::REG_FILE;
-	// 	if (uri == "/")
-	// 		this->_path = "./www/index.html";
-	// 	else if (uri == "/upload")
-	// 		this->_path = "./www/upload.html";
-	// 	else
-	// 	{
-	// 		this->_path = "./www/error404.html";
-	// 		responseCode = 404;
-	// 	}
-	// 	return (responseCode);
-	// }
+		(void)locIndex;
+		(void)matchingChars;
+		(void)maxMatch;
+
+
+		for (unsigned int i = 0; i < locations.size(); i++)
+		{
+			for (unsigned int letter = 0; letter < locations[i].getRootLocation().size(); i++)
+			{
+				/* code */
+			}
+			
+		}
+		
+		
+
+		// TODO: Later on I need to distinguish between type of files
+		// if (uri == "/")
+		// 	this->_path = "./www/index.html";
+		// else if (uri == "/upload")
+		// 	this->_path = "./www/upload.html";
+		// else
+		// {
+		// 	this->_path = "./www/error404.html";
+		// 	responseCode = 404;
+		// }
+		// return (responseCode);
+	}
 
 	void ResourceReq::readResource(void)
 	{

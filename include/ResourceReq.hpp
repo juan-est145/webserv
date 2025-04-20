@@ -4,13 +4,17 @@
 #include <iostream>
 #include <string>
 #include <sys/stat.h>
+#include <vector>
 #include <unistd.h>
 #include <fstream>
 #include "AServerAction.hpp"
+#include "ConfigServer.hpp"
 
 namespace Webserv
 {
-	class ResourceReq: public AServerAction
+	class ConfigServer;
+
+	class ResourceReq : public AServerAction
 	{
 	public:
 		enum E_ResourceType
@@ -25,7 +29,7 @@ namespace Webserv
 		ResourceReq(const ResourceReq &copy);
 		ResourceReq &operator=(const ResourceReq &assign);
 
-		void processRequest(ConfigServer *config);
+		void processRequest(const ConfigServer *config);
 
 		void setContent(const std::string &_content);
 		~ResourceReq();
@@ -33,7 +37,8 @@ namespace Webserv
 	private:
 		enum E_ResourceType _resourceType;
 
-		int mapUriToResource(const std::string &uri);
+		void obtainResource(const ConfigServer *config);
+		void mapPathToResource(const ConfigServer *config);
 		void readResource(void);
 	};
 }
