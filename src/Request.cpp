@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 14:35:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:48:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ namespace Webserv
 		return *this;
 	}
 
-	// TO DO: REMEMBER TO DECODE HTTP REQUEST HEADERS. IS A MUST
 	void Request::readReq(const char *buffer, size_t bufSize)
 	{
 		std::string strBuff(buffer, bufSize);
@@ -97,8 +96,7 @@ namespace Webserv
 		std::queue<std::string> headers;
 		std::size_t pos = buffer.find(deli);
 
-		// TO DO: Implement body extraction for POST and DELETE requests. Might need to change the extraction
-		// algorithm. Also set a 400 response for GET requests with a body.
+		// TO DO: Set a 400 response for GET requests with a body.
 		try
 		{
 			while (pos != std::string::npos && buffer.substr(0, 2) != "\r\n")
