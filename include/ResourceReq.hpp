@@ -39,8 +39,9 @@ namespace Webserv
 		enum E_ResourceType _resourceType;
 
 		void obtainResource(const ConfigServer *config);
-		void mapPathToResource(const ConfigServer *config);
-		void readResource(void);
+		const Location &obtainLocationConf(const ConfigServer *config) const;
+		std::string mapPathToResource(const Location &locationFile) const;
+		void readResource(const std::string &path);
 	};
 }
 
