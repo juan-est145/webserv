@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:30:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:47:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ namespace Webserv
 	class ConfigServer;
 	class Location;
 
-	class ResourceReq : public AServerAction
+	class ResourceReq: public AServerAction
 	{
 	public:
 		enum E_ResourceType
