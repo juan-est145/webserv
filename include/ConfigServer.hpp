@@ -107,8 +107,6 @@ namespace Webserv
 		 */
 		void setErrorPages(std::vector<std::string> &parameter);
 
-		void setDefaultErrorPages(void);
-
 		/**
 		 * Sets the index atttribute
 		 * @throw exception if token is invalid

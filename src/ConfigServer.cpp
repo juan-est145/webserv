@@ -439,8 +439,7 @@ namespace Webserv
 	bool ConfigServer::isValidErrorPages()
 	{
 		std::map<short, std::string>::const_iterator it;
-		for (it = this->_errorPages.begin();
-			 it != this->_errorPages.end(); it++)
+		for (it = this->_errorPages.begin(); it != this->_errorPages.end(); it++)
 		{
 			if (it->first < 100 || it->first > 599)
 				return (false);
