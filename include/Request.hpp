@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 14:14:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:30:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@
 #include <iostream>
 #include <string>
 #include <map>
-
 #include <queue>
 #include <exception>
 #include <cstdlib>
 #include <vector>
-#include "ConfigServer.hpp"
 #include "Logger.hpp"
 #include "ResourceReq.hpp"
 #include "PostUpload.hpp"
@@ -30,6 +28,8 @@ namespace Webserv
 {
 	class ConfigServer;
 	class AServerAction;
+	class ResourceReq;
+	class PostUpload;
 
 	class Request
 	{
@@ -77,7 +77,7 @@ namespace Webserv
 		enum E_Method _method;
 		std::string _path;
 		std::string _httpVers;
-		AServerAction  *_serverAction;
+		AServerAction *_serverAction;
 		ConfigServer *_configuration;
 
 		void extractHeaders(std::string &buffer);

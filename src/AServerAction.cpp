@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 16:17:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/21 20:53:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,38 @@ namespace Webserv
 		return (*this);
 	}
 
+	void AServerAction::processHttpError(const ConfigServer *config)
+	{
+		struct stat fileStat;
+		std::map<short, std::string>::const_iterator errorPage = config->getErrorPages().find(this->_resCode);
+		std::string localPath = "www/errorPages/error" + AuxFunc::ft_itoa(this->_resCode) + ".html";;
+		
+		if (errorPage != config->getErrorPages().end())
+			localPath = config->getRoot() + errorPage->second;
+		if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
+			throw std::exception();
+		this->_size = fileStat.st_size;
+		this->readResource(localPath);
+	}
+
+	void AServerAction::readResource(const std::string &path)
+	{
+		std::ifstream resource;
+		char *buffer = NULL;
+
+		resource.open(path.c_str(), std::ios::in);
+		if (!resource.is_open())
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		buffer = new char[this->_size + 1];
+		resource.read(buffer, this->_size);
+		buffer[this->_size] = '\0';
+		this->_content = buffer;
+		delete[] buffer;
+	}
+
 	const std::string &AServerAction::getPath(void) const
 	{
 		return (this->_path);
@@ -67,6 +99,11 @@ namespace Webserv
 	void AServerAction::setRescode(unsigned int resCode)
 	{
 		this->_resCode = resCode;
+	}
+
+	const char *AServerAction::HttpException::what(void) const throw()
+	{
+		return ("An http error has occurred");
 	}
 
 	AServerAction::~AServerAction() {}

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 18:45:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:24:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,14 @@ namespace Webserv
 
 	void ResourceReq::processRequest(const ConfigServer *config)
 	{
-		this->obtainResource(config);
+		try
+		{
+			this->obtainResource(config);
+		}
+		catch (const Webserv::AServerAction::HttpException &e)
+		{
+			this->processHttpError(config);
+		}
 	}
 
 	void ResourceReq::obtainResource(const ConfigServer *config)
@@ -55,20 +62,24 @@ namespace Webserv
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
 			this->_resCode = 404;
-			localPath = config->getRoot() + config->getErrorPages().find(this->_resCode)->second;
+			throw Webserv::AServerAction::HttpException();
 		}
 		// TO DO: Handle somehow 500 error codes later on
-		else if (access(localPath.c_str(), R_OK) == -1)
+		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
+		{
 			this->_resCode = 500;
-		// TO DO: Implement exception here if stat fails
-		// TO DO: Implement 404 if stat does not find anything
-		stat(localPath.c_str(), &fileStat);
+			throw Webserv::AServerAction::HttpException();
+		}
 		if (fileStat.st_mode & S_IFDIR)
 		{
 			if (locationFile.getAutoindex() == true)
 				std::cout << "Nothing yet, will implement later" << std::endl;
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
-			stat(localPath.c_str(), &fileStat);
+			if (stat(localPath.c_str(), &fileStat) == -1)
+			{
+				this->_resCode = 500;
+				throw Webserv::AServerAction::HttpException();
+			}
 		}
 		else
 			std::cout << "We hit something else" << std::endl;
@@ -117,20 +128,6 @@ namespace Webserv
 		reqPath.erase(0, breakIndex);
 		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
 		return (resourcePath);
-	}
-
-	void ResourceReq::readResource(const std::string &path)
-	{
-		std::ifstream resource;
-		char *buffer = NULL;
-
-		resource.open(path.c_str(), std::ios::in);
-		buffer = new char[this->_size + 1];
-		// TO DO: Check that resource is open and throw exception if it is not
-		resource.read(buffer, this->_size);
-		buffer[this->_size] = '\0';
-		this->_content = buffer;
-		delete[] buffer;
 	}
 
 	void ResourceReq::setContent(const std::string &_content)

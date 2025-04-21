@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ResourceReq.hpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
+/*   Updated: 2025/04/21 21:30:00 by juestrel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RESOURCEREQ_HPP
 #define RESOURCEREQ_HPP
 
@@ -9,8 +21,6 @@
 #include <fstream>
 #include <algorithm>
 #include "AServerAction.hpp"
-#include "ConfigServer.hpp"
-#include "Location.hpp"
 
 namespace Webserv
 {
@@ -43,7 +53,6 @@ namespace Webserv
 		void obtainResource(const ConfigServer *config);
 		const Location &obtainLocationConf(const ConfigServer *config) const;
 		std::string mapPathToResource(const Location &locationFile) const;
-		void readResource(const std::string &path);
 	};
 }
 

@@ -5,6 +5,8 @@ SRC-PATH = src
 HEADER-PATH = include
 
 SRCS = $(SRC-PATH)/main.cpp\
+$(SRC-PATH)/ConfigParser.cpp\
+$(SRC-PATH)/ConfigServer.cpp\
 $(SRC-PATH)/Request.cpp\
 $(SRC-PATH)/Cluster.cpp\
 $(SRC-PATH)/Logger.cpp\
@@ -15,16 +17,16 @@ $(SRC-PATH)/HttpResponse.cpp\
 $(SRC-PATH)/ConcreteBuilder.cpp\
 $(SRC-PATH)/Director.cpp\
 $(SRC-PATH)/Server.cpp\
-$(SRC-PATH)/ConfigParser.cpp\
-$(SRC-PATH)/ConfigServer.cpp\
-$(SRC-PATH)/AServerAction.cpp\
 $(SRC-PATH)/ResourceReq.cpp\
+$(SRC-PATH)/AServerAction.cpp\
 $(SRC-PATH)/PostUpload.cpp\
 
 
 OBJS = $(SRCS:.cpp=.o)
 
 HEADER = $(HEADER-PATH)/main.hpp\
+$(HEADER-PATH)/ConfigParser.hpp\
+$(HEADER-PATH)/ConfigServer.hpp\
 $(HEADER-PATH)/Builder.hpp\
 $(HEADER-PATH)/Request.hpp\
 $(HEADER-PATH)/Cluster.hpp\
@@ -36,10 +38,8 @@ $(HEADER-PATH)/HttpResponse.hpp\
 $(HEADER-PATH)/ConcreteBuilder.hpp\
 $(HEADER-PATH)/Director.hpp\
 $(HEADER-PATH)/Server.hpp\
-$(HEADER-PATH)/ConfigParser.hpp\
-$(HEADER-PATH)/ConfigServer.hpp\
-$(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/ResourceReq.hpp\
+$(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/PostUpload.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project

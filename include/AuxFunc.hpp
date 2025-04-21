@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:20:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:32:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 
 namespace Webserv
 {
+	class Server;
+	
 	class AuxFunc
 	{
 	private:

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 14:36:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:29:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,17 @@
 
 #include <iostream>
 #include <string>
+#include <map>
+#include <exception>
+#include <sys/stat.h>
+#include <fstream>
+#include "AuxFunc.hpp"
+#include "ConfigServer.hpp"
+#include "Location.hpp"
 
 namespace Webserv
 {
+	class ResourceReq;
 	class ConfigServer;
 
 	class AServerAction
@@ -27,6 +35,9 @@ namespace Webserv
 		std::string _content;
 		long _size;
 		unsigned int _resCode;
+
+		void processHttpError(const ConfigServer *config);
+		void readResource(const std::string &path);
 
 	public:
 		AServerAction(void);
@@ -40,10 +51,17 @@ namespace Webserv
 		const std::string &getContent(void) const;
 		long getSize(void) const;
 		unsigned int getResCode(void) const;
-		
+
 		void setRescode(unsigned int resCode);
 
 		virtual ~AServerAction();
+
+		class HttpException : std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
 	};
 }
+
 #endif
