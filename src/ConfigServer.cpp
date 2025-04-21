@@ -277,6 +277,16 @@ namespace Webserv
 		}
 	}
 
+	void ConfigServer::setDefaultErrorPages(void)
+	{
+		for (std::map<short, std::string>::iterator it = this->_errorPages.begin(); it != this->_errorPages.end(); it++)
+		{
+			if (it->second.length() > 0)
+				continue;
+			it->second = "www/errorPages/error" + AuxFunc::ft_itoa(it->first) + ".html";
+		}
+	}
+
 	void ConfigServer::setLocation(std::string nameLocation, std::vector<std::string> parameter)
 	{
 		Location newLocation;

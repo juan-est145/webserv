@@ -105,8 +105,9 @@ namespace Webserv
 		 * if error code is invalid, if path is incorrect
 		 * or if the error page file is not accesible
 		 */
-		void setErrorPages(
-			std::vector<std::string> &parameter);
+		void setErrorPages(std::vector<std::string> &parameter);
+
+		void setDefaultErrorPages(void);
 
 		/**
 		 * Sets the index atttribute

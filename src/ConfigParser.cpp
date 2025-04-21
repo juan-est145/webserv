@@ -260,6 +260,7 @@ namespace Webserv
 		if (!server.getPort())
 			throw ErrorException("Port not found");
 		server.setErrorPages(errorCodes);
+		server.setDefaultErrorPages();
 		if (!server.isValidErrorPages())
 			throw ErrorException("Incorrect path for error page or number of error");
 	}
