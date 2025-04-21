@@ -18,8 +18,8 @@ $(SRC-PATH)/ConcreteBuilder.cpp\
 $(SRC-PATH)/Director.cpp\
 $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/ResourceReq.cpp\
-$(SRC-PATH)/AServerAction.cpp\
 $(SRC-PATH)/PostUpload.cpp\
+$(SRC-PATH)/AServerAction.cpp\
 
 
 OBJS = $(SRCS:.cpp=.o)
@@ -39,8 +39,8 @@ $(HEADER-PATH)/ConcreteBuilder.hpp\
 $(HEADER-PATH)/Director.hpp\
 $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/ResourceReq.hpp\
-$(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/PostUpload.hpp\
+$(HEADER-PATH)/AServerAction.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
 CXX = $(shell which g++ c++ clang++  | head -n 1)
