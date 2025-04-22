@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 14:04:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:16:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,10 @@ namespace Webserv
 		std::map<std::string, bool>::const_iterator methodIter;
 		try
 		{
-			methodIter = locationFile.getMethods().find(methods[req.getMethod()]);
+			std::string httpMethod = methods[(int)req.getMethod()];
+			methodIter = locationFile.getMethods().find(httpMethod);
 		}
-		catch(const std::out_of_range& e)
+		catch(const std::bad_alloc& e)
 		{
 			this->_resCode = 405;
 			throw Webserv::AServerAction::HttpException();
