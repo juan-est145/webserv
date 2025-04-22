@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/20 18:48:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:17:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ namespace Webserv
 			return;
 		}
 		this->_serverAction = new Webserv::ResourceReq(this->_path);
-		this->_serverAction->processRequest(this->_configuration);
+		this->_serverAction->processRequest(this->_configuration, *this);
 	}
 
 	void Request::extractHeaders(std::string &buffer)

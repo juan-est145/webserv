@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:47:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:19:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <fstream>
 #include <algorithm>
 #include "AServerAction.hpp"
+#include "Request.hpp"
 
 namespace Webserv
 {
@@ -42,7 +43,7 @@ namespace Webserv
 		ResourceReq(const ResourceReq &copy);
 		ResourceReq &operator=(const ResourceReq &assign);
 
-		void processRequest(const ConfigServer *config);
+		void processRequest(const ConfigServer *config, const Request &req);
 
 		void setContent(const std::string &_content);
 		~ResourceReq();
@@ -50,7 +51,7 @@ namespace Webserv
 	private:
 		enum E_ResourceType _resourceType;
 
-		void obtainResource(const ConfigServer *config);
+		void obtainResource(const ConfigServer *config, const Request &req);
 		const Location &obtainLocationConf(const ConfigServer *config) const;
 		std::string mapPathToResource(const Location &locationFile) const;
 	};

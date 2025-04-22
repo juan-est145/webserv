@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 12:42:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:27:09 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ namespace Webserv
 		return (*this);
 	}
 
-	void ResourceReq::processRequest(const ConfigServer *config)
+	void ResourceReq::processRequest(const ConfigServer *config, const Request &req)
 	{
 		try
 		{
-			this->obtainResource(config);
+			this->obtainResource(config, req);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -53,11 +53,16 @@ namespace Webserv
 		}
 	}
 
-	void ResourceReq::obtainResource(const ConfigServer *config)
+	void ResourceReq::obtainResource(const ConfigServer *config, const Request &req)
 	{
+		std::string methods[3] = {
+			"GET",
+			"POST",
+			"DELETE"};
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = this->mapPathToResource(locationFile);
+		std::map<std::string, bool>::const_iterator methodIter = locationFile.getMethods().find(methods[req.getMethod()]);
 
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
@@ -67,6 +72,11 @@ namespace Webserv
 		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
 		{
 			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		if (!methodIter->second)
+		{
+			this->_resCode = 405;
 			throw Webserv::AServerAction::HttpException();
 		}
 		if (fileStat.st_mode & S_IFDIR)

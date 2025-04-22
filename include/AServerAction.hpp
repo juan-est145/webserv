@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:29:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:24:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ namespace Webserv
 {
 	class ResourceReq;
 	class ConfigServer;
+	class Request;
 
 	class AServerAction
 	{
@@ -45,7 +46,7 @@ namespace Webserv
 		AServerAction(const AServerAction &toCopy);
 		AServerAction &operator=(const AServerAction &toCopy);
 
-		virtual void processRequest(const ConfigServer *config) = 0;
+		virtual void processRequest(const ConfigServer *config, const Request &req) = 0;
 
 		const std::string &getPath(void) const;
 		const std::string &getContent(void) const;
@@ -56,7 +57,7 @@ namespace Webserv
 
 		virtual ~AServerAction();
 
-		class HttpException : std::exception
+		class HttpException : public std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();
