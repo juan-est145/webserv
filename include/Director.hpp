@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/20 16:09:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:43:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define DIRECTOR_HPP
 
 #include <sys/stat.h>
+#include "AuxFunc.hpp"
 #include "Builder.hpp"
 
 namespace Webserv
@@ -34,7 +35,7 @@ namespace Webserv
         void SetBuilder(Builder *builder);
         void BuildOkResponse(long size); // CODE 200
         void BuildOkUploadResponse(long size);   // CODE 201
-        void BuildNotFoundResponse(long size);           // CODE 404
+        void BuildErrorResponse(long size, unsigned int resCode); //Error respose
     };
 }
 

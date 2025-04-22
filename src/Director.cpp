@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/20 16:09:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:43:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,11 @@ namespace Webserv
         this->builder->SetContentLength(size);
     }
     //CODE 404        
-    void Director::BuildNotFoundResponse(long size)
+    void Director::BuildErrorResponse(long size, unsigned int resCode)
     {
-        this->builder->SetStatus("404");
+        if (resCode < 400)
+            throw std::exception();
+        this->builder->SetStatus(AuxFunc::ft_itoa(resCode));
         this->builder->SetContent("text/html");
         this->builder->SetContentLength(size);
     }

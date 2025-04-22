@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 20:53:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 13:38:00 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace Webserv
 		std::map<short, std::string>::const_iterator errorPage = config->getErrorPages().find(this->_resCode);
 		std::string localPath = "www/errorPages/error" + AuxFunc::ft_itoa(this->_resCode) + ".html";;
 		
-		if (errorPage != config->getErrorPages().end())
+		if (errorPage->second.length() > 0)
 			localPath = config->getRoot() + errorPage->second;
 		if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
 			throw std::exception();
