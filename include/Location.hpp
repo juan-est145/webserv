@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:26:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:16:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 #include <vector>
 #include <map>
 #include "AuxFunc.hpp"
+#include "ConfigServer.hpp"
+#include "ConfigFile.hpp"
 
 namespace Webserv
 {

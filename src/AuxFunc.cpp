@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:20:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:15:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace Webserv
 		{
 			close(epollFd);
 			Webserv::Logger::errorLog(errno, strerror, false);
-			throw Webserv::Server::ServerException();
+			throw std::exception();
 		}
 		close(eventList.data.fd);
 	}

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:32:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 11:15:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #include <cerrno>
 #include <sstream>
 #include "Logger.hpp"
-#include "Server.hpp"
 
 namespace Webserv
 {
