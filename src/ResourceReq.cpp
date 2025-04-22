@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 13:48:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:04:47 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,16 @@ namespace Webserv
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = this->mapPathToResource(locationFile);
-		std::map<std::string, bool>::const_iterator methodIter = locationFile.getMethods().find(methods[req.getMethod()]);
+		std::map<std::string, bool>::const_iterator methodIter;
+		try
+		{
+			methodIter = locationFile.getMethods().find(methods[req.getMethod()]);
+		}
+		catch(const std::out_of_range& e)
+		{
+			this->_resCode = 405;
+			throw Webserv::AServerAction::HttpException();
+		}
 
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
@@ -76,7 +85,7 @@ namespace Webserv
 		}
 		if (!methodIter->second)
 		{
-			this->_resCode = 405;
+			this->_resCode = 401;
 			throw Webserv::AServerAction::HttpException();
 		}
 		if (fileStat.st_mode & S_IFDIR)
