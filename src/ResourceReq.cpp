@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:24:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/22 12:42:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ namespace Webserv
 			this->_resCode = 404;
 			throw Webserv::AServerAction::HttpException();
 		}
-		// TO DO: Handle somehow 500 error codes later on
 		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
 		{
 			this->_resCode = 500;
