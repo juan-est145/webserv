@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 21:41:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 22:31:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace Webserv
 {
-	PostUpload::PostUpload(void): AServerAction()
+	PostUpload::PostUpload(void) : AServerAction()
 	{
 		this->_body = "";
 		this->_contentType = "";
@@ -22,7 +22,7 @@ namespace Webserv
 		this->_accept = "";
 	}
 
-	PostUpload::PostUpload(std::string body, const std::string path): AServerAction(path)
+	PostUpload::PostUpload(std::string body, const std::string path) : AServerAction(path)
 	{
 		this->_body = body;
 		this->_contentType = "";
@@ -30,7 +30,7 @@ namespace Webserv
 		this->_accept = "";
 	}
 
-	PostUpload::PostUpload(const PostUpload &copy)
+	PostUpload::PostUpload(const PostUpload &copy): AServerAction(copy)
 	{
 		*this = copy;
 	}
@@ -54,6 +54,12 @@ namespace Webserv
 		try
 		{
 			this->findHeaders(req);
+			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
+			{
+				this->_resCode = 405;
+				throw Webserv::AServerAction::HttpException();
+			}
+			this->uploadFile();
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -63,7 +69,25 @@ namespace Webserv
 
 	void PostUpload::findHeaders(const Request &req)
 	{
-		
+		std::map<std::string, std::string>::const_iterator it[3];
+		const std::map<std::string, std::string> reqHeaders = req.getReqHeader();
+		it[0] = req.getReqHeader().find("Content-Type");
+		it[1] = req.getReqHeader().find("Content-Length");
+		it[2] = req.getReqHeader().find("Accept");
+		for (unsigned int i = 0; i < 3; i++)
+			this->checkValidHeader(it[i], reqHeaders);
+		this->_contentType = it[0]->second;
+		this->_contentLength = std::atol(it[1]->second.c_str());
+		this->_accept = it[2]->second;
+	}
+
+	void PostUpload::checkValidHeader(std::map<std::string, std::string>::const_iterator &it, const std::map<std::string, std::string> &reqHeaders)
+	{
+		if (it == reqHeaders.end())
+		{
+			this->_resCode = 400;
+			throw Webserv::AServerAction::HttpException();
+		}
 	}
 
 	void PostUpload::uploadFile(void)
