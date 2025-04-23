@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 14:16:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:06:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,11 @@ namespace Webserv
 			throw Webserv::AServerAction::HttpException();
 		}
 
+		if (req.getHttpVers() != "HTTP/1.1")
+		{
+			this->_resCode = 505;
+			throw Webserv::AServerAction::HttpException();
+		}
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
 			this->_resCode = 404;
