@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 22:20:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 22:38:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ namespace Webserv
 		void processUpload(std::string &boundary);
 		void extractMetadata(std::map<std::string, std::string> &headers, std::string &body);
 		void downloadFile(std::map<std::string, std::string> &headers, std::string &body);
+		void createBodyMessage(void);
 
 	public:
 		PostUpload();

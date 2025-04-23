@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/20 16:08:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:13:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ namespace Webserv
            << "Content-Length: " << contentLength << "\r\n"
            << "\r\n"
            << req->getResourceContent();
-        std::string header = ss.str();
-        return header;
+        std::string response = ss.str();
+        return (response);
     }
     //*************GETTERS**************//
     std::string HttpResponse::getStatus() const

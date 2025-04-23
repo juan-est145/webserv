@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 22:31:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 23:11:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ namespace Webserv
 		this->_contentType = "";
 		this->_contentLength = 0;
 		this->_accept = "";
+		this->_resCode = 201;
 	}
 
 	PostUpload::PostUpload(std::string body, const std::string path) : AServerAction(path)
@@ -28,6 +29,7 @@ namespace Webserv
 		this->_contentType = "";
 		this->_contentLength = 0;
 		this->_accept = "";
+		this->_resCode = 201;
 	}
 
 	PostUpload::PostUpload(const PostUpload &copy): AServerAction(copy)
@@ -60,6 +62,7 @@ namespace Webserv
 				throw Webserv::AServerAction::HttpException();
 			}
 			this->uploadFile();
+			this->createBodyMessage();
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -166,6 +169,13 @@ namespace Webserv
 			throw Webserv::PostUpload::UploadError();
 		document << body.substr(0, body.length() - 2);
 		document.close();
+	}
+
+	void PostUpload::createBodyMessage(void)
+	{
+		// TO DO: Later on, make the response more dynamic. This is a placeholder for now
+		this->_content = "Resource was uploaded correctly";
+		this->_size = this->_content.length();
 	}
 
 	const char *PostUpload::BodyParseError::what(void) const throw()
