@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 19:06:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:10:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ namespace Webserv
 			this->_content = assign._content;
 			this->_size = assign._size;
 			this->_resourceType = ResourceReq::REG_FILE;
+			this->_resCode = assign._resCode;
 		}
 		return (*this);
 	}

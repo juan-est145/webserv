@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:49:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:39:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,20 @@
 #include <map>
 #include <fstream>
 #include <exception>
+#include "AServerAction.hpp"
 
 namespace Webserv
 {
-	class PostUpload
+	class PostUpload: public AServerAction
 	{
 	private:
 		std::string _body;
 		std::string _contentType;
 		long _contentLength;
 		std::string _accept;
+
+		void findHeaders(const Request &req);
+		void uploadFile(void);
 		std::string obtainDelimiter(void);
 		void processUpload(std::string &boundary);
 		void extractMetadata(std::map<std::string, std::string> &headers, std::string &body);
@@ -37,12 +41,15 @@ namespace Webserv
 	public:
 		PostUpload();
 		PostUpload(const PostUpload &copy);
-		PostUpload(std::string body, std::string contentType, long contentLength, std::string accept);
+		PostUpload(std::string body, const std::string path);
 		PostUpload &operator=(const PostUpload &assign);
-		void uploadFile(void);
+
+		void processRequest(const ConfigServer *config, const Request &req);
+
 		const std::string &getContentType(void) const;
 		long getContentLength(void) const;
 		const std::string &getAccept(void) const;
+
 		class BodyParseError : std::exception
 		{
 			public:

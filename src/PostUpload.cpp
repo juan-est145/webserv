@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:50:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:41:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace Webserv
 {
-	PostUpload::PostUpload(void)
+	PostUpload::PostUpload(void): AServerAction()
 	{
 		this->_body = "";
 		this->_contentType = "";
@@ -22,12 +22,12 @@ namespace Webserv
 		this->_accept = "";
 	}
 
-	PostUpload::PostUpload(std::string body, std::string contentType, long contentLength, std::string accept)
+	PostUpload::PostUpload(std::string body, const std::string path): AServerAction(path)
 	{
 		this->_body = body;
-		this->_contentType = contentType;
-		this->_contentLength = contentLength;
-		this->_accept = accept;
+		this->_contentType = "";
+		this->_contentLength = 0;
+		this->_accept = "";
 	}
 
 	PostUpload::PostUpload(const PostUpload &copy)
@@ -43,8 +43,27 @@ namespace Webserv
 			this->_contentType = assign._contentType;
 			this->_contentLength = assign._contentLength;
 			this->_accept = assign._accept;
+			this->_resCode = assign._resCode;
+			this->_size = assign._resCode;
 		}
 		return *this;
+	}
+
+	void PostUpload::processRequest(const ConfigServer *config, const Request &req)
+	{
+		try
+		{
+			this->findHeaders(req);
+		}
+		catch (const Webserv::AServerAction::HttpException &e)
+		{
+			this->processHttpError(config);
+		}
+	}
+
+	void PostUpload::findHeaders(const Request &req)
+	{
+		
 	}
 
 	void PostUpload::uploadFile(void)
@@ -64,7 +83,6 @@ namespace Webserv
 
 	void PostUpload::processUpload(std::string &boundary)
 	{
-
 		std::size_t startBound;
 		std::size_t endBound;
 		std::string delimiter = "\r\n";

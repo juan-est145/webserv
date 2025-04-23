@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 13:17:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/23 21:35:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,25 +67,25 @@ namespace Webserv
 	void Request::handleReq(const std::vector<ConfigServer> &configs)
 	{
 		this->selectConfiguration(configs);
-		if (this->_method == POST)
-		{
-			// TO DO: Make sure to later validate that the fields being passed exist
-			PostUpload upload(this->_reqBody, this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
-			try
-			{
-				upload.uploadFile();
-			}
-			catch (const Webserv::PostUpload::BodyParseError &e)
-			{
-				//this->_resCode = 400;
-			}
-			catch (const Webserv::PostUpload::UploadError &e)
-			{
-				//this->_resCode = 500;
-			}
-			return;
-		}
-		this->_serverAction = new Webserv::ResourceReq(this->_path);
+		// if (this->_method == POST)
+		// {
+		// 	// TO DO: Make sure to later validate that the fields being passed exist
+		// 	PostUpload upload(this->_reqBody, this->_reqHeader["Content-Type"], std::atol(this->_reqHeader["Content-Length"].c_str()), this->_reqHeader["Accept"]);
+		// 	try
+		// 	{
+		// 		upload.uploadFile();
+		// 	}
+		// 	catch (const Webserv::PostUpload::BodyParseError &e)
+		// 	{
+		// 		//this->_resCode = 400;
+		// 	}
+		// 	catch (const Webserv::PostUpload::UploadError &e)
+		// 	{
+		// 		//this->_resCode = 500;
+		// 	}
+		// 	return;
+		// }
+		this->_method == Request::POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->_path) : this->_serverAction = new Webserv::ResourceReq(this->_path);
 		this->_serverAction->processRequest(this->_configuration, *this);
 	}
 
