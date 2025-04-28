@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/14 13:57:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:18:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ namespace Webserv
 		struct epoll_event &getEvent(void) const;
 
 		void initVirtualServers(void);
+		void deleteAcceptSocket(int fd);
 
 		class ClusterException : std::exception
 		{

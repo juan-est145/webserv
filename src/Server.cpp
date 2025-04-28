@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 22:48:12 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/28 19:49:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ namespace Webserv
 		if (bufRead <= 0)
 		{
 			AuxFunc::handleRecvError(Cluster::cluster->getEvent(), eventList, bufRead, Cluster::cluster->getEpollFd());
+			Cluster::getInstance()->deleteAcceptSocket(eventList.data.fd);
 			return;
 		}
 		buffer[bufRead] = '\0';
@@ -171,7 +172,6 @@ namespace Webserv
 			throw Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);
-		close(eventList.data.fd);
 	}
 
 	const char *Server::ServerException::what(void) const throw()

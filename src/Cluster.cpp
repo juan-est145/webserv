@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/15 13:39:10 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:03:10 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,14 @@ namespace Webserv
 		socketDesc.socketType = ACCEPT_SOCKET;
 		socketDesc.server = this->_sockets[listenSocket].server;
 		this->_sockets[newSocket] = socketDesc;
+	}
+
+	void Cluster::deleteAcceptSocket(int fd)
+	{
+		socketIter it = this->_sockets.find(fd);
+		if (it == this->_sockets.end() || it->second.socketType != ACCEPT_SOCKET)
+			return;
+		this->_sockets.erase(it);
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const

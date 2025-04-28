@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 21:10:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/28 20:26:27 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ namespace Webserv
 				locIndex = i;
 			}
 		}
-		return (locations[locIndex]);
+		return (config->getLocations()[locIndex]);
 	}
 
 	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
