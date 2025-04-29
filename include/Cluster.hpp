@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/28 19:18:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:19:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <algorithm>
 #include <bitset>
 #include <sstream>
 #include "Server.hpp"

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/28 20:03:10 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 11:26:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,14 +251,15 @@ namespace Webserv
 
 	Cluster::~Cluster() 
 	{
+		std::vector<Server *> servers;
 		for (socketIter it = this->_sockets.begin(); it != this->_sockets.end(); it++)
 		{
 			close(it->first);
-			if (it->second.server == NULL)
-				continue;
-			delete (it->second.server);
-			it->second.server = NULL;
+			if (std::find(servers.begin(), servers.end(), it->second.server) == servers.end())
+				servers.push_back(it->second.server);
 		}
+		for (std::vector<Server *>::iterator it = servers.begin(); it != servers.end(); it++)
+			delete *it;
 		close(this->_epollFd);
 	}
 }
