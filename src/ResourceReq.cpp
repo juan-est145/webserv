@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 18:20:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:02:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ namespace Webserv
 		std::string localPath = this->mapPathToResource(locationFile);
 		std::map<std::string, bool>::const_iterator methodIter;
 
-		this->isMethodAllowed(methodIter, locationFile, req);
+		this->isMethodAllowed(methodIter, locationFile, req.getMethod());
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
 			this->_resCode = 505;
@@ -97,32 +97,6 @@ namespace Webserv
 			std::cout << "We hit something else" << std::endl;
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
-	}
-
-	const Location &ResourceReq::obtainLocationConf(const ConfigServer *config) const
-	{
-		const std::vector<Webserv::Location> locations = config->getLocations();
-		unsigned int locIndex = 0;
-		unsigned int matchingChars = 0;
-		unsigned int maxMatch = 0;
-
-		for (unsigned int i = 0; i < locations.size(); i++)
-		{
-			matchingChars = 0;
-			std::string path = locations[i].getPath();
-			for (unsigned int letter = 0; letter < std::min(path.size(), this->_path.size()); letter++)
-			{
-				if (path[letter] != this->_path[letter])
-					break;
-				matchingChars++;
-			}
-			if (matchingChars > maxMatch)
-			{
-				maxMatch = matchingChars;
-				locIndex = i;
-			}
-		}
-		return (config->getLocations()[locIndex]);
 	}
 
 	std::string ResourceReq::mapPathToResource(const Location &locationFile) const

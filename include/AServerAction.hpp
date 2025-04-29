@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 18:21:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:03:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,11 @@
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
 #include "Location.hpp"
-#include "Request.hpp"
-
 namespace Webserv
 {
-	class ResourceReq;
 	class ConfigServer;
+	class Location;
+	class AuxFunc;
 	class Request;
 
 	class AServerAction
@@ -40,7 +39,8 @@ namespace Webserv
 
 		void processHttpError(const ConfigServer *config);
 		void readResource(const std::string &path);
-		void isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, const Request &req);
+		const Location &obtainLocationConf(const ConfigServer *config) const;
+		void isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, int method);
 
 	public:
 		AServerAction(void);

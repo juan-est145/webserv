@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 22:38:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 18:58:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 
 namespace Webserv
 {
+	class Request;
+
 	class PostUpload : public AServerAction
 	{
 	private:

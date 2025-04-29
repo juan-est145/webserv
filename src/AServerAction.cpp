@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 18:19:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:03:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ namespace Webserv
 		struct stat fileStat;
 		std::map<short, std::string>::const_iterator errorPage = config->getErrorPages().find(this->_resCode);
 		std::string localPath = "www/errorPages/error" + AuxFunc::ft_itoa(this->_resCode) + ".html";
-		;
 
 		if (errorPage->second.length() > 0)
 			localPath = config->getRoot() + errorPage->second;
@@ -77,7 +76,33 @@ namespace Webserv
 		delete[] buffer;
 	}
 
-	void AServerAction::isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, const Request &req)
+	const Location &AServerAction::obtainLocationConf(const ConfigServer *config) const
+	{
+		const std::vector<Webserv::Location> locations = config->getLocations();
+		unsigned int locIndex = 0;
+		unsigned int matchingChars = 0;
+		unsigned int maxMatch = 0;
+
+		for (unsigned int i = 0; i < locations.size(); i++)
+		{
+			matchingChars = 0;
+			std::string path = locations[i].getPath();
+			for (unsigned int letter = 0; letter < std::min(path.size(), this->_path.size()); letter++)
+			{
+				if (path[letter] != this->_path[letter])
+					break;
+				matchingChars++;
+			}
+			if (matchingChars > maxMatch)
+			{
+				maxMatch = matchingChars;
+				locIndex = i;
+			}
+		}
+		return (config->getLocations()[locIndex]);
+	}
+
+	void AServerAction::isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, int method)
 	{
 		std::string methods[3] = {
 			"GET",
@@ -86,7 +111,7 @@ namespace Webserv
 
 		try
 		{
-			std::string httpMethod = methods[(int)req.getMethod()];
+			std::string httpMethod = methods[method];
 			methodIter = locationFile.getMethods().find(httpMethod);
 		}
 		catch (const std::bad_alloc &e)

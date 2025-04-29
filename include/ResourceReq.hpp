@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 13:19:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:06:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@
 
 namespace Webserv
 {
-	class ConfigServer;
-	class Location;
+	class Request;
 
 	class ResourceReq: public AServerAction
 	{
@@ -52,7 +51,6 @@ namespace Webserv
 		enum E_ResourceType _resourceType;
 
 		void obtainResource(const ConfigServer *config, const Request &req);
-		const Location &obtainLocationConf(const ConfigServer *config) const;
 		std::string mapPathToResource(const Location &locationFile) const;
 	};
 }

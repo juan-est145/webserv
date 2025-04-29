@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/23 23:11:48 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:05:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ namespace Webserv
 	{
 		try
 		{
+			const Location locationFile = this->obtainLocationConf(config);
+			std::map<std::string, bool>::const_iterator methodIter;
 			this->findHeaders(req);
+			this->isMethodAllowed(methodIter, locationFile, req.getMethod());
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
 			{
 				this->_resCode = 405;
