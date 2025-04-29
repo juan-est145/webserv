@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/22 13:38:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 18:19:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 namespace Webserv
 {
-	AServerAction::AServerAction(void): _path("")
+	AServerAction::AServerAction(void) : _path("")
 	{
 		this->_content = "";
 		this->_size = -1;
 		this->_resCode = 200;
 	}
 
-	AServerAction::AServerAction(const std::string path): _path(path)
+	AServerAction::AServerAction(const std::string path) : _path(path)
 	{
 		this->_content = "";
 		this->_size = -1;
@@ -48,8 +48,9 @@ namespace Webserv
 	{
 		struct stat fileStat;
 		std::map<short, std::string>::const_iterator errorPage = config->getErrorPages().find(this->_resCode);
-		std::string localPath = "www/errorPages/error" + AuxFunc::ft_itoa(this->_resCode) + ".html";;
-		
+		std::string localPath = "www/errorPages/error" + AuxFunc::ft_itoa(this->_resCode) + ".html";
+		;
+
 		if (errorPage->second.length() > 0)
 			localPath = config->getRoot() + errorPage->second;
 		if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
@@ -74,6 +75,25 @@ namespace Webserv
 		buffer[this->_size] = '\0';
 		this->_content = buffer;
 		delete[] buffer;
+	}
+
+	void AServerAction::isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, const Request &req)
+	{
+		std::string methods[3] = {
+			"GET",
+			"POST",
+			"DELETE"};
+
+		try
+		{
+			std::string httpMethod = methods[(int)req.getMethod()];
+			methodIter = locationFile.getMethods().find(httpMethod);
+		}
+		catch (const std::bad_alloc &e)
+		{
+			this->_resCode = 405;
+			throw Webserv::AServerAction::HttpException();
+		}
 	}
 
 	const std::string &AServerAction::getPath(void) const

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/28 20:26:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 18:20:47 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,25 +56,12 @@ namespace Webserv
 
 	void ResourceReq::obtainResource(const ConfigServer *config, const Request &req)
 	{
-		std::string methods[3] = {
-			"GET",
-			"POST",
-			"DELETE"};
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = this->mapPathToResource(locationFile);
 		std::map<std::string, bool>::const_iterator methodIter;
-		try
-		{
-			std::string httpMethod = methods[(int)req.getMethod()];
-			methodIter = locationFile.getMethods().find(httpMethod);
-		}
-		catch(const std::bad_alloc& e)
-		{
-			this->_resCode = 405;
-			throw Webserv::AServerAction::HttpException();
-		}
 
+		this->isMethodAllowed(methodIter, locationFile, req);
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
 			this->_resCode = 505;
