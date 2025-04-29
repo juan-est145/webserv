@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 19:05:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:12:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace Webserv
 		this->_resCode = 201;
 	}
 
-	PostUpload::PostUpload(const PostUpload &copy): AServerAction(copy)
+	PostUpload::PostUpload(const PostUpload &copy) : AServerAction(copy)
 	{
 		*this = copy;
 	}
@@ -59,6 +59,11 @@ namespace Webserv
 			std::map<std::string, bool>::const_iterator methodIter;
 			this->findHeaders(req);
 			this->isMethodAllowed(methodIter, locationFile, req.getMethod());
+			if (!methodIter->second)
+			{
+				this->_resCode = 401;
+				throw Webserv::AServerAction::HttpException();
+			}
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
 			{
 				this->_resCode = 405;
