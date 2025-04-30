@@ -33,7 +33,7 @@
         "type": "cppdbg",
         "request": "launch",
         "program": "${workspaceRoot}/webserv",
-        "args": ["config/test.conf"],
+        "args": [""],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
         "environment": [],
