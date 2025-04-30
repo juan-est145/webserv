@@ -34,7 +34,7 @@
         "request": "launch",
         "program": "${workspaceRoot}/webserv",
         "args": [],
-        "stopAtEntry": true,
+        "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
         "environment": [],
         "externalConsole": false,
