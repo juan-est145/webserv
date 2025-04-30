@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 19:03:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:57:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,17 +104,14 @@ namespace Webserv
 
 	void AServerAction::isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, int method)
 	{
-		std::string methods[3] = {
-			"GET",
-			"POST",
-			"DELETE"};
-
+		const std::string fill[3] = {"GET", "POST", "DELETE"};
+		const std::vector<std::string> methods(fill, fill + 3);
 		try
 		{
-			std::string httpMethod = methods[method];
+			std::string httpMethod = methods.at(method);
 			methodIter = locationFile.getMethods().find(httpMethod);
 		}
-		catch (const std::bad_alloc &e)
+		catch (const std::out_of_range &e)
 		{
 			this->_resCode = 405;
 			throw Webserv::AServerAction::HttpException();

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 19:02:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:37:44 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ namespace Webserv
 		std::map<std::string, bool>::const_iterator methodIter;
 
 		this->isMethodAllowed(methodIter, locationFile, req.getMethod());
+		if (!methodIter->second)
+		{
+			this->_resCode = 405;
+			throw Webserv::AServerAction::HttpException();
+		}
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
 			this->_resCode = 505;
@@ -75,11 +80,6 @@ namespace Webserv
 		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
 		{
 			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
-		}
-		if (!methodIter->second)
-		{
-			this->_resCode = 401;
 			throw Webserv::AServerAction::HttpException();
 		}
 		if (fileStat.st_mode & S_IFDIR)
