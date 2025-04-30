@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/30 10:53:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:21:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ namespace Webserv
 		std::cout << "Reading from client " << eventList.data.fd << std::endl;
 		// If later bufRead  is less than size of buffer, then we now for a fact that we have read everything.
 		// Try to implement later onto to the logic of the program.
+		memset(buffer, '\0', sizeof(buffer));
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
 		{
