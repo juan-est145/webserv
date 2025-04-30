@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 19:12:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:23:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,9 @@ namespace Webserv
 	{
 		std::map<std::string, std::string>::const_iterator it[3];
 		const std::map<std::string, std::string> reqHeaders = req.getReqHeader();
-		it[0] = req.getReqHeader().find("Content-Type");
-		it[1] = req.getReqHeader().find("Content-Length");
-		it[2] = req.getReqHeader().find("Accept");
+		it[0] = reqHeaders.find("Content-Type");
+		it[1] = reqHeaders.find("Content-Length");
+		it[2] = reqHeaders.find("Accept");
 		for (unsigned int i = 0; i < 3; i++)
 			this->checkValidHeader(it[i], reqHeaders);
 		this->_contentType = it[0]->second;

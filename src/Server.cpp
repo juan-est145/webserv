@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/30 11:21:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/30 12:02:27 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ namespace Webserv
 		// TO DO: Set dynamic buffer size according to body size.
 		// TO DO: Possibly will need to add a timer to listening to timeout connection
 		char buffer[1024];
+		std::size_t bodySize;
+		std::size_t expectedSize;
 		std::cout << "Reading from client " << eventList.data.fd << std::endl;
 		// If later bufRead  is less than size of buffer, then we now for a fact that we have read everything.
 		// Try to implement later onto to the logic of the program.
@@ -82,33 +84,27 @@ namespace Webserv
 		buffer[bufRead] = '\0';
 		Request *req = new Request(eventList.data.fd);
 		req->readReq(buffer, bufRead);
+		bodySize = req->getReqBody().size();
+		const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
+		expectedSize = conLenKey == req->getReqHeader().end() ? 0 : std::atol(conLenKey->second.c_str());
 		// TO DO: Work with transfer encoding chunked later on
-		if (req->getMethod() == Request::POST)
+		if (bufRead == sizeof(buffer) - 1 || bodySize < expectedSize)
 		{
-			std::size_t bodySize = req->getReqBody().size();
-			std::size_t expectedSize;
-			const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
-			if (conLenKey == req->getReqHeader().end())
-				req->setResCode(400);
-			else
+			// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
+			while (bodySize < expectedSize)
 			{
-				expectedSize = std::atol(conLenKey->second.c_str());
-				// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
-				while (bodySize < expectedSize)
+				// TO DO: In order to avoid lagging behind with 'big download requests', we need
+				// to reserve enough space in the body property of request. Should use the value given by conf
+				memset(buffer, '\0', sizeof(buffer));
+				bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
+				if (bufRead <= 0)
 				{
-					// TO DO: In order to avoid lagging behind with 'big download requests', we need
-					// to reserve enough space in the body property of request. Should use the value given by conf
-					memset(buffer, '\0', sizeof(buffer));
-					bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
-					if (bufRead <= 0)
-					{
-						AuxFunc::handleRecvError(Cluster::cluster->getEvent(), eventList, bufRead, Cluster::cluster->getEpollFd());
-						return;
-					}
-					buffer[bufRead] = '\0';
-					std::string body(buffer, bufRead);
-					bodySize = req->setReqBody(body);
+					AuxFunc::handleRecvError(Cluster::cluster->getEvent(), eventList, bufRead, Cluster::cluster->getEpollFd());
+					return;
 				}
+				buffer[bufRead] = '\0';
+				std::string body(buffer, bufRead);
+				bodySize = req->setReqBody(body);
 			}
 		}
 		req->handleReq(this->_configurations);
@@ -147,9 +143,9 @@ namespace Webserv
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
-		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp);//hay que borrar este objeto
+		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); // hay que borrar este objeto
 		director.SetBuilder(builder);
-		
+
 		if (req->getResCode() == 200)
 		{
 			director.BuildOkResponse(req->getResourceSize());
