@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/28 19:49:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/04/30 10:53:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,8 +168,12 @@ namespace Webserv
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;
 		// *----------//
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
-			throw Server::ServerException();
+
+		// The lines below are comented because we now don't close the connection on server. Later on we might need to change this
+		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
+		// 	throw Server::ServerException();
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLIN, eventList.data.fd, Cluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);
 	}
