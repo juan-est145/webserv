@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/30 12:02:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:15:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,11 @@ namespace Webserv
 
 	void Server::readSocket(const struct epoll_event &eventList)
 	{
-		// TO DO: Set dynamic buffer size according to body size.
 		// TO DO: Possibly will need to add a timer to listening to timeout connection
 		char buffer[1024];
 		std::size_t bodySize;
 		std::size_t expectedSize;
 		std::cout << "Reading from client " << eventList.data.fd << std::endl;
-		// If later bufRead  is less than size of buffer, then we now for a fact that we have read everything.
-		// Try to implement later onto to the logic of the program.
 		memset(buffer, '\0', sizeof(buffer));
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
@@ -85,16 +82,12 @@ namespace Webserv
 		Request *req = new Request(eventList.data.fd);
 		req->readReq(buffer, bufRead);
 		bodySize = req->getReqBody().size();
-		const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
-		expectedSize = conLenKey == req->getReqHeader().end() ? 0 : std::atol(conLenKey->second.c_str());
+		expectedSize = this->findExpectedSize(req);
 		// TO DO: Work with transfer encoding chunked later on
 		if (bufRead == sizeof(buffer) - 1 || bodySize < expectedSize)
 		{
-			// TO DO: Later on, we need to check the config for max body size. This is all very messy for now
 			while (bodySize < expectedSize)
 			{
-				// TO DO: In order to avoid lagging behind with 'big download requests', we need
-				// to reserve enough space in the body property of request. Should use the value given by conf
 				memset(buffer, '\0', sizeof(buffer));
 				bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 				if (bufRead <= 0)
@@ -173,6 +166,13 @@ namespace Webserv
 			throw Webserv::Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);
+	}
+
+	std::size_t Server::findExpectedSize(Request *req) const
+	{
+		const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
+		std::size_t expectedSize = conLenKey == req->getReqHeader().end() ? 0 : std::atol(conLenKey->second.c_str());
+		return (expectedSize);
 	}
 
 	const char *Server::ServerException::what(void) const throw()

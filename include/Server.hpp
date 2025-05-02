@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:33:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:12:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ namespace Webserv
 		void readSocket(const struct epoll_event &eventList);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void writeOperations(const struct epoll_event &eventList);
+		std::size_t findExpectedSize(Request *req) const;
 
 	public:
 		Server(void);
