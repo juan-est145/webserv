@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/30 12:36:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:04:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,11 @@ namespace Webserv
 			if (!methodIter->second)
 			{
 				this->_resCode = 405;
+				throw Webserv::AServerAction::HttpException();
+			}
+			if (locationFile.getMaxBodySize() < req.getReqBody().size())
+			{
+				this->_resCode = 413;
 				throw Webserv::AServerAction::HttpException();
 			}
 			this->findHeaders(req);

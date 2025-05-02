@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:29 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:50:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/02 20:07:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ namespace Webserv
 		this->_errorPages[404] = "";
 		this->_errorPages[405] = "";
 		this->_errorPages[406] = "";
+		this->_errorPages[413] = "";
 		this->_errorPages[500] = "";
 		this->_errorPages[501] = "";
 		this->_errorPages[502] = "";
