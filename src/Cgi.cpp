@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 18:44:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 18:48:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace Webserv
 	bool Cgi::isCgi(const std::string &path) const
 	{
 		std::vector<std::string> segmentedPath;
-		std::string delimiter = "/";
+		const std::string delimiter = "/";
 		std::string copy(path);
 		size_t pos = 0;
 
