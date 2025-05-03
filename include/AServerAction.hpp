@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 19:03:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 11:54:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ namespace Webserv
 		std::string _content;
 		long _size;
 		unsigned int _resCode;
+		std::string _mime;
 
 		void processHttpError(const ConfigServer *config);
 		void readResource(const std::string &path);
@@ -54,6 +55,7 @@ namespace Webserv
 		const std::string &getContent(void) const;
 		long getSize(void) const;
 		unsigned int getResCode(void) const;
+		const std::string &getMime(void) const;
 
 		void setRescode(unsigned int resCode);
 

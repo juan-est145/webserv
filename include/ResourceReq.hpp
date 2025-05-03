@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 19:06:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 12:15:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <fstream>
 #include <algorithm>
+#include <utility>
 #include "AServerAction.hpp"
 #include "Request.hpp"
 
@@ -52,6 +53,7 @@ namespace Webserv
 
 		void obtainResource(const ConfigServer *config, const Request &req);
 		std::string mapPathToResource(const Location &locationFile) const;
+		std::string chooseMime(const std::string &path) const;
 	};
 }
 

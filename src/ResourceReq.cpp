@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/30 12:37:44 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 13:08:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ namespace Webserv
 			std::cout << "We hit something else" << std::endl;
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
+		this->_mime = this->chooseMime(localPath);
 	}
 
 	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
@@ -114,6 +115,81 @@ namespace Webserv
 		reqPath.erase(0, breakIndex);
 		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
 		return (resourcePath);
+	}
+
+	std::string ResourceReq::chooseMime(const std::string &path) const
+	{
+		std::pair<std::string, std::string> mimes[] = {
+			std::make_pair(".3gp", "video/3gpp"),
+			std::make_pair(".3g2", "video/3gpp2"),
+			std::make_pair(".7z", "application/x-7z-compressed"),
+			std::make_pair(".aac", "audio/aac"),
+			std::make_pair(".abw", "application/x-abiword"),
+			std::make_pair(".arc", "application/octet-stream"),
+			std::make_pair(".avi", "video/x-msvideo"),
+			std::make_pair(".azw", "application/vnd.amazon.ebook"),
+			std::make_pair(".bin", "application/octet-stream"),
+			std::make_pair(".bz", "application/x-bzip"),
+			std::make_pair(".bz2", "application/x-bzip2"),
+			std::make_pair(".csh", "application/x-csh"),
+			std::make_pair(".css", "text/css"),
+			std::make_pair(".csv", "text/csv"),
+			std::make_pair(".doc", "application/msword"),
+			std::make_pair(".epub", "application/epub+zip"),
+			std::make_pair(".gif", "image/gif"),
+			std::make_pair(".htm", "text/html"),
+			std::make_pair(".html", "text/html"),
+			std::make_pair(".ico", "image/x-icon"),
+			std::make_pair(".ics", "text/calendar"),
+			std::make_pair(".jar", "application/java-archive"),
+			std::make_pair(".jpeg", "image/jpeg"),
+			std::make_pair(".jpg", "image/jpeg"),
+			std::make_pair(".js", "application/javascript"),
+			std::make_pair(".json", "application/json"),
+			std::make_pair(".mid", "audio/midi"),
+			std::make_pair(".midi", "audio/midi"),
+			std::make_pair(".mpeg", "video/mpeg"),
+			std::make_pair(".mpkg", "application/vnd.apple.installer+xml"),
+			std::make_pair(".odp", "application/vnd.oasis.opendocument.presentation"),
+			std::make_pair(".ods", "application/vnd.oasis.opendocument.spreadsheet"),
+			std::make_pair(".odt", "application/vnd.oasis.opendocument.text"),
+			std::make_pair(".oga", "audio/ogg"),
+			std::make_pair(".ogv", "video/ogg"),
+			std::make_pair(".ogx", "application/ogg"),
+			std::make_pair(".pdf", "application/pdf"),
+			std::make_pair(".ppt", "application/vnd.ms-powerpoint"),
+			std::make_pair(".rar", "application/x-rar-compressed"),
+			std::make_pair(".rtf", "application/rtf"),
+			std::make_pair(".sh", "application/x-sh"),
+			std::make_pair(".svg", "application/svg+xml"),
+			std::make_pair(".swf", "application/x-shockwave-flash"),
+			std::make_pair(".tar", "application/x-tar"),
+			std::make_pair(".tif", "image/tiff"),
+			std::make_pair(".tiff", "image/tiff"),
+			std::make_pair(".ttf", "font/ttf"),
+			std::make_pair(".vsd", "application/vnd.visio"),
+			std::make_pair(".wav", "audio/x-wav"),
+			std::make_pair(".weba", "audio/webm"),
+			std::make_pair(".webm", "video/webm"),
+			std::make_pair(".webp", "image/webp"),
+			std::make_pair(".woff", "font/woff"),
+			std::make_pair(".woff2", "font/woff2"),
+			std::make_pair(".xhtml", "application/xhtml+xml"),
+			std::make_pair(".xls", "application/vnd.ms-excel"),
+			std::make_pair(".xml", "application/xml"),
+			std::make_pair(".xul", "application/vnd.mozilla.xul+xml"),
+			std::make_pair(".zip", "application/zip"),
+		};
+		std::size_t lastSlash = path.find_last_of("/");
+		if (lastSlash == std::string::npos)
+			lastSlash = 0;
+		std::string fileName = path.substr(lastSlash);
+		std::size_t extensionIndex = fileName.find_last_of(".");
+		if (extensionIndex == std::string::npos)
+			return ("text/plain");
+		std::string extension = fileName.substr(extensionIndex);
+		//std::pair<std::string, std::string> *mime = std::find(mimes, mimes + 58, extension);
+		return ("xd");
 	}
 
 	void ResourceReq::setContent(const std::string &_content)
