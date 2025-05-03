@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:24:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 18:09:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ namespace Webserv
 			this->_resCode = 505;
 			throw Webserv::AServerAction::HttpException();
 		}
+		// Here we should probably add the cgi check and call
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
 			this->_resCode = 404;
@@ -93,8 +94,6 @@ namespace Webserv
 				throw Webserv::AServerAction::HttpException();
 			}
 		}
-		else
-			std::cout << "We hit something else" << std::endl;
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
 		this->_mime = this->chooseMime(localPath);
