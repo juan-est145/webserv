@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:18:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 18:40:09 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <utility>
 #include "AServerAction.hpp"
 #include "Request.hpp"
+#include "Cgi.hpp"
 
 namespace Webserv
 {
