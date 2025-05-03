@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/02 20:04:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 13:39:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ namespace Webserv
 		// TO DO: Later on, make the response more dynamic. This is a placeholder for now
 		this->_content = "Resource was uploaded correctly";
 		this->_size = this->_content.length();
+		this->_mime = "text/plain";
 	}
 
 	const char *PostUpload::BodyParseError::what(void) const throw()

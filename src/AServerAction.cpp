@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 11:54:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 13:38:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ namespace Webserv
 		this->_content = "";
 		this->_size = -1;
 		this->_resCode = 200;
-		this->_mime = "";
+		this->_mime = "text/plain";
 	}
 
 	AServerAction::AServerAction(const std::string path) : _path(path)
@@ -27,7 +27,7 @@ namespace Webserv
 		this->_content = "";
 		this->_size = -1;
 		this->_resCode = 200;
-		this->_mime = "";
+		this->_mime = "text/plain";
 	}
 
 	AServerAction::AServerAction(const AServerAction &toCopy)
