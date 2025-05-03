@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:08:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 13:24:00 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,8 +188,27 @@ namespace Webserv
 		if (extensionIndex == std::string::npos)
 			return ("text/plain");
 		std::string extension = fileName.substr(extensionIndex);
-		//std::pair<std::string, std::string> *mime = std::find(mimes, mimes + 58, extension);
-		return ("xd");
+		return (this->binaryMimeSearch(mimes, 0, sizeof(mimes) / sizeof(mimes[0]) - 1, extension).second);
+	}
+
+	std::pair<std::string, std::string> ResourceReq::binaryMimeSearch(
+		std::pair<std::string, std::string> *mimes, 
+		int low, 
+		int high, 
+		std::string toFind
+	) const
+	{
+		while (low <= high)
+		{
+			int mid = low + (high - low) / 2;
+			if (mimes[mid].first == toFind)
+				return (mimes[mid]);
+			else if (mimes[mid].first < toFind)
+				low = mid + 1;
+			else
+				high = mid - 1;
+		}
+		return (std::make_pair("default", "text/plain"));
 	}
 
 	void ResourceReq::setContent(const std::string &_content)

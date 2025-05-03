@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 12:15:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/03 13:18:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace Webserv
 {
 	class Request;
 
-	class ResourceReq: public AServerAction
+	class ResourceReq : public AServerAction
 	{
 	public:
 		enum E_ResourceType
@@ -54,6 +54,11 @@ namespace Webserv
 		void obtainResource(const ConfigServer *config, const Request &req);
 		std::string mapPathToResource(const Location &locationFile) const;
 		std::string chooseMime(const std::string &path) const;
+		std::pair<std::string, std::string> binaryMimeSearch(
+			std::pair<std::string, std::string> *mimes,
+			int low, int high,
+			std::string toFind
+		) const;
 	};
 }
 
