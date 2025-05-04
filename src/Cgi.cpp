@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 20:45:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:57:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,6 @@ namespace Webserv
 		this->_interpreter = this->_locationConf->getCgiPath()[indexes.first];
 		size_t pathInfoIndex = path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size();
 		this->_pathInfo = pathInfoIndex < path.size() ? path.substr(pathInfoIndex) : "";
-		// if (pathInfoIndex < path.size())
-		// 	this->_pathInfo = path.substr(pathInfoIndex);
 	}
 
 	Cgi::~Cgi() {}
