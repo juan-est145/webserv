@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 19:24:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:24:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ namespace Webserv
 			this->_resCode = 505;
 			throw Webserv::AServerAction::HttpException();
 		}
-		// Here we should probably add the cgi check and call
 		if (locationFile.getCgiPath().size() > 0)
 		{
 			// DO something with Cgi
