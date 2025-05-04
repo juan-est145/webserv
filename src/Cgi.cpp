@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 18:38:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:55:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,32 @@
 
 namespace Webserv
 {
-	Cgi::Cgi() : _locationConf(NULL) {}
+	Cgi::Cgi() : _locationConf(NULL) 
+	{
+		this->_interpreter = "";
+	}
 
-	Cgi::Cgi(const Location &location) : _locationConf(&location) {}
+	Cgi::Cgi(const Location &location) : _locationConf(&location) 
+	{
+		this->_interpreter = "";
+	}
 
-	bool Cgi::isCgi(const std::string &path) const
+	Cgi::Cgi(const Cgi &toCopy): _locationConf(toCopy._locationConf)
+	{
+		*this = toCopy;
+	}
+
+	Cgi &Cgi::operator=(const Cgi &toCopy)
+	{
+		if (this != &toCopy)
+		{
+			this->_interpreter = toCopy._interpreter;
+			this->_locationConf = toCopy._locationConf;
+		}
+		return (*this);
+	}
+
+	bool Cgi::isCgi(const std::string &path)
 	{
 		std::vector<std::string> segmentedPath;
 		const std::string delimiter = "/";
@@ -35,6 +56,7 @@ namespace Webserv
 		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
+		this->_interpreter = this->_locationConf->getCgiPath()[indexes.first];
 		return (true);
 	}
 

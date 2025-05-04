@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 18:40:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:52:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,16 @@ namespace Webserv
 		typedef int urlSegmentIndex;
 
 		const Location *_locationConf;
+		std::string _interpreter;
 
 		std::pair<int, int> selectCgiExtensions(const std::vector<std::string> &segmentedPath) const;
 
 	public:
 		Cgi(void);
 		Cgi(const Location &location);
-		bool isCgi(const std::string &path) const;
+		Cgi(const Cgi &toCopy);
+		Cgi &operator=(const Cgi &toCopy);
+		bool isCgi(const std::string &path);
 		~Cgi();
 	};
 }
