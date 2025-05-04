@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 20:19:17 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:33:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ namespace Webserv
 		Cgi(const Location &location);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
-		bool isCgi(const std::string &path);
+		bool canProcessasCgi(const std::string &path);
 		~Cgi();
 	};
 }

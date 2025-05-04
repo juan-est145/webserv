@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 20:24:48 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:33:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ namespace Webserv
 		{
 			// DO something with Cgi
 			Cgi cgi(locationFile);
-			cgi.isCgi(req.getPath());
+			cgi.canProcessasCgi(req.getPath());
 		}
 		if (access(localPath.c_str(), F_OK) == -1)
 		{

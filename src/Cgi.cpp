@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 20:18:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:33:29 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace Webserv
 		return (*this);
 	}
 
-	bool Cgi::isCgi(const std::string &path)
+	bool Cgi::canProcessasCgi(const std::string &path)
 	{
 		std::vector<std::string> segmentedPath;
 		const std::string delimiter = "/";
