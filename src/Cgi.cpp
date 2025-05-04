@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 18:55:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 19:46:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ namespace Webserv
 	Cgi::Cgi() : _locationConf(NULL) 
 	{
 		this->_interpreter = "";
+		this->_pathInfo = "";
 	}
 
 	Cgi::Cgi(const Location &location) : _locationConf(&location) 
 	{
 		this->_interpreter = "";
+		this->_pathInfo = "";
 	}
 
 	Cgi::Cgi(const Cgi &toCopy): _locationConf(toCopy._locationConf)
@@ -35,6 +37,7 @@ namespace Webserv
 		{
 			this->_interpreter = toCopy._interpreter;
 			this->_locationConf = toCopy._locationConf;
+			this->_pathInfo = toCopy._pathInfo;
 		}
 		return (*this);
 	}
@@ -57,6 +60,9 @@ namespace Webserv
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
 		this->_interpreter = this->_locationConf->getCgiPath()[indexes.first];
+		size_t pathInfoIndex = path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size();
+		if (pathInfoIndex < path.size())
+			this->_pathInfo = path.substr(pathInfoIndex);
 		return (true);
 	}
 

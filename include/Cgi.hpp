@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 18:52:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 19:22:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ namespace Webserv
 
 		const Location *_locationConf;
 		std::string _interpreter;
+		std::string _pathInfo;
 
 		std::pair<int, int> selectCgiExtensions(const std::vector<std::string> &segmentedPath) const;
 
