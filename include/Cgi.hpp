@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 18:33:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:26:50 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <utility>
 #include "Location.hpp"
 
 namespace Webserv
@@ -26,6 +27,11 @@ namespace Webserv
 	{
 	private:
 		const Location *_locationConf;
+
+		typedef int cgiExtenIndex;
+		typedef int urlSegmentIndex;
+
+		std::pair<int, int> selectCgiExtensions(const std::vector<std::string> &segmentedPath) const;
 	public:
 		Cgi(void);
 		Cgi(const Location &location);

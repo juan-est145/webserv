@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 19:54:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:30:29 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 namespace Webserv
 {
-	Cgi::Cgi(): _locationConf(NULL) {}
+	Cgi::Cgi() : _locationConf(NULL) {}
 
-	Cgi::Cgi(const Location &location): _locationConf(&location) {}
+	Cgi::Cgi(const Location &location) : _locationConf(&location) {}
 
 	bool Cgi::isCgi(const std::string &path) const
 	{
@@ -24,7 +24,6 @@ namespace Webserv
 		const std::string delimiter = "/";
 		std::string copy(path);
 		size_t pos = 0;
-		const std::vector<std::string> cgiExten = this->_locationConf->getCgiExtension();
 
 		while ((pos = copy.find(delimiter)) != std::string::npos)
 		{
@@ -33,6 +32,16 @@ namespace Webserv
 		}
 		if (copy.size() > 0)
 			segmentedPath.push_back(copy);
+		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
+		(void)indexes;
+		return (true);
+	}
+
+	std::pair<int, int> Cgi::selectCgiExtensions(const std::vector<std::string> &segmentedPath) const
+	{
+		std::pair<cgiExtenIndex, urlSegmentIndex> indexes = std::make_pair(-1, -1);
+		const std::vector<std::string> cgiExten = this->_locationConf->getCgiExtension();
+
 		for (size_t i = 0; i < segmentedPath.size(); i++)
 		{
 			for (size_t extenIndex = 0; extenIndex < cgiExten.size(); extenIndex++)
@@ -40,13 +49,13 @@ namespace Webserv
 				size_t startIndex = segmentedPath[i].rfind(cgiExten[extenIndex]);
 				if (startIndex != std::string::npos && segmentedPath[i].substr(startIndex) == cgiExten[extenIndex])
 				{
-					std::cout << "Extension " << cgiExten[extenIndex] << " was found on key word " << segmentedPath[i] << std::endl;
-					return (true);
+					indexes.first = extenIndex;
+					indexes.second = i;
+					return (indexes);
 				}
 			}
 		}
-		
-		return (true);
+		return (indexes);
 	}
 
 	Cgi::~Cgi() {}
