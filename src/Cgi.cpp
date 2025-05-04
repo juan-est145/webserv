@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 18:30:29 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:38:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ namespace Webserv
 		if (copy.size() > 0)
 			segmentedPath.push_back(copy);
 		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
-		(void)indexes;
+		if (indexes.first == -1 || indexes.second == -1)
+			return (false);
 		return (true);
 	}
 
