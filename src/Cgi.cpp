@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 19:46:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:05:59 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,7 @@ namespace Webserv
 		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
-		this->_interpreter = this->_locationConf->getCgiPath()[indexes.first];
-		size_t pathInfoIndex = path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size();
-		if (pathInfoIndex < path.size())
-			this->_pathInfo = path.substr(pathInfoIndex);
+		this->extractPathInfoAndInter(indexes, path, segmentedPath);
 		return (true);
 	}
 
@@ -85,6 +82,19 @@ namespace Webserv
 			}
 		}
 		return (indexes);
+	}
+
+	void Cgi::extractPathInfoAndInter(
+		const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes, 
+		const std::string &path, 
+		const std::vector<std::string> &segmentedPath
+	)
+	{
+		this->_interpreter = this->_locationConf->getCgiPath()[indexes.first];
+		size_t pathInfoIndex = path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size();
+		this->_pathInfo = pathInfoIndex < path.size() ? path.substr(pathInfoIndex) : "";
+		// if (pathInfoIndex < path.size())
+		// 	this->_pathInfo = path.substr(pathInfoIndex);
 	}
 
 	Cgi::~Cgi() {}
