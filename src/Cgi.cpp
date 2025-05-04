@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 20:05:59 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:18:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ namespace Webserv
 		return (true);
 	}
 
-	std::pair<int, int> Cgi::selectCgiExtensions(const std::vector<std::string> &segmentedPath) const
+	std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> Cgi::selectCgiExtensions(const std::vector<std::string> &segmentedPath) const
 	{
 		std::pair<cgiExtenIndex, urlSegmentIndex> indexes = std::make_pair(-1, -1);
 		const std::vector<std::string> cgiExten = this->_locationConf->getCgiExtension();
