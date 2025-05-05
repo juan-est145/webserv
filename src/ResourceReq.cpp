@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:24:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:28:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ namespace Webserv
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
 			this->processHttpError(config);
+			this->_mime = "text/html";
 		}
 	}
 
