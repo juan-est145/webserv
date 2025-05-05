@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 20:45:19 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:35:10 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ namespace Webserv
 	{
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
-		std::string localPath = this->mapPathToResource(locationFile);
+		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 		std::map<std::string, bool>::const_iterator methodIter;
 
 		this->isMethodAllowed(methodIter, locationFile, req.getMethod());
@@ -104,25 +104,11 @@ namespace Webserv
 		this->_mime = this->chooseMime(localPath);
 	}
 
-	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
-	{
-		std::string reqPath = this->_path;
-		std::string path = locationFile.getPath().size() <= 1 ? "" : locationFile.getPath().substr(1);
-		std::string resourcePath;
-		unsigned int breakIndex = 0;
-
-		for (; breakIndex < std::min(this->_path.size(), locationFile.getPath().size()); breakIndex++)
-		{
-			if (this->_path[breakIndex] != locationFile.getPath()[breakIndex])
-				break;
-		}
-		reqPath.erase(0, breakIndex);
-		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
-		return (resourcePath);
-	}
-
 	std::string ResourceReq::chooseMime(const std::string &path) const
 	{
+		// NOTE: If it became necessary to add more mimes, the inclusion must respect the order value of the ascii table.
+		// Numbers first, then uppercase and lastly, lowercase.
+		// Failing to comply with these instructions will result in the binaryMimeSearch to fail and cause bugs.
 		std::pair<std::string, std::string> mimes[] = {
 			std::make_pair(".3gp", "video/3gpp"),
 			std::make_pair(".3g2", "video/3gpp2"),
