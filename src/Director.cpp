@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Director.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/23 23:13:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 14:43:47 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,26 @@ namespace Webserv
 		this->builder = builder;
 	}
 	// CODE 200
-	void Director::BuildOkResponse(long size)
+	void Director::BuildOkResponse(long size, std::string mime)
 	{
 		builder->SetStatus("200");
-		builder->SetContent("text/html");
+		builder->SetContent(mime);
 		builder->SetContentLength(size);
 	}
 	// CODE 201
-	void Director::BuildOkUploadResponse(long size) // toco content_length
+	void Director::BuildOkUploadResponse(long size, std::string mime)
 	{
 		this->builder->SetStatus("201");
-		this->builder->SetContent("text/plain");
+		this->builder->SetContent(mime);
 		this->builder->SetContentLength(size);
 	}
 	// CODE 404
-	void Director::BuildErrorResponse(long size, unsigned int resCode)
+	void Director::BuildErrorResponse(long size, unsigned int resCode, std::string mime)
 	{
 		if (resCode < 400)
 			throw std::exception();
 		this->builder->SetStatus(AuxFunc::ft_itoa(resCode));
-		this->builder->SetContent("text/html");
+		this->builder->SetContent(mime);
 		this->builder->SetContentLength(size);
 	}
 }
