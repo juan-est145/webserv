@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 18:58:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:59:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ namespace Webserv
 		{
 			std::cout << "Pipe got fucked xd" << std::endl;
 			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
+			// Also delete the cout
 		}
 		pid_t pid = fork();
 		if (pid == -1)
@@ -130,6 +131,7 @@ namespace Webserv
 			close(pipeFd[PIPE_READ]);
 			close(pipeFd[PIPE_WRITE]);
 			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
+			// Also delete the cout
 		}
 		else if (pid == 0)
 			exit(EXIT_SUCCESS); // Temporary, here we would call the execute function for child process
