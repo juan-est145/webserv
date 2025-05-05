@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 17:27:59 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:02:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ namespace Webserv
 			const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes, 
 			const std::string &path, 
 			const std::vector<std::string> &segmentedPath
+		);
+		void findCgiFile(
+			const std::string &path,
+			const std::vector<std::string> segmentedPath,
+			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes
 		);
 
 	public:

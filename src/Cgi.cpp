@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 17:52:48 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:02:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 namespace Webserv
 {
-	Cgi::Cgi() : _locationConf(NULL) 
+	Cgi::Cgi() : _locationConf(NULL)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Location &location) : _locationConf(&location) 
+	Cgi::Cgi(const Location &location) : _locationConf(&location)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Cgi &toCopy): _locationConf(toCopy._locationConf)
+	Cgi::Cgi(const Cgi &toCopy) : _locationConf(toCopy._locationConf)
 	{
 		*this = toCopy;
 	}
@@ -60,10 +60,7 @@ namespace Webserv
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
 		this->extractPathInfoAndInter(indexes, path, segmentedPath);
-		std::string cgiLocalPath = path.substr(0, this->_pathInfo.size() <= 0 ? path.size(): path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size());
-		(void)cgiLocalPath;
-		// TO DO: Map path to cgi script in local computer. Perhaps move mapPathToResource in ResourceReq
-		// to AuxFunc class
+		this->findCgiFile(path, segmentedPath, indexes);
 		return (true);
 	}
 
@@ -89,14 +86,24 @@ namespace Webserv
 	}
 
 	void Cgi::extractPathInfoAndInter(
-		const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes, 
-		const std::string &path, 
-		const std::vector<std::string> &segmentedPath
-	)
+		const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes,
+		const std::string &path,
+		const std::vector<std::string> &segmentedPath)
 	{
 		this->_interpreter = this->_locationConf->getCgiPath()[indexes.first];
 		size_t pathInfoIndex = path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size();
 		this->_pathInfo = pathInfoIndex < path.size() ? path.substr(pathInfoIndex) : "";
+	}
+
+	void Cgi::findCgiFile(
+		const std::string &path,
+		const std::vector<std::string> segmentedPath,
+		const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes)
+	{
+		std::string cgiUrl = path.substr(0, this->_pathInfo.size() <= 0 ? path.size() : path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size());
+		std::string localPath = AuxFunc::mapPathToResource(*this->_locationConf, cgiUrl);
+		// TO DO: Map path to cgi script in local computer. Perhaps move mapPathToResource in ResourceReq
+		// to AuxFunc class
 	}
 
 	Cgi::~Cgi() {}
