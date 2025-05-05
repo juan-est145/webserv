@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/04 21:18:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:52:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ namespace Webserv
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
 		this->extractPathInfoAndInter(indexes, path, segmentedPath);
+		std::string cgiLocalPath = path.substr(0, this->_pathInfo.size() <= 0 ? path.size(): path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size());
+		(void)cgiLocalPath;
 		// TO DO: Map path to cgi script in local computer. Perhaps move mapPathToResource in ResourceReq
 		// to AuxFunc class
 		return (true);
