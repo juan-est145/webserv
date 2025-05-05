@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 18:02:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:17:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,17 @@ namespace Webserv
 		const std::vector<std::string> segmentedPath,
 		const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes)
 	{
+		struct stat fileStat;
 		std::string cgiUrl = path.substr(0, this->_pathInfo.size() <= 0 ? path.size() : path.find(segmentedPath[indexes.second]) + segmentedPath[indexes.second].size());
 		std::string localPath = AuxFunc::mapPathToResource(*this->_locationConf, cgiUrl);
-		// TO DO: Map path to cgi script in local computer. Perhaps move mapPathToResource in ResourceReq
-		// to AuxFunc class
+
+		(void)fileStat;
+		if (access(localPath.c_str(), F_OK) == -1)
+		{
+			std::cout << "The file does not exist in cgi directory lol" << std::endl;
+		}
+		else
+			std::cout << "The file DOES exist in cgi directory" << std::endl;
 	}
 
 	Cgi::~Cgi() {}
