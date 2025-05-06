@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 12:27:50 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:22:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <utility>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include "Location.hpp"
 #include "AuxFunc.hpp"
 

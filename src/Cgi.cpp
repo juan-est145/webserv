@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 12:33:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:28:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,11 @@ namespace Webserv
 
 	void Cgi::execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers) const
 	{
-		(void)localPath;
-		(void)headers;
 		int pipeFd[2];
+		char buffer[1024];
+		int status = 0;
+
+		memset(buffer, '\0', sizeof(buffer));
 		if (pipe(pipeFd) == -1)
 		{
 			std::cout << "Pipe got fucked xd" << std::endl;
@@ -137,15 +139,40 @@ namespace Webserv
 		}
 		else if (pid == 0)
 			this->childProcess(pipeFd, localPath, headers); // Temporary, here we would call the execute function for child process
+		// TO DO: Need to write the request body on pipeFd[PIPE_WRITE] before closing it
 		if (close(pipeFd[PIPE_WRITE]) == -1)
 		{
 			close(pipeFd[PIPE_READ]);
 			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
 		}
+		// TO DO: Check for -1 values
+		while (read(pipeFd[PIPE_READ], buffer, sizeof(buffer)) > 0)
+		{
+			std::cout << buffer;
+			memset(buffer, '\0', sizeof(buffer));
+		}
+		std::cout << std::endl;
+		if (close(pipeFd[PIPE_READ]) == -1)
+		{
+			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
+		}
+		waitpid(pid, &status, 0);
+		// TO DO: Check the status of waitpid
+		
 	}
 
 	void Cgi::childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers) const
 	{
+		char *args[] = {
+			(char *)this->_interpreter.c_str(),
+			(char *)localPath.data(),
+			NULL,
+		};
+		char *env[] = {
+			(char *)(std::string("HTTP_USER_AGENT=") + (headers.find("User-Agent") == headers.end() ? "" : headers.find("User-Agent")->second)).data(),
+			NULL,
+		}; 
+
 		if (close(pipeFd[PIPE_READ]) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
@@ -161,7 +188,7 @@ namespace Webserv
 		{
 			// TO DO: Later do an exit of -1 for parent process to pick up
 		}
-		execve(this->_interpreter.c_str(), NULL, NULL);
+		execve(this->_interpreter.c_str(), args, env);
 		// TO DO: If we reach here, send an exit failure
 	}
 
