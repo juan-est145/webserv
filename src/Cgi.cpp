@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 12:07:50 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:33:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,12 +136,33 @@ namespace Webserv
 			// Also delete the cout
 		}
 		else if (pid == 0)
-			exit(EXIT_SUCCESS); // Temporary, here we would call the execute function for child process
+			this->childProcess(pipeFd, localPath, headers); // Temporary, here we would call the execute function for child process
 		if (close(pipeFd[PIPE_WRITE]) == -1)
 		{
 			close(pipeFd[PIPE_READ]);
 			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
 		}
+	}
+
+	void Cgi::childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers) const
+	{
+		if (close(pipeFd[PIPE_READ]) == -1)
+		{
+			close(pipeFd[PIPE_WRITE]);
+			// TO DO: Later do an exit of -1 for parent process to pick up
+		}
+		if (dup2(pipeFd[PIPE_WRITE], STDOUT_FILENO) == -1)
+		{
+			close(pipeFd[PIPE_READ]);
+            close(pipeFd[PIPE_WRITE]);
+			// TO DO: Later do an exit of -1 for parent process to pick up
+		}
+		if (close(pipeFd[PIPE_WRITE]) == -1)
+		{
+			// TO DO: Later do an exit of -1 for parent process to pick up
+		}
+		execve(this->_interpreter.c_str(), NULL, NULL);
+		// TO DO: If we reach here, send an exit failure
 	}
 
 	Cgi::~Cgi() {}
