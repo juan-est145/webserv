@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 18:52:48 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:05:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include <utility>
 #include <unistd.h>
 #include <sys/types.h>
@@ -50,19 +51,19 @@ namespace Webserv
 			const std::string &path, 
 			const std::vector<std::string> &segmentedPath
 		);
-		void findCgiFile(
+		std::string findCgiFile(
 			const std::string &path,
 			const std::vector<std::string> segmentedPath,
 			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes
 		);
-		void execCgi(void) const;
+		void execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers) const;
 
 	public:
 		Cgi(void);
 		Cgi(const Location &location);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
-		bool canProcessAsCgi(const std::string &path);
+		bool canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers);
 		~Cgi();
 	};
 }

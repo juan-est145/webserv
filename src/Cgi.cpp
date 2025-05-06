@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 18:59:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 12:07:50 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace Webserv
 		return (*this);
 	}
 
-	bool Cgi::canProcessAsCgi(const std::string &path)
+	bool Cgi::canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers)
 	{
 		std::vector<std::string> segmentedPath;
 		const std::string delimiter = "/";
@@ -60,8 +60,7 @@ namespace Webserv
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
 		this->extractPathInfoAndInter(indexes, path, segmentedPath);
-		this->findCgiFile(path, segmentedPath, indexes);
-		this->execCgi();
+		this->execCgi(this->findCgiFile(path, segmentedPath, indexes), headers);
 		return (true);
 	}
 
@@ -96,7 +95,7 @@ namespace Webserv
 		this->_pathInfo = pathInfoIndex < path.size() ? path.substr(pathInfoIndex) : "";
 	}
 
-	void Cgi::findCgiFile(
+	std::string Cgi::findCgiFile(
 		const std::string &path,
 		const std::vector<std::string> segmentedPath,
 		const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes)
@@ -114,10 +113,13 @@ namespace Webserv
 			std::cout << "We can't execute the script in cgi directory lol" << std::endl;
 			// TO DO: Throw an exception that later marks it as a 500 error in ResourceReq or PostUpload. Also delete the std::cout
 		}
+		return (localPath);
 	}
 
-	void Cgi::execCgi(void) const
+	void Cgi::execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers) const
 	{
+		(void)localPath;
+		(void)headers;
 		int pipeFd[2];
 		if (pipe(pipeFd) == -1)
 		{
