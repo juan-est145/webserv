@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 13:28:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:45:35 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,11 +168,13 @@ namespace Webserv
 			(char *)localPath.data(),
 			NULL,
 		};
+		std::string userAgent = "HTTP_USER_AGENT=";
+		userAgent += headers.find("User-Agent") == headers.end() ? "" : headers.find("User-Agent")->second;
 		char *env[] = {
-			(char *)(std::string("HTTP_USER_AGENT=") + (headers.find("User-Agent") == headers.end() ? "" : headers.find("User-Agent")->second)).data(),
+			//(char *)(std::string("HTTP_USER_AGENT=") + (headers.find("User-Agent") == headers.end() ? "" : headers.find("User-Agent")->second)).data(),
+			(char *)userAgent.data(),
 			NULL,
 		}; 
-
 		if (close(pipeFd[PIPE_READ]) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
