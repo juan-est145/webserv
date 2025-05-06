@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 13:45:35 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/06 13:54:59 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace Webserv
 		return (*this);
 	}
 
-	bool Cgi::canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers)
+	bool Cgi::canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers, std::string &content)
 	{
 		std::vector<std::string> segmentedPath;
 		const std::string delimiter = "/";
@@ -60,7 +60,7 @@ namespace Webserv
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
 		this->extractPathInfoAndInter(indexes, path, segmentedPath);
-		this->execCgi(this->findCgiFile(path, segmentedPath, indexes), headers);
+		this->execCgi(this->findCgiFile(path, segmentedPath, indexes), headers, content);
 		return (true);
 	}
 
@@ -116,7 +116,7 @@ namespace Webserv
 		return (localPath);
 	}
 
-	void Cgi::execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers) const
+	void Cgi::execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content) const
 	{
 		int pipeFd[2];
 		char buffer[1024];
@@ -149,6 +149,7 @@ namespace Webserv
 		while (read(pipeFd[PIPE_READ], buffer, sizeof(buffer)) > 0)
 		{
 			std::cout << buffer;
+			content += buffer;
 			memset(buffer, '\0', sizeof(buffer));
 		}
 		std::cout << std::endl;
