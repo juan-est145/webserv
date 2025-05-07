@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 13:55:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:16:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ namespace Webserv
 		{
 			// DO something with Cgi
 			Cgi cgi(locationFile);
-			if (cgi.canProcessAsCgi(req.getPath(), req.getReqHeader(), this->_content))
+			if (cgi.canProcessAsCgi(req.getPath(), req.getReqHeader(), this->_content, config))
 			{
 				this->_size = this->_content.size();
 				this->_mime = "text/html";

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 12:23:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:18:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace Webserv
 		return (*this);
 	}
 
-	bool Cgi::canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers, std::string &content)
+	bool Cgi::canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers, std::string &content, const ConfigServer *config)
 	{
 		std::vector<std::string> segmentedPath;
 		const std::string delimiter = "/";
@@ -60,7 +60,7 @@ namespace Webserv
 		if (indexes.first == -1 || indexes.second == -1)
 			return (false);
 		this->extractPathInfoAndInter(indexes, path, segmentedPath);
-		this->execCgi(this->findCgiFile(path, segmentedPath, indexes), headers, content);
+		this->execCgi(this->findCgiFile(path, segmentedPath, indexes), headers, content, config);
 		return (true);
 	}
 
@@ -116,7 +116,7 @@ namespace Webserv
 		return (localPath);
 	}
 
-	void Cgi::execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content) const
+	void Cgi::execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content, const ConfigServer *config) const
 	{
 		int pipeFd[2];
 		char buffer[1024];
@@ -138,7 +138,7 @@ namespace Webserv
 			// Also delete the cout
 		}
 		else if (pid == 0)
-			this->childProcess(pipeFd, localPath, headers); // Temporary, here we would call the execute function for child process
+			this->childProcess(pipeFd, localPath, headers, config);
 		// TO DO: Need to write the request body on pipeFd[PIPE_WRITE] before closing it
 		if (close(pipeFd[PIPE_WRITE]) == -1)
 		{
@@ -162,23 +162,47 @@ namespace Webserv
 		
 	}
 
-	void Cgi::childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers) const
+	void Cgi::childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers, const ConfigServer *config) const
 	{
 		char *args[] = {
 			(char *)this->_interpreter.c_str(),
 			(char *)localPath.data(),
 			NULL,
 		};
-		std::string userAgent = "HTTP_USER_AGENT=";
+		// TO DO: Add the QUERY_STRING, REQUEST_METHOD, SERVER_PROTOCOL, HTTP_COOKIE and SCRIPT_NAME env and maybe the PATH_TRANSLATED env too.
 		std::string contentLength = "CONTENT_LENGTH=";
 		std::string contentType = "CONTENT_TYPE=";
+		std::string httpAccept = "HTTP_ACCEPT=";
+		std::string httpAcceptCharset = "HTTP_ACCEPT_CHARSET=";
+		std::string httpAcceptEncoding = "HTTP_ACCEPT_ENCODING=";
+		std::string httpAcceptLanguage = "HTTP_ACCEPT_LANGUAGE=";
+		std::string httpHost = "HTTP_HOST=";
+		std::string userAgent = "HTTP_USER_AGENT=";
+		std::string serverName = "SERVER_NAME=" + config->getServerName();
+		std::string port = "SERVER_PORT=" + config->getPort();
+		std::string gatewayInterface = "GATEWAY_INTERFACE=CGI/1.1";
 
-		this->addHeaderValue(userAgent, "", "User-Agent", headers);
 		this->addHeaderValue(contentLength, "-1", "Content-Length", headers);
-		contentLength += headers.find("Content-Length") == headers.end() ? "-1" : headers.find("Content-Length")->second;
+		this->addHeaderValue(contentType, "null", "Content-Type", headers);
+		this->addHeaderValue(httpAccept, "", "Accept", headers);
+		this->addHeaderValue(httpAcceptCharset, "", "Accept-Charset", headers);
+		this->addHeaderValue(httpAcceptEncoding, "", "Accept-Encoding", headers);
+		this->addHeaderValue(httpAcceptLanguage, "", "Accept-Language", headers);
+		this->addHeaderValue(httpHost, "", "Host", headers);
+		this->addHeaderValue(userAgent, "", "User-Agent", headers);
 		char *env[] = {
-			(char *)userAgent.data(),
 			(char *)contentLength.data(),
+			(char *)contentType.data(),
+			(char *)httpAccept.data(),
+			(char *)httpAcceptCharset.data(),
+			(char *)httpAcceptEncoding.data(),
+			(char *)httpAcceptLanguage.data(),
+			(char *)httpHost.data(),
+			(char *)userAgent.data(),
+			(char *)this->_pathInfo.data(),
+			(char *)serverName.data(),
+			(char *)port.data(),
+			(char *)gatewayInterface.data(),
 			NULL,
 		}; 
 		if (close(pipeFd[PIPE_READ]) == -1)

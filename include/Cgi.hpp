@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 12:18:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:13:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include <sys/wait.h>
 #include "Location.hpp"
 #include "AuxFunc.hpp"
+#include "ConfigServer.hpp"
 
 namespace Webserv
 {
@@ -57,8 +58,8 @@ namespace Webserv
 			const std::vector<std::string> segmentedPath,
 			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes
 		);
-		void execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content) const;
-		void childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers) const;
+		void execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content, const ConfigServer *config) const;
+		void childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers, const ConfigServer *config) const;
 		void addHeaderValue(std::string &env, std::string errorValue, const std::string &searchValue, const std::map<std::string, std::string> &headers) const;
 
 	public:
@@ -66,7 +67,7 @@ namespace Webserv
 		Cgi(const Location &location);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
-		bool canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers, std::string &content);
+		bool canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers, std::string &content, const ConfigServer *config);
 		~Cgi();
 	};
 }
