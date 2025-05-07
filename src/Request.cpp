@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:24:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:54:50 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ namespace Webserv
 				this->_firstHeader.method = this->selectMethod(temp);
 				break;
 			case 1:
-				this->_firstHeader.path = temp;
+				this->extractUrlAndQuery(temp);
 				break;
 			case 2:
 				this->_firstHeader.httpVers = temp;
@@ -186,6 +186,18 @@ namespace Webserv
 			}
 		}
 		this->_configuration = new ConfigServer(*configuration);
+	}
+
+	void Request::extractUrlAndQuery(const std::string &path)
+	{
+		size_t queryIndex = path.rfind("?");
+		if (queryIndex == std::string::npos)
+		{
+			this->_firstHeader.path = path;
+			return;
+		}
+		this->_firstHeader.path = path.substr(0, queryIndex);
+		this->_firstHeader.query = path.substr(queryIndex + 1);
 	}
 
 	const std::map<std::string, std::string> &Request::getReqHeader(void) const

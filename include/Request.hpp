@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:21:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:51:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ namespace Webserv
 		void extractFirstHead(std::string &line);
 		std::pair<std::string, enum method> selectMethod(std::string &method);
 		void selectConfiguration(const std::vector<ConfigServer> &configs);
+		void extractUrlAndQuery(const std::string &path);
 
 	public:
 		typedef std::map<std::string, std::string>::const_iterator T_reqHeadIter;
