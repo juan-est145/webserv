@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 13:54:29 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:18:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ namespace Webserv
 		);
 		void execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content) const;
 		void childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers) const;
+		void addHeaderValue(std::string &env, std::string errorValue, const std::string &searchValue, const std::map<std::string, std::string> &headers) const;
 
 	public:
 		Cgi(void);

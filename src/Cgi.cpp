@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/06 13:54:59 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 12:23:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,10 +170,15 @@ namespace Webserv
 			NULL,
 		};
 		std::string userAgent = "HTTP_USER_AGENT=";
-		userAgent += headers.find("User-Agent") == headers.end() ? "" : headers.find("User-Agent")->second;
+		std::string contentLength = "CONTENT_LENGTH=";
+		std::string contentType = "CONTENT_TYPE=";
+
+		this->addHeaderValue(userAgent, "", "User-Agent", headers);
+		this->addHeaderValue(contentLength, "-1", "Content-Length", headers);
+		contentLength += headers.find("Content-Length") == headers.end() ? "-1" : headers.find("Content-Length")->second;
 		char *env[] = {
-			//(char *)(std::string("HTTP_USER_AGENT=") + (headers.find("User-Agent") == headers.end() ? "" : headers.find("User-Agent")->second)).data(),
 			(char *)userAgent.data(),
+			(char *)contentLength.data(),
 			NULL,
 		}; 
 		if (close(pipeFd[PIPE_READ]) == -1)
@@ -193,6 +198,11 @@ namespace Webserv
 		}
 		execve(this->_interpreter.c_str(), args, env);
 		// TO DO: If we reach here, send an exit failure
+	}
+
+	void Cgi::addHeaderValue(std::string &env, std::string errorValue, const std::string &searchValue, const std::map<std::string, std::string> &headers) const
+	{
+		env += headers.find(searchValue) == headers.end() ? errorValue : headers.find(searchValue)->second;
 	}
 
 	Cgi::~Cgi() {}
