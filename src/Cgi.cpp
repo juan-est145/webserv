@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 19:08:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:18:12 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,11 +164,9 @@ namespace Webserv
 		// TO DO: Check for -1 values
 		while (read(pipeFd[PIPE_READ], buffer, sizeof(buffer)) > 0)
 		{
-			std::cout << buffer;
 			content += buffer;
 			memset(buffer, '\0', sizeof(buffer));
 		}
-		std::cout << std::endl;
 		if (close(pipeFd[PIPE_READ]) == -1)
 		{
 			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
