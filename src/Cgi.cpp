@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 17:54:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 19:08:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,9 @@ namespace Webserv
 		}
 		else if (pid == 0)
 			this->childProcess(pipeFd, path, localPath, headers, config, firstHeader);
-		// TO DO: Need to write the request body on pipeFd[PIPE_WRITE] before closing it
+		// TO DO: Check the value of write
+		write(pipeFd[PIPE_WRITE], body.c_str(), body.size());
+		waitpid(pid, &status, 0);
 		if (close(pipeFd[PIPE_WRITE]) == -1)
 		{
 			close(pipeFd[PIPE_READ]);
@@ -171,7 +173,6 @@ namespace Webserv
 		{
 			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
 		}
-		waitpid(pid, &status, 0);
 		// TO DO: Check the status of waitpid
 	}
 
@@ -238,14 +239,20 @@ namespace Webserv
 			(char *)httpCookie.data(),
 			NULL,
 		};
-		if (close(pipeFd[PIPE_READ]) == -1)
+		if (dup2(pipeFd[PIPE_READ], STDIN_FILENO) == -1)
 		{
+			close(pipeFd[PIPE_READ]);
 			close(pipeFd[PIPE_WRITE]);
 			// TO DO: Later do an exit of -1 for parent process to pick up
 		}
 		if (dup2(pipeFd[PIPE_WRITE], STDOUT_FILENO) == -1)
 		{
 			close(pipeFd[PIPE_READ]);
+			close(pipeFd[PIPE_WRITE]);
+			// TO DO: Later do an exit of -1 for parent process to pick up
+		}
+		if (close(pipeFd[PIPE_READ]) == -1)
+		{
 			close(pipeFd[PIPE_WRITE]);
 			// TO DO: Later do an exit of -1 for parent process to pick up
 		}
