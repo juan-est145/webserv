@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 13:16:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:34:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,8 @@ namespace Webserv
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
-		std::map<std::string, bool>::const_iterator methodIter;
 
-		this->isMethodAllowed(methodIter, locationFile, req.getMethod());
-		if (!methodIter->second)
-		{
-			this->_resCode = 405;
-			throw Webserv::AServerAction::HttpException();
-		}
+		this->isMethodAllowed(locationFile, req.getMethod().first);
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
 			this->_resCode = 505;

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:39:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:34:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,7 @@ namespace Webserv
 		try
 		{
 			const Location locationFile = this->obtainLocationConf(config);
-			std::map<std::string, bool>::const_iterator methodIter;
-			this->isMethodAllowed(methodIter, locationFile, req.getMethod());
-			if (!methodIter->second)
-			{
-				this->_resCode = 405;
-				throw Webserv::AServerAction::HttpException();
-			}
+			this->isMethodAllowed(locationFile, req.getMethod().first);
 			if (locationFile.getMaxBodySize() < req.getReqBody().size())
 			{
 				this->_resCode = 413;
