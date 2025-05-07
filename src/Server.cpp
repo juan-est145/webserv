@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 14:50:43 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:08:20 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,22 +136,21 @@ namespace Webserv
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
-		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); // hay que borrar este objeto
+		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); 
 		director.SetBuilder(builder);
-		std::cout << req->getResourceContent() << std::endl;
 		if (req->getResCode() == 200)
 		{
-			director.BuildOkResponse(req->getResourceSize(), req->getResourceMime());
+			director.BuildOkResponse(req);
 			response = Hresp.Print(req);
 		}
 		else if (req->getResCode() == 201)
 		{
-			director.BuildOkUploadResponse(req->getResourceSize(), req->getResourceMime());
+			director.BuildOkUploadResponse(req);
 			response = Hresp.Print(req);
 		}
 		else if (req->getResCode() >= 400)
 		{
-			director.BuildErrorResponse(req->getResourceSize(), req->getResCode(), req->getResourceMime());
+			director.BuildErrorResponse(req);
 			response = Hresp.Print(req);
 		}
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)

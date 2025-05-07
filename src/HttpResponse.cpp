@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/23 23:13:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 14:36:01 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,10 @@ namespace Webserv
         std::string response = ss.str();
         return (response);
     }
+    // APARTADOS FALTANTES
+    // WWW-Authenticate(401)
+    // Location 
+    // OPCIONALES: ALLOW(405), RETRY-AFTER(503)
     //*************GETTERS**************//
     std::string HttpResponse::getStatus() const
     {

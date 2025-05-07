@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/05 14:43:47 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/07 18:14:18 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,24 @@ namespace Webserv
 		this->builder = builder;
 	}
 	// CODE 200
-	void Director::BuildOkResponse(long size, std::string mime)
+	void Director::BuildOkResponse(const Request *rq)
 	{
-		builder->SetStatus("200");
-		builder->SetContent(mime);
-		builder->SetContentLength(size);
+		builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
+		builder->SetContent(rq->getResourceMime());
+		builder->SetContentLength(rq->getResourceSize());
 	}
 	// CODE 201
-	void Director::BuildOkUploadResponse(long size, std::string mime)
+	void Director::BuildOkUploadResponse(const Request *rq)
 	{
-		this->builder->SetStatus("201");
-		this->builder->SetContent(mime);
-		this->builder->SetContentLength(size);
+		builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
+		builder->SetContent(rq->getResourceMime());
+		builder->SetContentLength(rq->getResourceSize());
 	}
 	// CODE 404
-	void Director::BuildErrorResponse(long size, unsigned int resCode, std::string mime)
+	void Director::BuildErrorResponse(const Request *rq)
 	{
-		if (resCode < 400)
-			throw std::exception();
-		this->builder->SetStatus(AuxFunc::ft_itoa(resCode));
-		this->builder->SetContent(mime);
-		this->builder->SetContentLength(size);
+		this->builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
+		this->builder->SetContent(rq->getResourceMime());
+		builder->SetContentLength(rq->getResourceSize());
 	}
 }
