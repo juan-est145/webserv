@@ -6,10 +6,12 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 16:05:55 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:08:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:04:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef FIRSTHEADER_HPP
+#define FIRSTHEADER_HPP
 #include <iostream>
 #include <string>
 #include <utility>
@@ -29,3 +31,5 @@ struct firstHeader
 	std::pair<std::string, enum method> method;
 	std::string query;
 };
+
+#endif

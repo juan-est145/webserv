@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:34:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:31:48 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ namespace Webserv
 		{
 			// DO something with Cgi
 			Cgi cgi(locationFile);
-			if (cgi.canProcessAsCgi(req.getPath(), req.getReqHeader(), this->_content, config))
+			if (cgi.canProcessAsCgi(req.getPath(), req.getReqHeader(), this->_content, config, req.getFirstHeader(), req.getReqBody()))
 			{
 				this->_size = this->_content.size();
 				this->_mime = "text/html";
@@ -181,11 +181,10 @@ namespace Webserv
 	}
 
 	std::pair<std::string, std::string> ResourceReq::binaryMimeSearch(
-		std::pair<std::string, std::string> *mimes, 
-		int low, 
-		int high, 
-		std::string toFind
-	) const
+		std::pair<std::string, std::string> *mimes,
+		int low,
+		int high,
+		std::string toFind) const
 	{
 		while (low <= high)
 		{

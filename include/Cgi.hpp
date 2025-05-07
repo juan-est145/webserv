@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 13:13:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 17:32:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 #include "Location.hpp"
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
+#include "FirstHeader.hpp"
 
 namespace Webserv
 {
@@ -49,25 +50,46 @@ namespace Webserv
 
 		std::pair<cgiExtenIndex, urlSegmentIndex> selectCgiExtensions(const std::vector<std::string> &segmentedPath) const;
 		void extractPathInfoAndInter(
-			const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes, 
-			const std::string &path, 
-			const std::vector<std::string> &segmentedPath
-		);
+			const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes,
+			const std::string &path,
+			const std::vector<std::string> &segmentedPath);
 		std::string findCgiFile(
 			const std::string &path,
 			const std::vector<std::string> segmentedPath,
-			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes
-		);
-		void execCgi(const std::string &localPath, const std::map<std::string, std::string> &headers, std::string &content, const ConfigServer *config) const;
-		void childProcess(int pipeFd[2], const std::string &localPath, const std::map<std::string, std::string> &headers, const ConfigServer *config) const;
-		void addHeaderValue(std::string &env, std::string errorValue, const std::string &searchValue, const std::map<std::string, std::string> &headers) const;
+			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes) const;
+		void execCgi(
+			const std::string &path,
+			const std::string &localPath,
+			const std::map<std::string, std::string> &headers,
+			std::string &content,
+			const ConfigServer *config,
+			const struct firstHeader &firstHeader,
+			const std::string &body) const;
+		void childProcess(
+			int pipeFd[2],
+			const std::string &path,
+			const std::string &localPath,
+			const std::map<std::string, std::string> &headers,
+			const ConfigServer *config,
+			const struct firstHeader &firstHeader) const;
+		void addHeaderValue(
+			std::string &env,
+			std::string errorValue,
+			const std::string &searchValue,
+			const std::map<std::string, std::string> &headers) const;
 
 	public:
 		Cgi(void);
 		Cgi(const Location &location);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
-		bool canProcessAsCgi(const std::string &path, const std::map<std::string, std::string> &headers, std::string &content, const ConfigServer *config);
+		bool canProcessAsCgi(
+			const std::string &path,
+			const std::map<std::string, std::string> &headers,
+			std::string &content,
+			const ConfigServer *config,
+			const struct firstHeader &firstHeader,
+			const std::string &body);
 		~Cgi();
 	};
 }
