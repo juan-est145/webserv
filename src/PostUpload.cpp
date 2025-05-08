@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 19:49:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 20:51:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ namespace Webserv
 				throw Webserv::AServerAction::HttpException();
 			}
 			this->findHeaders(req);
-			// TO DO: In Cgi part, check the value of content type
 			if (locationFile.getCgiPath().size() > 0)
 			{
 				if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
