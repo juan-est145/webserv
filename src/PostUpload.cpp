@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 18:52:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:28:11 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,21 +72,28 @@ namespace Webserv
 			// TO DO: In Cgi part, check the value of content type
 			if (locationFile.getCgiPath().size() > 0)
 			{
-				Cgi cgi(locationFile);
-				try
-				{
-					if (cgi.canProcessAsCgi(req.getPath(), req.getReqHeader(), this->_content, config, req.getFirstHeader(), req.getReqBody()))
-					{
-						this->_size = this->_content.size();
-						this->_mime = "text/html";
-						return;
-					}
-				}
-				catch (const Webserv::Cgi::NotFoundException &e)
-				{
-					this->_resCode = 404;
-					throw Webserv::AServerAction::HttpException();
-				}
+				if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
+					return;
+				// Cgi cgi(locationFile);
+				// try
+				// {
+				// 	if (cgi.canProcessAsCgi(req.getPath(), req.getReqHeader(), this->_content, config, req.getFirstHeader(), req.getReqBody()))
+				// 	{
+				// 		this->_size = this->_content.size();
+				// 		this->_mime = "text/html";
+				// 		return;
+				// 	}
+				// }
+				// catch (const Webserv::Cgi::NotFoundException &e)
+				// {
+				// 	this->_resCode = 404;
+				// 	throw Webserv::AServerAction::HttpException();
+				// }
+				// catch (const Webserv::Cgi::CgiErrorException &e)
+				// {
+				// 	this->_resCode = 500;
+				// 	throw Webserv::AServerAction::HttpException();
+				// }
 			}
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
 			{

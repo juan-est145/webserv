@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 18:46:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:58:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ namespace Webserv
 		~Cgi();
 
 		class NotFoundException : public std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
+
+		class CgiErrorException : public std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 18:47:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:27:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,37 @@ namespace Webserv
 			this->_resCode = 405;
 			throw Webserv::AServerAction::HttpException();
 		}
+	}
+
+	bool AServerAction::isCgi(
+		const Location &locationFile,
+		const std::string &path,
+		const std::map<std::string, std::string> &reqHeader,
+		const ConfigServer *config,
+		const struct firstHeader &firstHeader,
+		const std::string &body)
+	{
+		Cgi cgi(locationFile);
+		try
+		{
+			if (cgi.canProcessAsCgi(path, reqHeader, this->_content, config, firstHeader, body))
+			{
+				this->_size = this->_content.size();
+				this->_mime = "text/html";
+				return (true);
+			}
+		}
+		catch (const Webserv::Cgi::NotFoundException &e)
+		{
+			this->_resCode = 404;
+			throw Webserv::AServerAction::HttpException();
+		}
+		catch (const Webserv::Cgi::CgiErrorException &e)
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		return (false);
 	}
 
 	const std::string &AServerAction::getPath(void) const

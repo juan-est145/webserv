@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:34:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:26:59 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
 #include "Location.hpp"
+#include "ConfigServer.hpp"
+#include "FirstHeader.hpp"
+#include "Cgi.hpp"
 
 namespace Webserv
 {
@@ -43,6 +46,14 @@ namespace Webserv
 		void readResource(const std::string &path);
 		const Location &obtainLocationConf(const ConfigServer *config) const;
 		void isMethodAllowed(const Location &locationFile, const std::string &method);
+		bool isCgi(
+			const Location &locationFile,
+			const std::string &path,
+			const std::map<std::string, std::string> &reqHeader,
+			const ConfigServer *config,
+			const struct firstHeader &firstHeader,
+			const std::string &body
+		);
 
 	public:
 		AServerAction(void);

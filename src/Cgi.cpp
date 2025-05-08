@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 18:49:12 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:59:27 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,10 +112,7 @@ namespace Webserv
 		if (access(localPath.c_str(), F_OK) == -1)
 			throw Webserv::Cgi::NotFoundException();
 		if (access(localPath.c_str(), X_OK) == -1)
-		{
-			std::cout << "We can't execute the script in cgi directory lol" << std::endl;
-			// TO DO: Throw an exception that later marks it as a 500 error in ResourceReq or PostUpload. Also delete the std::cout
-		}
+			throw Webserv::Cgi::CgiErrorException();
 		return (localPath);
 	}
 
@@ -270,6 +267,11 @@ namespace Webserv
 	const char *Cgi::NotFoundException::what(void) const throw()
 	{
 		return ("Cgi script not found");
+	}
+
+	const char *Cgi::CgiErrorException::what(void) const throw()
+	{
+		return ("Internal error with cgi script");
 	}
 
 	Cgi::~Cgi() {}
