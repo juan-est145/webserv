@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 19:18:12 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:49:12 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,10 +110,7 @@ namespace Webserv
 		std::string localPath = AuxFunc::mapPathToResource(*this->_locationConf, cgiUrl);
 
 		if (access(localPath.c_str(), F_OK) == -1)
-		{
-			std::cout << "The file does not exist in cgi directory lol" << std::endl;
-			// TO DO: Throw an exception that later marks it as a 404 error in ResourceReq or PostUpload. Also delete the std::cout
-		}
+			throw Webserv::Cgi::NotFoundException();
 		if (access(localPath.c_str(), X_OK) == -1)
 		{
 			std::cout << "We can't execute the script in cgi directory lol" << std::endl;
@@ -131,7 +128,6 @@ namespace Webserv
 		const struct firstHeader &firstHeader,
 		const std::string &body) const
 	{
-		(void)body;
 		int pipeFd[2];
 		char buffer[1024];
 		int status = 0;
@@ -269,6 +265,11 @@ namespace Webserv
 		const std::map<std::string, std::string> &headers) const
 	{
 		env += headers.find(searchValue) == headers.end() ? errorValue : headers.find(searchValue)->second;
+	}
+
+	const char *Cgi::NotFoundException::what(void) const throw()
+	{
+		return ("Cgi script not found");
 	}
 
 	Cgi::~Cgi() {}

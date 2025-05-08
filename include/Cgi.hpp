@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 17:32:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:46:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <exception>
 #include "Location.hpp"
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
@@ -83,6 +84,7 @@ namespace Webserv
 		Cgi(const Location &location);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
+
 		bool canProcessAsCgi(
 			const std::string &path,
 			const std::map<std::string, std::string> &headers,
@@ -90,7 +92,14 @@ namespace Webserv
 			const ConfigServer *config,
 			const struct firstHeader &firstHeader,
 			const std::string &body);
+
 		~Cgi();
+
+		class NotFoundException : public std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
 	};
 }
 
