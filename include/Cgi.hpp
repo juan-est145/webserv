@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 18:58:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 20:35:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ namespace Webserv
 			std::string errorValue,
 			const std::string &searchValue,
 			const std::map<std::string, std::string> &headers) const;
+		void parentProcess(int *pipeFd, const std::string &body, pid_t &pid, std::string &content) const;
 
 	public:
 		Cgi(void);

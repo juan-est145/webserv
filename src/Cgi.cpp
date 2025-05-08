@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 18:59:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 20:47:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,45 +126,19 @@ namespace Webserv
 		const std::string &body) const
 	{
 		int pipeFd[2];
-		char buffer[1024];
-		int status = 0;
 
-		memset(buffer, '\0', sizeof(buffer));
 		if (pipe(pipeFd) == -1)
-		{
-			std::cout << "Pipe got fucked xd" << std::endl;
-			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
-			// Also delete the cout
-		}
+			throw Webserv::Cgi::CgiErrorException();
 		pid_t pid = fork();
 		if (pid == -1)
 		{
 			close(pipeFd[PIPE_READ]);
 			close(pipeFd[PIPE_WRITE]);
-			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
-			// Also delete the cout
+			throw Webserv::Cgi::CgiErrorException();
 		}
 		else if (pid == 0)
 			this->childProcess(pipeFd, path, localPath, headers, config, firstHeader);
-		// TO DO: Check the value of write
-		write(pipeFd[PIPE_WRITE], body.c_str(), body.size());
-		waitpid(pid, &status, 0);
-		if (close(pipeFd[PIPE_WRITE]) == -1)
-		{
-			close(pipeFd[PIPE_READ]);
-			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
-		}
-		// TO DO: Check for -1 values
-		while (read(pipeFd[PIPE_READ], buffer, sizeof(buffer)) > 0)
-		{
-			content += buffer;
-			memset(buffer, '\0', sizeof(buffer));
-		}
-		if (close(pipeFd[PIPE_READ]) == -1)
-		{
-			// TO DO: Throw an appropiate exeception that caller class must transform into http error code
-		}
-		// TO DO: Check the status of waitpid
+		this->parentProcess(pipeFd, body, pid, content);
 	}
 
 	void Cgi::childProcess(
@@ -180,7 +154,6 @@ namespace Webserv
 			(char *)localPath.data(),
 			NULL,
 		};
-		// TO DO: Add the SCRIPT_NAME env
 		std::string contentLength = "CONTENT_LENGTH=";
 		std::string contentType = "CONTENT_TYPE=";
 		std::string gatewayInterface = "GATEWAY_INTERFACE=CGI/1.1";
@@ -234,25 +207,23 @@ namespace Webserv
 		{
 			close(pipeFd[PIPE_READ]);
 			close(pipeFd[PIPE_WRITE]);
-			// TO DO: Later do an exit of -1 for parent process to pick up
+			exit(EXIT_FAILURE);
 		}
 		if (dup2(pipeFd[PIPE_WRITE], STDOUT_FILENO) == -1)
 		{
 			close(pipeFd[PIPE_READ]);
 			close(pipeFd[PIPE_WRITE]);
-			// TO DO: Later do an exit of -1 for parent process to pick up
+			exit(EXIT_FAILURE);
 		}
 		if (close(pipeFd[PIPE_READ]) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
-			// TO DO: Later do an exit of -1 for parent process to pick up
+			exit(EXIT_FAILURE);
 		}
 		if (close(pipeFd[PIPE_WRITE]) == -1)
-		{
-			// TO DO: Later do an exit of -1 for parent process to pick up
-		}
+			exit(EXIT_FAILURE);
 		execve(this->_interpreter.c_str(), args, env);
-		// TO DO: If we reach here, send an exit failure
+		exit(EXIT_FAILURE);
 	}
 
 	void Cgi::addHeaderValue(
@@ -262,6 +233,46 @@ namespace Webserv
 		const std::map<std::string, std::string> &headers) const
 	{
 		env += headers.find(searchValue) == headers.end() ? errorValue : headers.find(searchValue)->second;
+	}
+
+	void Cgi::parentProcess(int *pipeFd, const std::string &body, pid_t &pid, std::string &content) const
+	{
+		char buffer[1024];
+		int status = 0;
+		int bytesRead = 0;
+
+		memset(buffer, '\0', sizeof(buffer));
+		if (write(pipeFd[PIPE_WRITE], body.c_str(), body.size()) == -1)
+		{
+			close(pipeFd[PIPE_WRITE]);
+			close(pipeFd[PIPE_READ]);
+			throw Webserv::Cgi::CgiErrorException();
+		}
+		if (waitpid(pid, &status, 0) == -1)
+		{
+			close(pipeFd[PIPE_WRITE]);
+			close(pipeFd[PIPE_READ]);
+			throw Webserv::Cgi::CgiErrorException();
+		}
+		if (close(pipeFd[PIPE_WRITE]) == -1)
+		{
+			close(pipeFd[PIPE_READ]);
+			throw Webserv::Cgi::CgiErrorException();
+		}
+		while ((bytesRead = read(pipeFd[PIPE_READ], buffer, sizeof(buffer))) > 0)
+		{
+			content += buffer;
+			memset(buffer, '\0', sizeof(buffer));
+		}
+		if (bytesRead == -1)
+		{
+			close(pipeFd[PIPE_READ]);
+			throw Webserv::Cgi::CgiErrorException();
+		}
+		if (close(pipeFd[PIPE_READ]) == -1)
+			throw Webserv::Cgi::CgiErrorException();
+		if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+    		throw Webserv::Cgi::CgiErrorException();
 	}
 
 	const char *Cgi::NotFoundException::what(void) const throw()
