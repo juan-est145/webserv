@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 20:47:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 13:21:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,21 @@ namespace Webserv
 		const struct firstHeader &firstHeader,
 		const std::string &body)
 	{
+		std::vector<std::string> segmentedPath = this->obtainSegmentedPath(path);
+		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
+		if (indexes.first == -1 || indexes.second == -1)
+			return (false);
+		this->extractPathInfoAndInter(indexes, path, segmentedPath);
+		this->execCgi(path, this->findCgiFile(path, segmentedPath, indexes), headers, content, config, firstHeader, body);
+		return (true);
+	}
+
+	std::vector<std::string> Cgi::obtainSegmentedPath(const std::string &path) const
+	{
 		std::vector<std::string> segmentedPath;
+		size_t pos = 0;
 		const std::string delimiter = "/";
 		std::string copy(path);
-		size_t pos = 0;
 
 		while ((pos = copy.find(delimiter)) != std::string::npos)
 		{
@@ -62,12 +73,7 @@ namespace Webserv
 		}
 		if (copy.size() > 0)
 			segmentedPath.push_back(copy);
-		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
-		if (indexes.first == -1 || indexes.second == -1)
-			return (false);
-		this->extractPathInfoAndInter(indexes, path, segmentedPath);
-		this->execCgi(path, this->findCgiFile(path, segmentedPath, indexes), headers, content, config, firstHeader, body);
-		return (true);
+		return (segmentedPath);
 	}
 
 	std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> Cgi::selectCgiExtensions(const std::vector<std::string> &segmentedPath) const
