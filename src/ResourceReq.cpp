@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 14:27:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:55:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,9 @@
 namespace Webserv
 {
 	// TO DO: Later on we need a public function that takes as an argument the type of verb of the request
-	ResourceReq::ResourceReq(void) : AServerAction()
-	{
-		this->_resourceType = ResourceReq::REG_FILE;
-	}
+	ResourceReq::ResourceReq(void) : AServerAction() {}
 
-	ResourceReq::ResourceReq(const std::string path) : AServerAction(path)
-	{
-		this->_resourceType = ResourceReq::REG_FILE;
-	}
+	ResourceReq::ResourceReq(const std::string path) : AServerAction(path) {}
 
 	ResourceReq::ResourceReq(const ResourceReq &copy) : AServerAction(copy)
 	{
@@ -36,7 +30,6 @@ namespace Webserv
 		{
 			this->_content = assign._content;
 			this->_size = assign._size;
-			this->_resourceType = ResourceReq::REG_FILE;
 			this->_resCode = assign._resCode;
 		}
 		return (*this);
