@@ -6,11 +6,11 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:30:15 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/02/16 18:57:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:23:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/HtmlFile.hpp"
+#include "HtmlFile.hpp"
 
 namespace Webserv
 {

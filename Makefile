@@ -19,6 +19,7 @@ $(SRC-PATH)/Director.cpp\
 $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/ResourceReq.cpp\
 $(SRC-PATH)/PostUpload.cpp\
+$(SRC-PATH)/Cgi.cpp\
 $(SRC-PATH)/AServerAction.cpp\
 
 
@@ -40,7 +41,9 @@ $(HEADER-PATH)/Director.hpp\
 $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/ResourceReq.hpp\
 $(HEADER-PATH)/PostUpload.hpp\
+$(HEADER-PATH)/Cgi.hpp\
 $(HEADER-PATH)/AServerAction.hpp\
+$(HEADER-PATH)/FirstHeader.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
 CXX = $(shell which g++ c++ clang++  | head -n 1)

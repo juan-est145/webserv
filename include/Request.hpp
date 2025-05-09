@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:31:11 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:51:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 #include <exception>
 #include <cstdlib>
 #include <vector>
+#include <utility>
 #include "Logger.hpp"
 #include "ResourceReq.hpp"
 #include "PostUpload.hpp"
+#include "FirstHeader.hpp"
 
 namespace Webserv
 {
@@ -31,14 +33,22 @@ namespace Webserv
 
 	class Request
 	{
+	private:
+		int _socketFd;
+		std::map<std::string, std::string> _reqHeader;
+		std::string _reqBody;
+		struct firstHeader _firstHeader;
+		AServerAction *_serverAction;
+		ConfigServer *_configuration;
+
+		void extractHeaders(std::string &buffer);
+		void extractReqHead(std::queue<std::string> &headers);
+		void extractFirstHead(std::string &line);
+		std::pair<std::string, enum method> selectMethod(std::string &method);
+		void selectConfiguration(const std::vector<ConfigServer> &configs);
+		void extractUrlAndQuery(const std::string &path);
+
 	public:
-		enum E_Method
-		{
-			GET = 0,
-			POST = 1,
-			DELETE = 2,
-			UNKNOWN = 3,
-		};
 		typedef std::map<std::string, std::string>::const_iterator T_reqHeadIter;
 
 		Request(void);
@@ -50,7 +60,7 @@ namespace Webserv
 		void handleReq(const std::vector<ConfigServer> &configs);
 
 		const std::map<std::string, std::string> &getReqHeader(void) const;
-		enum E_Method getMethod(void) const;
+		std::pair<std::string, enum method> getMethod(void) const;
 		const std::string &getPath(void) const;
 		const std::string &getHttpVers(void) const;
 		unsigned int getResCode(void) const;
@@ -58,6 +68,7 @@ namespace Webserv
 		long getResourceSize(void) const;
 		const std::string &getResourceContent(void) const;
 		const std::string &getResourceMime(void) const;
+		const struct firstHeader &getFirstHeader(void) const;
 
 		void setResCode(unsigned int resCode);
 		std::size_t setReqBody(std::string &body);
@@ -68,22 +79,6 @@ namespace Webserv
 			virtual const char *what(void) const throw();
 		};
 		~Request();
-
-	private:
-		int _socketFd;
-		std::map<std::string, std::string> _reqHeader;
-		std::string _reqBody;
-		enum E_Method _method;
-		std::string _path;
-		std::string _httpVers;
-		AServerAction *_serverAction;
-		ConfigServer *_configuration;
-
-		void extractHeaders(std::string &buffer);
-		void extractReqHead(std::queue<std::string> &headers);
-		void extractFirstHead(std::string &line);
-		enum E_Method selectMethod(std::string &method);
-		void selectConfiguration(const std::vector<ConfigServer> &configs);
 	};
 }
 

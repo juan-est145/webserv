@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:39:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 20:51:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ namespace Webserv
 		try
 		{
 			const Location locationFile = this->obtainLocationConf(config);
-			std::map<std::string, bool>::const_iterator methodIter;
-			this->isMethodAllowed(methodIter, locationFile, req.getMethod());
-			if (!methodIter->second)
+
+			this->isMethodAllowed(locationFile, req.getMethod().first);
+			if (req.getHttpVers() != "HTTP/1.1")
 			{
-				this->_resCode = 405;
+				this->_resCode = 505;
 				throw Webserv::AServerAction::HttpException();
 			}
 			if (locationFile.getMaxBodySize() < req.getReqBody().size())
@@ -69,6 +69,11 @@ namespace Webserv
 				throw Webserv::AServerAction::HttpException();
 			}
 			this->findHeaders(req);
+			if (locationFile.getCgiPath().size() > 0)
+			{
+				if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
+					return;
+			}
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
 			{
 				this->_resCode = 405;

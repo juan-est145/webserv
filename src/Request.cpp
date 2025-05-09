@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:33:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:54:50 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@ namespace Webserv
 {
 	Request::Request(void)
 	{
-		this->_method = UNKNOWN;
-		this->_path = "";
-		this->_httpVers = "";
+		this->_firstHeader.httpVers = "";
+		this->_firstHeader.method = std::make_pair("", UNKNOWN);
+		this->_firstHeader.path = "";
+		this->_firstHeader.httpVers = "";
+		this->_firstHeader.query = "";
 		this->_socketFd = -1;
 		this->_reqBody = "";
 		this->_configuration = NULL;
@@ -27,9 +29,11 @@ namespace Webserv
 
 	Request::Request(int socketFd)
 	{
-		this->_method = UNKNOWN;
-		this->_path = "";
-		this->_httpVers = "";
+		this->_firstHeader.httpVers = "";
+		this->_firstHeader.method = std::make_pair("", UNKNOWN);
+		this->_firstHeader.path = "";
+		this->_firstHeader.httpVers = "";
+		this->_firstHeader.query = "";
 		this->_socketFd = socketFd;
 		this->_reqBody = "";
 		this->_configuration = NULL;
@@ -47,9 +51,7 @@ namespace Webserv
 		{
 			this->_reqHeader = assign._reqHeader;
 			this->_reqBody = assign._reqBody;
-			this->_method = assign._method;
-			this->_httpVers = assign._httpVers;
-			this->_path = assign._path;
+			this->_firstHeader = assign._firstHeader;
 			this->_serverAction = assign._serverAction;
 			this->_configuration = assign._configuration;
 		}
@@ -67,7 +69,7 @@ namespace Webserv
 	void Request::handleReq(const std::vector<ConfigServer> &configs)
 	{
 		this->selectConfiguration(configs);
-		this->_method == Request::POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->_path) : this->_serverAction = new Webserv::ResourceReq(this->_path);
+		this->getMethod().second == POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath()) : this->_serverAction = new Webserv::ResourceReq(this->getPath());
 		this->_serverAction->processRequest(this->_configuration, *this);
 	}
 
@@ -142,13 +144,13 @@ namespace Webserv
 			switch (i)
 			{
 			case 0:
-				this->_method = this->selectMethod(temp);
+				this->_firstHeader.method = this->selectMethod(temp);
 				break;
 			case 1:
-				this->_path = temp;
+				this->extractUrlAndQuery(temp);
 				break;
 			case 2:
-				this->_httpVers = temp;
+				this->_firstHeader.httpVers = temp;
 				break;
 			default:
 				break;
@@ -156,7 +158,7 @@ namespace Webserv
 		}
 	}
 
-	Request::E_Method Request::selectMethod(std::string &method)
+	std::pair<std::string, enum method> Request::selectMethod(std::string &method)
 	{
 		std::string methods[3] = {
 			"GET",
@@ -165,9 +167,9 @@ namespace Webserv
 		for (int i = 0; i < 3; i++)
 		{
 			if (methods[i] == method)
-				return ((Request::E_Method)i);
+				return (std::make_pair(methods[i], (enum method)i));
 		}
-		return (UNKNOWN);
+		return (std::make_pair("", UNKNOWN));
 	}
 
 	void Request::selectConfiguration(const std::vector<ConfigServer> &configs)
@@ -186,24 +188,36 @@ namespace Webserv
 		this->_configuration = new ConfigServer(*configuration);
 	}
 
+	void Request::extractUrlAndQuery(const std::string &path)
+	{
+		size_t queryIndex = path.rfind("?");
+		if (queryIndex == std::string::npos)
+		{
+			this->_firstHeader.path = path;
+			return;
+		}
+		this->_firstHeader.path = path.substr(0, queryIndex);
+		this->_firstHeader.query = path.substr(queryIndex + 1);
+	}
+
 	const std::map<std::string, std::string> &Request::getReqHeader(void) const
 	{
 		return (this->_reqHeader);
 	}
 
-	Request::E_Method Request::getMethod(void) const
+	std::pair<std::string, enum method> Request::getMethod(void) const
 	{
-		return (this->_method);
+		return (this->_firstHeader.method);
 	}
 
 	const std::string &Request::getPath(void) const
 	{
-		return (this->_path);
+		return (this->_firstHeader.path);
 	}
 
 	const std::string &Request::getHttpVers(void) const
 	{
-		return (this->_httpVers);
+		return (this->_firstHeader.httpVers);
 	}
 
 	unsigned int Request::getResCode(void) const
@@ -237,6 +251,11 @@ namespace Webserv
 		if (this->_serverAction == NULL)
 			throw Request::RequestException();
 		return (this->_serverAction->getMime());
+	}
+
+	const struct firstHeader &Request::getFirstHeader(void) const
+	{
+		return (this->_firstHeader);
 	}
 
 	void Request::setResCode(unsigned int resCode)

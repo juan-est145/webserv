@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 14:28:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:10:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,18 @@ namespace Webserv
 	{
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
-		std::string localPath = this->mapPathToResource(locationFile);
-		std::map<std::string, bool>::const_iterator methodIter;
+		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
-		this->isMethodAllowed(methodIter, locationFile, req.getMethod());
-		if (!methodIter->second)
-		{
-			this->_resCode = 405;
-			throw Webserv::AServerAction::HttpException();
-		}
+		this->isMethodAllowed(locationFile, req.getMethod().first);
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
 			this->_resCode = 505;
 			throw Webserv::AServerAction::HttpException();
+		}
+		if (locationFile.getCgiPath().size() > 0)
+		{
+			if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
+				return;
 		}
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
@@ -94,32 +93,16 @@ namespace Webserv
 				throw Webserv::AServerAction::HttpException();
 			}
 		}
-		else
-			std::cout << "We hit something else" << std::endl;
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
 		this->_mime = this->chooseMime(localPath);
 	}
 
-	std::string ResourceReq::mapPathToResource(const Location &locationFile) const
-	{
-		std::string reqPath = this->_path;
-		std::string path = locationFile.getPath().size() <= 1 ? "" : locationFile.getPath().substr(1);
-		std::string resourcePath;
-		unsigned int breakIndex = 0;
-
-		for (; breakIndex < std::min(this->_path.size(), locationFile.getPath().size()); breakIndex++)
-		{
-			if (this->_path[breakIndex] != locationFile.getPath()[breakIndex])
-				break;
-		}
-		reqPath.erase(0, breakIndex);
-		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
-		return (resourcePath);
-	}
-
 	std::string ResourceReq::chooseMime(const std::string &path) const
 	{
+		// NOTE: If it became necessary to add more mimes, the inclusion must respect the order value of the ascii table.
+		// Numbers first, then uppercase and lastly, lowercase.
+		// Failing to comply with these instructions will result in the binaryMimeSearch to fail and cause bugs.
 		std::pair<std::string, std::string> mimes[] = {
 			std::make_pair(".3gp", "video/3gpp"),
 			std::make_pair(".3g2", "video/3gpp2"),
@@ -193,11 +176,10 @@ namespace Webserv
 	}
 
 	std::pair<std::string, std::string> ResourceReq::binaryMimeSearch(
-		std::pair<std::string, std::string> *mimes, 
-		int low, 
-		int high, 
-		std::string toFind
-	) const
+		std::pair<std::string, std::string> *mimes,
+		int low,
+		int high,
+		std::string toFind) const
 	{
 		while (low <= high)
 		{

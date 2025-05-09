@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/28 19:26:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/05 17:34:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,22 @@ namespace Webserv
 		else
 			result = number + 48;
 		return (result);
+	}
+
+	std::string AuxFunc::mapPathToResource(const Location &locationFile, std::string reqPath)
+	{
+		std::string path = locationFile.getPath().size() <= 1 ? "" : locationFile.getPath().substr(1);
+		std::string resourcePath;
+		unsigned int breakIndex = 0;
+
+		for (; breakIndex < std::min(reqPath.size(), locationFile.getPath().size()); breakIndex++)
+		{
+			if (reqPath[breakIndex] != locationFile.getPath()[breakIndex])
+				break;
+		}
+		reqPath.erase(0, breakIndex);
+		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
+		return (resourcePath);
 	}
 
 	AuxFunc::~AuxFunc(void) {}

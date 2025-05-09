@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/03 13:38:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:27:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,20 +105,45 @@ namespace Webserv
 		return (config->getLocations()[locIndex]);
 	}
 
-	void AServerAction::isMethodAllowed(std::map<std::string, bool>::const_iterator &methodIter, const Location &locationFile, int method)
+	void AServerAction::isMethodAllowed(const Location &locationFile, const std::string &method)
 	{
-		const std::string fill[3] = {"GET", "POST", "DELETE"};
-		const std::vector<std::string> methods(fill, fill + 3);
-		try
-		{
-			std::string httpMethod = methods.at(method);
-			methodIter = locationFile.getMethods().find(httpMethod);
-		}
-		catch (const std::out_of_range &e)
+		std::map<std::string, bool>::const_iterator it = locationFile.getMethods().find(method);
+		if (it == locationFile.getMethods().end() || !it->second)
 		{
 			this->_resCode = 405;
 			throw Webserv::AServerAction::HttpException();
 		}
+	}
+
+	bool AServerAction::isCgi(
+		const Location &locationFile,
+		const std::string &path,
+		const std::map<std::string, std::string> &reqHeader,
+		const ConfigServer *config,
+		const struct firstHeader &firstHeader,
+		const std::string &body)
+	{
+		Cgi cgi(locationFile);
+		try
+		{
+			if (cgi.canProcessAsCgi(path, reqHeader, this->_content, config, firstHeader, body))
+			{
+				this->_size = this->_content.size();
+				this->_mime = "text/html";
+				return (true);
+			}
+		}
+		catch (const Webserv::Cgi::NotFoundException &e)
+		{
+			this->_resCode = 404;
+			throw Webserv::AServerAction::HttpException();
+		}
+		catch (const Webserv::Cgi::CgiErrorException &e)
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		return (false);
 	}
 
 	const std::string &AServerAction::getPath(void) const
