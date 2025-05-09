@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 13:21:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 13:49:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@ namespace Webserv
 		std::string _pathInfo;
 
 		std::vector<std::string> obtainSegmentedPath(const std::string &path) const;
+		bool isValidCgiRoute(
+			std::string &path,
+			std::vector<std::string> &segmentedPath,
+			std::pair<cgiExtenIndex, urlSegmentIndex> &indexes) const;
 		std::pair<cgiExtenIndex, urlSegmentIndex> selectCgiExtensions(const std::vector<std::string> &segmentedPath) const;
 		void extractPathInfoAndInter(
 			const std::pair<cgiExtenIndex, urlSegmentIndex> &indexes,

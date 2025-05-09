@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 13:21:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:04:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,13 @@ namespace Webserv
 		const struct firstHeader &firstHeader,
 		const std::string &body)
 	{
-		std::vector<std::string> segmentedPath = this->obtainSegmentedPath(path);
-		const std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
-		if (indexes.first == -1 || indexes.second == -1)
+		std::string cgiPath(path);
+		std::vector<std::string> segmentedPath = this->obtainSegmentedPath(cgiPath);
+		std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
+		if (!this->isValidCgiRoute(cgiPath, segmentedPath, indexes))
 			return (false);
-		this->extractPathInfoAndInter(indexes, path, segmentedPath);
-		this->execCgi(path, this->findCgiFile(path, segmentedPath, indexes), headers, content, config, firstHeader, body);
+		this->extractPathInfoAndInter(indexes, cgiPath, segmentedPath);
+		this->execCgi(cgiPath, this->findCgiFile(cgiPath, segmentedPath, indexes), headers, content, config, firstHeader, body);
 		return (true);
 	}
 
@@ -74,6 +75,27 @@ namespace Webserv
 		if (copy.size() > 0)
 			segmentedPath.push_back(copy);
 		return (segmentedPath);
+	}
+
+	bool Cgi::isValidCgiRoute(std::string &path, std::vector<std::string> &segmentedPath, std::pair<cgiExtenIndex, urlSegmentIndex> &indexes) const
+	{
+		struct stat fileStat;
+		std::string localPath = AuxFunc::mapPathToResource(*this->_locationConf, path);
+		
+		if (indexes.first != -1 && indexes.second != -1)
+			return (true);
+		if (access(localPath.c_str(), F_OK) == -1)
+			throw Webserv::Cgi::NotFoundException();
+		if (stat(localPath.c_str(), &fileStat) == -1)
+			throw Webserv::Cgi::CgiErrorException();
+		if (fileStat.st_mode & S_IFREG || this->_locationConf->getAutoindex())
+			return (false);
+		path += path[path.size() - 1] == '/' ? this->_locationConf->getIndexLocation() : "/" + this->_locationConf->getIndexLocation();
+		segmentedPath = this->obtainSegmentedPath(path);
+		indexes = this->selectCgiExtensions(segmentedPath);
+		if (indexes.first == -1 || indexes.second == -1)
+			return (false);
+		return (true);
 	}
 
 	std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> Cgi::selectCgiExtensions(const std::vector<std::string> &segmentedPath) const
