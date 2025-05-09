@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 14:10:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:27:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ namespace Webserv
 	std::string ResourceReq::chooseMime(const std::string &path) const
 	{
 		// NOTE: If it became necessary to add more mimes, the inclusion must respect the order value of the ascii table.
-		// Numbers first, then uppercase and lastly, lowercase.
-		// Failing to comply with these instructions will result in the binaryMimeSearch to fail and cause bugs.
+		// Numbers first, then uppercase and lastly, lowercase. This restrictions apply to the first key of the pair
+		// Failing to comply with these instructions will cause the binaryMimeSearch to fail and create bugs.
 		std::pair<std::string, std::string> mimes[] = {
 			std::make_pair(".3gp", "video/3gpp"),
 			std::make_pair(".3g2", "video/3gpp2"),
