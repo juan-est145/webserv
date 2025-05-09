@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 17:59:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 18:38:42 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <utility>
 #include <sys/types.h>
 #include <dirent.h>
+#include <sstream>
 #include "AServerAction.hpp"
 #include "Request.hpp"
 
@@ -40,6 +41,8 @@ namespace Webserv
 			int low, int high,
 			std::string toFind) const;
 		void directoryListing(const std::string &localPath);
+		void addDirectoryInfo(struct dirent *readDir);
+		void addFileInfo(struct dirent *readDir);
 
 	public:
 		ResourceReq(void);

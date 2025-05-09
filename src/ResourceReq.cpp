@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 18:27:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 18:46:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,18 +207,41 @@ namespace Webserv
 		};
 
 		this->_content += "<html>\n<head><title>" + title + "</title></head>\n";
-		this->_content += "<body>\n<h1>" + title + "</h1><hr><pre><a href=\"../\">../</a>";
+		this->_content += "<body>\n<h1>" + title + "</h1><hr><pre><a href=\"../\">../</a>\n";
 
 		while ((readDir = readdir(dir)) != NULL)
 		{
 			if (readDir->d_name == skip[0] || readDir->d_name == skip[1])
 				continue;
+			if (readDir->d_type == DT_DIR)
+				this->addDirectoryInfo(readDir);
+			else
+				this->addFileInfo(readDir);
 			std::string type = readDir->d_type == DT_REG ? "file" : "directory";
 			std::cout << "We have found a " << type << " of name " << readDir->d_name << std::endl;
 		}
+		this->_content += "</pre><hr></body>\n</html>";
 		// TO DO: Check the value of closedir
+		std::cout << std::endl << this->_content << std::endl;
 		closedir(dir);
 		exit(EXIT_SUCCESS);
+	}
+
+	void ResourceReq::addDirectoryInfo(struct dirent *readDir)
+	{
+		std::stringstream link;
+
+		link << "<a href=\"" << readDir->d_name << "/\">" << readDir->d_name << "/</a>\n";
+		this->_content += link.str();
+	}
+
+	void ResourceReq::addFileInfo(struct dirent *readDir)
+	{
+		std::stringstream link;
+		// TO DO: Add the last modified value and extra stuff. Check nginx
+
+		link << "<a href=\"" << readDir->d_name << "\">" << readDir->d_name << "</a>\n";
+		this->_content += link.str();
 	}
 
 	void ResourceReq::setContent(const std::string &_content)
