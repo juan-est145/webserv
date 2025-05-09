@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 17:55:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 18:09:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ namespace Webserv
 		if (fileStat.st_mode & S_IFDIR)
 		{
 			if (locationFile.getAutoindex() == true)
-				std::cout << "Nothing yet, will implement later" << std::endl;
+				this->directoryListing(localPath);
+			// TO DO: Fully implement directory listing
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
 			if (stat(localPath.c_str(), &fileStat) == -1)
 			{
@@ -185,6 +186,27 @@ namespace Webserv
 				high = mid - 1;
 		}
 		return (std::make_pair("default", "text/plain"));
+	}
+
+	void ResourceReq::directoryListing(const std::string &localPath)
+	{
+		DIR *dir = opendir(localPath.c_str());
+		struct dirent *readDir;
+
+		if (dir == NULL)
+		{
+			Logger::errorLog(errno, strerror, false);
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		while ((readDir = readdir(dir)) != NULL)
+		{
+			std::string type = readDir->d_type == DT_REG ? "file" : "directory";
+			std::cout << "We have found a " << type << " of name " << readDir->d_name << std::endl;
+		}
+		// TO DO: Check the value of closedir
+		closedir(dir);
+		exit(EXIT_SUCCESS);
 	}
 
 	void ResourceReq::setContent(const std::string &_content)

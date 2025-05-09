@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 17:55:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:59:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include <fstream>
 #include <algorithm>
 #include <utility>
+#include <sys/types.h>
+#include <dirent.h>
 #include "AServerAction.hpp"
 #include "Request.hpp"
 
@@ -37,6 +39,7 @@ namespace Webserv
 			std::pair<std::string, std::string> *mimes,
 			int low, int high,
 			std::string toFind) const;
+		void directoryListing(const std::string &localPath);
 
 	public:
 		ResourceReq(void);
