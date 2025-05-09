@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 18:09:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 18:27:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,8 +199,20 @@ namespace Webserv
 			this->_resCode = 500;
 			throw Webserv::AServerAction::HttpException();
 		}
+
+		std::string title = "Index of " + this->_path;
+		std::string skip[2] = {
+			".",
+			"..",
+		};
+
+		this->_content += "<html>\n<head><title>" + title + "</title></head>\n";
+		this->_content += "<body>\n<h1>" + title + "</h1><hr><pre><a href=\"../\">../</a>";
+
 		while ((readDir = readdir(dir)) != NULL)
 		{
+			if (readDir->d_name == skip[0] || readDir->d_name == skip[1])
+				continue;
 			std::string type = readDir->d_type == DT_REG ? "file" : "directory";
 			std::cout << "We have found a " << type << " of name " << readDir->d_name << std::endl;
 		}
