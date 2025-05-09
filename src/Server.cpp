@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 18:08:20 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:38:17 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,21 +138,10 @@ namespace Webserv
 		Director director;
 		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); 
 		director.SetBuilder(builder);
-		if (req->getResCode() == 200)
-		{
-			director.BuildOkResponse(req);
-			response = Hresp.Print(req);
-		}
-		else if (req->getResCode() == 201)
-		{
-			director.BuildOkUploadResponse(req);
-			response = Hresp.Print(req);
-		}
-		else if (req->getResCode() >= 400)
-		{
-			director.BuildErrorResponse(req);
-			response = Hresp.Print(req);
-		}
+
+		director.BuildDefaultResponse(req);
+		response = Hresp.Print(req);
+	
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;

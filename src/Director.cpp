@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/07 18:14:18 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:51:35 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,33 @@ namespace Webserv
 	{
 		this->builder = builder;
 	}
-	// CODE 200
-	void Director::BuildOkResponse(const Request *rq)
+	// DEFAULT
+	void Director::BuildDefaultResponse(const Request *rq)
 	{
 		builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
 		builder->SetContent(rq->getResourceMime());
 		builder->SetContentLength(rq->getResourceSize());
+		/*
+		if (req->getResCode() == 301 || req->getResCode() == 302)
+			builder->setLocation(rq->getLocation());
+	    else if (req->getResCode() == 401)
+            builder->setWwwAuthenticate(rq->getWwwAuthenticate()); 
+	    else if (req->getResCode() == 405)
+            builder->setAllow(rq->getAllow()); 
+	    else if (req->getResCode() == 503)
+            this->setRetryAfter(rq->getRetryAfter()); 
+
+		*/
 	}
-	// CODE 201
-	void Director::BuildOkUploadResponse(const Request *rq)
+	// CODE 301 & 401 POSIBLE ELIMINAR
+	void Director::BuildLocationResponse(const Request *rq)
 	{
 		builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
 		builder->SetContent(rq->getResourceMime());
 		builder->SetContentLength(rq->getResourceSize());
+		
 	}
-	// CODE 404
+	// CODE 404 POSIBLE ELIMINAR
 	void Director::BuildErrorResponse(const Request *rq)
 	{
 		this->builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
