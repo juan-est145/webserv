@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 18:38:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:13:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ namespace Webserv
 			int low, int high,
 			std::string toFind) const;
 		void directoryListing(const std::string &localPath);
-		void addDirectoryInfo(struct dirent *readDir);
-		void addFileInfo(struct dirent *readDir);
+		void addDirectoryInfo(struct dirent *readDir, const std::string &localPath);
+		void addFileInfo(struct dirent *readDir, const std::string &localPath);
 
 	public:
 		ResourceReq(void);

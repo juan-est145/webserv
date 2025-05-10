@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 17:34:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:14:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,15 @@ namespace Webserv
 		reqPath.erase(0, breakIndex);
 		resourcePath = AuxFunc::urldecode((locationFile.getRootLocation() + path + reqPath).c_str());
 		return (resourcePath);
+	}
+
+	std::string AuxFunc::getHumanTime(time_t rawTime)
+	{
+		struct tm *timeInfo = std::localtime(&rawTime);
+		char buffer[80];
+
+		std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeInfo);
+		return (std::string(buffer));
 	}
 
 	AuxFunc::~AuxFunc(void) {}

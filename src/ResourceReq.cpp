@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 10:41:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:20:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 namespace Webserv
 {
-	// TO DO: Later on we need a public function that takes as an argument the type of verb of the request
 	ResourceReq::ResourceReq(void) : AServerAction() {}
 
 	ResourceReq::ResourceReq(const std::string path) : AServerAction(path) {}
@@ -218,34 +217,60 @@ namespace Webserv
 			if (readDir->d_name == skip[0] || readDir->d_name == skip[1])
 				continue;
 			if (readDir->d_type == DT_DIR)
-				this->addDirectoryInfo(readDir);
+				this->addDirectoryInfo(readDir, localPath);
 			else
-				this->addFileInfo(readDir);
-			std::string type = readDir->d_type == DT_REG ? "file" : "directory";
-			std::cout << "We have found a " << type << " of name " << readDir->d_name << std::endl;
+				this->addFileInfo(readDir, localPath);
 		}
 		this->_content += "</pre><hr></body>\n</html>";
-		// TO DO: Check the value of closedir
 		std::cout << std::endl << this->_content << std::endl;
-		closedir(dir);
+		if (closedir(dir) == -1)
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
 		this->_size = this->_content.size();
 		this->_mime = "text/html";
 	}
 
-	void ResourceReq::addDirectoryInfo(struct dirent *readDir)
+	void ResourceReq::addDirectoryInfo(struct dirent *readDir, const std::string &localPath)
 	{
 		std::stringstream link;
+		struct stat fileStat;
+		std::string directoryPath = localPath + readDir->d_name + "/";
 
-		link << "<a href=\"" << readDir->d_name << "/\">" << readDir->d_name << "/</a>\n";
+		if (stat(directoryPath.c_str(), &fileStat) == -1)
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		link << "<a href=\"" << readDir->d_name << "/\">" << readDir->d_name << "/</a>";
+		for (size_t i = 0; i < 41; i++)
+			link << ' ';
+		link << AuxFunc::getHumanTime(fileStat.st_mtime);
+		for (size_t i = 0; i < 41; i++)
+			link << ' ';
+		link << "-\n";
 		this->_content += link.str();
 	}
 
-	void ResourceReq::addFileInfo(struct dirent *readDir)
+	void ResourceReq::addFileInfo(struct dirent *readDir, const std::string &localPath)
 	{
 		std::stringstream link;
-		// TO DO: Add the last modified value and extra stuff. Check nginx
+		struct stat fileStat;
+		std::string directoryPath = localPath + readDir->d_name;
 
-		link << "<a href=\"" << readDir->d_name << "\">" << readDir->d_name << "</a>\n";
+		if (stat(directoryPath.c_str(), &fileStat) == -1)
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
+		link << "<a href=\"" << readDir->d_name << "\">" << readDir->d_name << "</a>";
+		for (size_t i = 0; i < 41; i++)
+			link << " ";
+		link << AuxFunc::getHumanTime(fileStat.st_mtime);
+		for (size_t i = 0; i < 41; i++)
+			link << ' ';
+		link << readDir->d_reclen << "\n";
 		this->_content += link.str();
 	}
 

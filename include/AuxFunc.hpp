@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/05 17:35:32 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:13:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 #include <string>
 #include <cerrno>
 #include <sstream>
+#include <ctime>
 #include "Logger.hpp"
 #include "Location.hpp"
 
@@ -47,6 +48,7 @@ namespace Webserv
 		static std::string ft_itoa(int number);
 		static std::string ft_itoa(unsigned int number);
 		static std::string mapPathToResource(const Location &locationFile, std::string reqPath);
+		static std::string getHumanTime(time_t rawTime);
 	};
 
 }
