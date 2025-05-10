@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 18:46:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 10:18:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ namespace Webserv
 		if (fileStat.st_mode & S_IFDIR)
 		{
 			if (locationFile.getAutoindex() == true)
+			{
 				this->directoryListing(localPath);
-			// TO DO: Fully implement directory listing
+				return;
+			}				
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
 			if (stat(localPath.c_str(), &fileStat) == -1)
 			{
@@ -224,7 +226,8 @@ namespace Webserv
 		// TO DO: Check the value of closedir
 		std::cout << std::endl << this->_content << std::endl;
 		closedir(dir);
-		exit(EXIT_SUCCESS);
+		this->_size = this->_content.size();
+		this->_mime = "text/html";
 	}
 
 	void ResourceReq::addDirectoryInfo(struct dirent *readDir)
