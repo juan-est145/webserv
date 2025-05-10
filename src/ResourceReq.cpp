@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 10:18:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 10:41:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,11 @@ namespace Webserv
 	{
 		DIR *dir = opendir(localPath.c_str());
 		struct dirent *readDir;
+		std::string title = "Index of " + this->_path;
+		std::string skip[2] = {
+			".",
+			"..",
+		};
 
 		if (dir == NULL)
 		{
@@ -201,16 +206,13 @@ namespace Webserv
 			this->_resCode = 500;
 			throw Webserv::AServerAction::HttpException();
 		}
-
-		std::string title = "Index of " + this->_path;
-		std::string skip[2] = {
-			".",
-			"..",
-		};
-
+		if (localPath[localPath.size() - 1] != '/')
+		{
+			this->_resCode = 404;
+			throw Webserv::AServerAction::HttpException();
+		}
 		this->_content += "<html>\n<head><title>" + title + "</title></head>\n";
 		this->_content += "<body>\n<h1>" + title + "</h1><hr><pre><a href=\"../\">../</a>\n";
-
 		while ((readDir = readdir(dir)) != NULL)
 		{
 			if (readDir->d_name == skip[0] || readDir->d_name == skip[1])
