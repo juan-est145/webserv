@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 11:20:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:33:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,12 +201,14 @@ namespace Webserv
 
 		if (dir == NULL)
 		{
+			closedir(dir);
 			Logger::errorLog(errno, strerror, false);
 			this->_resCode = 500;
 			throw Webserv::AServerAction::HttpException();
 		}
 		if (localPath[localPath.size() - 1] != '/')
 		{
+			closedir(dir);
 			this->_resCode = 404;
 			throw Webserv::AServerAction::HttpException();
 		}
@@ -217,12 +219,11 @@ namespace Webserv
 			if (readDir->d_name == skip[0] || readDir->d_name == skip[1])
 				continue;
 			if (readDir->d_type == DT_DIR)
-				this->addDirectoryInfo(readDir, localPath);
+				this->addDirectoryInfo(readDir, localPath, dir);
 			else
-				this->addFileInfo(readDir, localPath);
+				this->addFileInfo(readDir, localPath, dir);
 		}
 		this->_content += "</pre><hr></body>\n</html>";
-		std::cout << std::endl << this->_content << std::endl;
 		if (closedir(dir) == -1)
 		{
 			this->_resCode = 500;
@@ -232,7 +233,7 @@ namespace Webserv
 		this->_mime = "text/html";
 	}
 
-	void ResourceReq::addDirectoryInfo(struct dirent *readDir, const std::string &localPath)
+	void ResourceReq::addDirectoryInfo(struct dirent *readDir, const std::string &localPath, DIR *dir)
 	{
 		std::stringstream link;
 		struct stat fileStat;
@@ -240,6 +241,7 @@ namespace Webserv
 
 		if (stat(directoryPath.c_str(), &fileStat) == -1)
 		{
+			closedir(dir);
 			this->_resCode = 500;
 			throw Webserv::AServerAction::HttpException();
 		}
@@ -253,7 +255,7 @@ namespace Webserv
 		this->_content += link.str();
 	}
 
-	void ResourceReq::addFileInfo(struct dirent *readDir, const std::string &localPath)
+	void ResourceReq::addFileInfo(struct dirent *readDir, const std::string &localPath, DIR *dir)
 	{
 		std::stringstream link;
 		struct stat fileStat;
@@ -261,6 +263,7 @@ namespace Webserv
 
 		if (stat(directoryPath.c_str(), &fileStat) == -1)
 		{
+			closedir(dir);
 			this->_resCode = 500;
 			throw Webserv::AServerAction::HttpException();
 		}
