@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/02 20:12:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:25:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ namespace Webserv
 		const std::vector<ConfigServer> _configurations;
 		std::map<int, Request *> _clientPool;
 		void addConnectionToQueue(struct epoll_event &event) const;
-		void readOperations(int socketFd, const struct epoll_event &eventList);
 		void readSocket(const struct epoll_event &eventList);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void writeOperations(const struct epoll_event &eventList);
@@ -60,7 +59,7 @@ namespace Webserv
 		Server(const std::vector<ConfigServer> &configurations, int listenFd);
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
-		void processClientConn(int socketFd, int eventListIndex);
+		void processClientConn(int eventListIndex);
 
 		class ServerException : std::exception
 		{

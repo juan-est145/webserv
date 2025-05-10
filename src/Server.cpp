@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/02 20:15:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/10 11:25:30 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,28 +39,13 @@ namespace Webserv
 		return (*this);
 	}
 
-	void Server::processClientConn(int socketFd, int eventListIndex)
+	void Server::processClientConn(int eventListIndex)
 	{
 		const struct epoll_event *eventList = Cluster::cluster->getEventList();
 		if (eventList[eventListIndex].events & EPOLLIN)
-			this->readOperations(socketFd, eventList[eventListIndex]);
+			this->readSocket(eventList[eventListIndex]);
 		else
 			this->writeOperations(eventList[eventListIndex]);
-	}
-
-	void Server::readOperations(int socketFd, const struct epoll_event &eventList)
-	{
-		struct stat statbuf;
-		if (fstat(socketFd, &statbuf) == -1)
-		{
-			Webserv::Logger::errorLog(errno, strerror, false);
-			throw Server::ServerException();
-		}
-		if (S_ISSOCK(statbuf.st_mode))
-			this->readSocket(eventList);
-		// Later on, this could be used for CGI
-		// else
-		// 	this->readFile(eventList, eventConf);
 	}
 
 	void Server::readSocket(const struct epoll_event &eventList)
@@ -105,27 +90,6 @@ namespace Webserv
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}
-
-	// Later on, this might be useful for CGI
-	// void Server::readFile(struct epoll_event &eventList, struct epoll_event &eventConf)
-	// {
-	// 	int htmlFd = eventList.data.fd;
-	// 	int socketFd = this->_htmlFdSockPair[htmlFd]->getSocketFd();
-	// 	long size = this->_htmlFdSockPair[htmlFd]->getRequest().getResourceData().size;
-	// 	char *buffer = new char[size + 1];
-	// 	// TO DO. Check value of read. If negative, maybe send a response code of the 500 family?
-	// 	read(eventList.data.fd, buffer, size);
-	// 	buffer[size] = '\0';
-	// 	this->_htmlFdSockPair[htmlFd]->setContent(buffer);
-	// 	delete[] buffer;
-	// 	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, eventConf))
-	// 		throw Server::ServerException();
-	// 	this->_sockFdHtmlPair[socketFd] = this->_htmlFdSockPair[htmlFd];
-	// 	this->_htmlFdSockPair.erase(htmlFd);
-	// 	close(eventList.data.fd);
-	// 	if (!AuxFunc::handle_ctl(this->_epollFd, EPOLL_CTL_ADD, EPOLLOUT, socketFd, eventConf))
-	// 		throw Server::ServerException();
-	// }
 
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
