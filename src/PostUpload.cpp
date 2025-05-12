@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 18:44:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:58:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,16 +150,19 @@ namespace Webserv
 		std::size_t begginingIndex;
 		std::map<std::string, std::string> metadata;
 
-		startBound = this->_body.find("--" + boundary);
-		endBound = this->_body.find("--" + boundary, 1);
-		begginingIndex = boundary.length() + delimiter.length() + 2;
-		file = this->_body.substr(begginingIndex, endBound - begginingIndex);
-		this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
-		// TO DO: Test if we throw exception when we upload multiple files at the same time
-		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
-			throw Webserv::PostUpload::BodyParseError();
-		this->extractMetadata(metadata, file);
-		this->downloadFile(metadata, file, localPath);
+		while (this->_body != "--" + boundary + "--\r\n")
+		{
+			startBound = this->_body.find("--" + boundary);
+			endBound = this->_body.find("--" + boundary, 1);
+			begginingIndex = boundary.length() + delimiter.length() + 2;
+			file = this->_body.substr(begginingIndex, endBound - begginingIndex);
+			this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
+			// TO DO: Test if we throw exception when we upload multiple files at the same time
+			if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
+				throw Webserv::PostUpload::BodyParseError();
+			this->extractMetadata(metadata, file);
+			this->downloadFile(metadata, file, localPath);
+		}
 	}
 
 	void PostUpload::extractMetadata(std::map<std::string, std::string> &headers, std::string &body)
@@ -206,7 +209,6 @@ namespace Webserv
 
 	void PostUpload::createBodyMessage(void)
 	{
-		// TO DO: Later on, make the response more dynamic. This is a placeholder for now
 		this->_content = "Resource was uploaded correctly on path " + this->_path;
 		this->_size = this->_content.length();
 		this->_mime = "text/plain";
