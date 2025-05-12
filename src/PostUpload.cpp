@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 18:40:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:44:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ namespace Webserv
 		try
 		{
 			const Location locationFile = this->obtainLocationConf(config);
-			//std::string localPath = this->_path[this->_path.size() - 1] == '/' ? AuxFunc::mapPathToResource(locationFile, this->_path) : "/" + AuxFunc::mapPathToResource(locationFile, this->_path);
 			std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
 			if (localPath[localPath.size() - 1] != '/')
@@ -208,7 +207,7 @@ namespace Webserv
 	void PostUpload::createBodyMessage(void)
 	{
 		// TO DO: Later on, make the response more dynamic. This is a placeholder for now
-		this->_content = "Resource was uploaded correctly";
+		this->_content = "Resource was uploaded correctly on path " + this->_path;
 		this->_size = this->_content.length();
 		this->_mime = "text/plain";
 	}
