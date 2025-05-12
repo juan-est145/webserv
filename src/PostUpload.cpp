@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 19:27:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:28:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,8 @@ namespace Webserv
 		std::string newLine = "\r\n";
 		std::size_t newLinePos;
 
+		if (body == "\r\n" || body.size() == 0)
+			return;
 		delimiterPos = headers["Content-Disposition"].find(delimiter);
 		newLinePos = headers["Content-Disposition"].find(newLine);
 		if (delimiterPos == std::string::npos || newLinePos == std::string::npos)
