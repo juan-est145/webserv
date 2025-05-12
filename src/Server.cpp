@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 11:25:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 17:49:29 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,24 +100,12 @@ namespace Webserv
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
-		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); // hay que borrar este objeto
+		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); 
 		director.SetBuilder(builder);
 
-		if (req->getResCode() == 200)
-		{
-			director.BuildOkResponse(req->getResourceSize());
-			response = Hresp.Print(req);
-		}
-		else if (req->getResCode() == 201)
-		{
-			director.BuildOkUploadResponse(req->getResourceSize());
-			response = Hresp.Print(req);
-		}
-		else if (req->getResCode() >= 400)
-		{
-			director.BuildErrorResponse(req->getResourceSize(), req->getResCode());
-			response = Hresp.Print(req);
-		}
+		director.BuildDefaultResponse(req);
+		response = Hresp.Print(req);
+	
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;

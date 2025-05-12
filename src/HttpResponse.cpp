@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/23 23:13:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/09 14:48:11 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ namespace Webserv
         this->status = "200";
         this->content = "text/html";
         this->contentLength = 0;
+        /*
+        this->wwwAuthenticate = NULL;
+        this->location = NULL;
+        this->allow = NULL;
+        this->retryAfter = NULL;
+        */
     }
 
     HttpResponse::HttpResponse(std::string status, std::string content, int contentLength)
@@ -26,6 +32,12 @@ namespace Webserv
         this->status = status;
         this->content = content;
         this->contentLength = contentLength;
+        /*
+        this->wwwAuthenticate = wwwAuthenticate;
+        this->location = location;
+        this->allow = allow;
+        this->retryAfter = retryAfter;
+        */
     }
     HttpResponse::HttpResponse(HttpResponse &toCopy)
     {
@@ -45,12 +57,24 @@ namespace Webserv
         std::stringstream ss;
         ss << "HTTP/1.1 " << status << "\r\n"
            << "Content-Type: " << content << "\r\n"
-           << "Content-Length: " << contentLength << "\r\n"
-           << "\r\n"
+           << "Content-Length: " << contentLength << "\r\n";
+/*      if (req->getResCode() == 301 || req->getResCode() == 401)
+            ss << "Location: "<<req->getLocation() << "\r\n"; */
+/*      if (req->getResCode() == 401)
+            ss << "WWW-Authenticate: "<<req->getAutheticate() << "\r\n"; */
+/*      if (req->getResCode() == 405)
+            ss << "Allow: "<<req->getAllow() << "\r\n"; */
+/*      if (req->getResCode() == 503)
+            ss << "Retry-After: "<<req->getRetry() << "\r\n"; */
+        ss << "\r\n"
            << req->getResourceContent();
         std::string response = ss.str();
         return (response);
     }
+    // APARTADOS FALTANTES
+    // WWW-Authenticate(401)
+    // Location(301)(302)
+    // OPCIONALES: ALLOW(405), RETRY-AFTER(503)
     //*************GETTERS**************//
     std::string HttpResponse::getStatus() const
     {
@@ -66,6 +90,22 @@ namespace Webserv
     {
         return contentLength;
     }
+    /*std::string getWwwAuthenticate() const
+    {
+        return this->wwwAuthenticate;
+    }*/
+    /*std::string getLocation() const
+    {
+        return this->location;
+    }*/
+    /*std::string getAllow() const
+    {
+        return this->allow;
+    }*/
+    /*int getRetryAfter() const
+    {
+        return this->retryAfter;
+    }*/
     //*************SETTERS**************//
     void HttpResponse::setStatus(std::string status)
     {
@@ -81,6 +121,21 @@ namespace Webserv
     {
         this->contentLength = contentLength;
     }
-
+    /*void setWwwAuthenticate(std::string wwwAuthenticate)
+    {
+        this->wwwAuthenticate = wwwAuthenticate;
+    }*/
+    /*void setLocation(std::string location)
+    {
+        this->location = location;
+    }*/
+    /*void setAllow(std::string allow)
+    {
+        this->allow = allow;
+    }*/
+    /*void setRetryAfter(int retryAfter)
+    {
+        this->retryAfter = retryAfter;
+    }*/
     HttpResponse::~HttpResponse() {}
 }

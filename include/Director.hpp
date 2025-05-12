@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Director.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/22 13:43:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/08 18:55:48 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include "AuxFunc.hpp"
 #include "Builder.hpp"
+#include "Request.hpp"
 
 namespace Webserv
 {
@@ -33,9 +34,9 @@ namespace Webserv
         Director &operator=(const Director &other);
         ~Director();
         void SetBuilder(Builder *builder);
-        void BuildOkResponse(long size); // CODE 200
-        void BuildOkUploadResponse(long size);   // CODE 201
-        void BuildErrorResponse(long size, unsigned int resCode); //Error respose
+        void BuildDefaultResponse(const Request *rq); // CODE 200
+        void BuildLocationResponse(const Request *rq);   // CODE 201
+        void BuildErrorResponse(const Request *rq); //Error respose
     };
 }
 
