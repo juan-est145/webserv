@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 18:58:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:31:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ namespace Webserv
 
 		void findHeaders(const Request &req);
 		void checkValidHeader(std::map<std::string, std::string>::const_iterator &it, const std::map<std::string, std::string> &reqHeaders);
-		void uploadFile(void);
+		void uploadFile(const std::string &directory);
 		std::string obtainDelimiter(void);
-		void processUpload(std::string &boundary);
+		void processUpload(std::string &boundary, const std::string &localPath);
 		void extractMetadata(std::map<std::string, std::string> &headers, std::string &body);
-		void downloadFile(std::map<std::string, std::string> &headers, std::string &body);
+		void downloadFile(std::map<std::string, std::string> &headers, std::string &body, const std::string &localPath);
 		void createBodyMessage(void);
 
 	public:

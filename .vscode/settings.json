@@ -53,6 +53,7 @@
 		"sstream": "cpp",
 		"fstream": "cpp",
 		"bitset": "cpp",
-		"queue": "cpp"
+		"queue": "cpp",
+		"ctime": "cpp"
 	}
 }

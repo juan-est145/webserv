@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 20:51:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:40:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,11 @@ namespace Webserv
 		try
 		{
 			const Location locationFile = this->obtainLocationConf(config);
+			//std::string localPath = this->_path[this->_path.size() - 1] == '/' ? AuxFunc::mapPathToResource(locationFile, this->_path) : "/" + AuxFunc::mapPathToResource(locationFile, this->_path);
+			std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
+			if (localPath[localPath.size() - 1] != '/')
+				localPath += "/";
 			this->isMethodAllowed(locationFile, req.getMethod().first);
 			if (req.getHttpVers() != "HTTP/1.1")
 			{
@@ -74,17 +78,29 @@ namespace Webserv
 				if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
 					return;
 			}
+			if (access(localPath.c_str(), F_OK) == -1)
+			{
+				this->_resCode = 404;
+				throw Webserv::AServerAction::HttpException();
+			}
+			else if (access(localPath.c_str(), W_OK) == -1)
+			{
+				this->_resCode = 500;
+				throw Webserv::AServerAction::HttpException();
+			}
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
 			{
 				this->_resCode = 405;
 				throw Webserv::AServerAction::HttpException();
 			}
-			this->uploadFile();
+			(void)localPath;
+			this->uploadFile(localPath);
 			this->createBodyMessage();
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
 			this->processHttpError(config);
+			this->_mime = "text/html";
 		}
 	}
 
@@ -111,10 +127,10 @@ namespace Webserv
 		}
 	}
 
-	void PostUpload::uploadFile(void)
+	void PostUpload::uploadFile(const std::string &localPath)
 	{
 		std::string delimiter = this->obtainDelimiter();
-		this->processUpload(delimiter);
+		this->processUpload(delimiter, localPath);
 	}
 
 	std::string PostUpload::obtainDelimiter(void)
@@ -126,7 +142,7 @@ namespace Webserv
 		return (this->_contentType.substr(pos + delimiter.length()));
 	}
 
-	void PostUpload::processUpload(std::string &boundary)
+	void PostUpload::processUpload(std::string &boundary, const std::string &localPath)
 	{
 		std::size_t startBound;
 		std::size_t endBound;
@@ -144,7 +160,7 @@ namespace Webserv
 		if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
 			throw Webserv::PostUpload::BodyParseError();
 		this->extractMetadata(metadata, file);
-		this->downloadFile(metadata, file);
+		this->downloadFile(metadata, file, localPath);
 	}
 
 	void PostUpload::extractMetadata(std::map<std::string, std::string> &headers, std::string &body)
@@ -165,7 +181,7 @@ namespace Webserv
 		body.erase(0, 2);
 	}
 
-	void PostUpload::downloadFile(std::map<std::string, std::string> &headers, std::string &body)
+	void PostUpload::downloadFile(std::map<std::string, std::string> &headers, std::string &body, const std::string &localPath)
 	{
 		std::size_t delimiterPos;
 		std::string delimiter = "filename=";
@@ -177,7 +193,7 @@ namespace Webserv
 		newLinePos = headers["Content-Disposition"].find(newLine);
 		if (delimiterPos == std::string::npos || newLinePos == std::string::npos)
 			throw Webserv::PostUpload::BodyParseError();
-		fileNameField = headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
+		fileNameField = localPath + headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
 		if (fileNameField.find(";") != std::string::npos)
 		{
 			// TO DO: Implement something here
