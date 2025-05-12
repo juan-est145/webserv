@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 18:31:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:00:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,6 @@ namespace Webserv
 		long getContentLength(void) const;
 		const std::string &getAccept(void) const;
 
-		class BodyParseError : std::exception
-		{
-		public:
-			virtual const char *what(void) const throw();
-		};
-		class UploadError : std::exception
-		{
-		public:
-			virtual const char *what(void) const throw();
-		};
 		~PostUpload();
 	};
 }

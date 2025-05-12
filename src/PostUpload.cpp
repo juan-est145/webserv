@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 18:58:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:27:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,10 @@ namespace Webserv
 		std::string delimiter = "; boundary=";
 		std::size_t pos = this->_contentType.find(delimiter);
 		if (pos == std::string::npos)
-			throw Webserv::PostUpload::BodyParseError();
+		{
+			this->_resCode = 400;
+			throw Webserv::AServerAction::HttpException();
+		}
 		return (this->_contentType.substr(pos + delimiter.length()));
 	}
 
@@ -157,9 +160,11 @@ namespace Webserv
 			begginingIndex = boundary.length() + delimiter.length() + 2;
 			file = this->_body.substr(begginingIndex, endBound - begginingIndex);
 			this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
-			// TO DO: Test if we throw exception when we upload multiple files at the same time
 			if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
-				throw Webserv::PostUpload::BodyParseError();
+			{
+				this->_resCode = 400;
+				throw Webserv::AServerAction::HttpException();
+			}
 			this->extractMetadata(metadata, file);
 			this->downloadFile(metadata, file, localPath);
 		}
@@ -176,7 +181,10 @@ namespace Webserv
 			newLinePos = body.find(delimiter);
 			separatorPos = body.find(":");
 			if (newLinePos == std::string::npos || separatorPos == std::string::npos)
-				throw Webserv::PostUpload::BodyParseError();
+			{
+				this->_resCode = 400;
+				throw Webserv::AServerAction::HttpException();
+			}
 			headers[body.substr(0, separatorPos)] = body.substr(separatorPos + 2, newLinePos - separatorPos);
 			body.erase(0, newLinePos + delimiter.length());
 		}
@@ -194,15 +202,22 @@ namespace Webserv
 		delimiterPos = headers["Content-Disposition"].find(delimiter);
 		newLinePos = headers["Content-Disposition"].find(newLine);
 		if (delimiterPos == std::string::npos || newLinePos == std::string::npos)
-			throw Webserv::PostUpload::BodyParseError();
+		{
+			this->_resCode = 400;
+			throw Webserv::AServerAction::HttpException();
+		}
 		fileNameField = localPath + headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
 		if (fileNameField.find(";") != std::string::npos)
 		{
-			// TO DO: Implement something here
+			this->_resCode = 400;
+			throw Webserv::AServerAction::HttpException();
 		}
 		std::ofstream document(fileNameField.substr(0, fileNameField.length() - 2).c_str(), std::ios::out);
 		if (!document.is_open())
-			throw Webserv::PostUpload::UploadError();
+		{
+			this->_resCode = 500;
+			throw Webserv::AServerAction::HttpException();
+		}
 		document << body.substr(0, body.length() - 2);
 		document.close();
 	}
@@ -212,16 +227,6 @@ namespace Webserv
 		this->_content = "Resource was uploaded correctly on path " + this->_path;
 		this->_size = this->_content.length();
 		this->_mime = "text/plain";
-	}
-
-	const char *PostUpload::BodyParseError::what(void) const throw()
-	{
-		return ("Invalid body found in this POST request");
-	}
-
-	const char *PostUpload::UploadError::what(void) const throw()
-	{
-		return ("Could not upload file to the server");
 	}
 
 	const std::string &PostUpload::getContentType(void) const
