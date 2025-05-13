@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/08 19:27:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:25:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ namespace Webserv
 		this->_size = -1;
 		this->_resCode = 200;
 		this->_mime = "text/plain";
+		this->_location = "";
 	}
 
 	AServerAction::AServerAction(const std::string path) : _path(path)
@@ -28,6 +29,7 @@ namespace Webserv
 		this->_size = -1;
 		this->_resCode = 200;
 		this->_mime = "text/plain";
+		this->_location = "";
 	}
 
 	AServerAction::AServerAction(const AServerAction &toCopy)
@@ -43,6 +45,7 @@ namespace Webserv
 			this->_size = toCopy._size;
 			this->_resCode = toCopy._resCode;
 			this->_mime = toCopy._mime;
+			this->_location = toCopy._location;
 		}
 		return (*this);
 	}
@@ -169,6 +172,11 @@ namespace Webserv
 	const std::string &AServerAction::getMime(void) const
 	{
 		return (this->_mime);
+	}
+
+	const std::string &AServerAction::getLocation(void) const
+	{
+		return (this->_location);
 	}
 
 	void AServerAction::setRescode(unsigned int resCode)

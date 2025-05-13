@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 19:28:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:41:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ namespace Webserv
 				this->_resCode = 405;
 				throw Webserv::AServerAction::HttpException();
 			}
-			(void)localPath;
 			this->uploadFile(localPath);
 			this->createBodyMessage();
+			this->addLocationMember(config);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -229,6 +229,13 @@ namespace Webserv
 		this->_content = "Resource was uploaded correctly on path " + this->_path;
 		this->_size = this->_content.length();
 		this->_mime = "text/plain";
+	}
+
+	void PostUpload::addLocationMember(const ConfigServer *config)
+	{
+		this->_location = "http://" + config->getHost();
+		this->_location += config->getPort() == 80 ? "" : ":" + config->getPort();
+		this->_location += this->_path;
 	}
 
 	const std::string &PostUpload::getContentType(void) const

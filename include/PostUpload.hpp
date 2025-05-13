@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/12 19:00:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:41:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ namespace Webserv
 		void extractMetadata(std::map<std::string, std::string> &headers, std::string &body);
 		void downloadFile(std::map<std::string, std::string> &headers, std::string &body, const std::string &localPath);
 		void createBodyMessage(void);
+		void addLocationMember(const ConfigServer *config);
 
 	public:
 		PostUpload();
