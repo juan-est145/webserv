@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/08 18:55:48 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:53:56 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ namespace Webserv
         ~Director();
         void SetBuilder(Builder *builder);
         void BuildDefaultResponse(const Request *rq); // CODE 200
-        void BuildLocationResponse(const Request *rq);   // CODE 201
-        void BuildErrorResponse(const Request *rq); //Error respose
     };
 }
 
