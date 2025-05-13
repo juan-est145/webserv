@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConcreteBuilder.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:30:19 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/08 18:20:21 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:36:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,42 +18,45 @@ namespace Webserv
     {
         this->response = new HttpResponse();
     }
+    
     ConcreteBuilder::ConcreteBuilder(HttpResponse *response)
     {
         this->response = response;
     }
+
     ConcreteBuilder::ConcreteBuilder(ConcreteBuilder &toCopy)
     {
         *this = toCopy;
     }
+    
     ConcreteBuilder &ConcreteBuilder::operator=(const ConcreteBuilder& other)
     {
-        this->response = other.getResponse();
+        if (this != &other)
+            this->response = other.response;
         return *this;
-    }
-    ConcreteBuilder::~ConcreteBuilder()
-    {
-        //delete this->response;
     }
 
     //*****GETTERS*****//
     HttpResponse* ConcreteBuilder::getResponse() const
     {
-        HttpResponse *result = this->response;
-        new HttpResponse();
-        return result;
+        return (this->response);
     }
+    
     //*****SETTERS*****//
     void ConcreteBuilder::SetStatus(const std::string& status)
     {
-        response->setStatus(status);
-    }   
+        this->response->setStatus(status);
+    }
+
     void ConcreteBuilder::SetContent(const std::string& type)
     {
-        response->setContent(type);
+        this->response->setContent(type);
     }
+    
     void ConcreteBuilder::SetContentLength(int length)
     {
-        response->setContentLength(length);
+        this->response->setContentLength(length);
     }
+
+    ConcreteBuilder::~ConcreteBuilder() {}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Director.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/13 12:54:07 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:18:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ namespace Webserv
 	// DEFAULT
 	void Director::BuildDefaultResponse(const Request *rq)
 	{
-		builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
-		builder->SetContent(rq->getResourceMime());
-		builder->SetContentLength(rq->getResourceSize());
+		this->builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
+		this->builder->SetContent(rq->getResourceMime());
+		this->builder->SetContentLength(rq->getResourceSize());
 		/*
 		if (req->getResCode() == 301 || req->getResCode() == 302)
 			builder->setLocation(rq->getLocation());
