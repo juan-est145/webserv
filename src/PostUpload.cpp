@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 00:08:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 00:11:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,14 +233,6 @@ namespace Webserv
 
 	void PostUpload::addLocationMember(const ConfigServer *config)
 	{
-		// std::stringstream location;
-		// std::string port = config->getPort() == 80 ? "" : ":" + config->getPort();
-
-		// location << "http://" << config->getHost();
-		// location << port;
-		// location << this->_path;
-		
-		// this->_location = location.str();
 		this->_location = "http://" + config->getServerName();
 		this->_location += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
 		this->_location += this->_path;
