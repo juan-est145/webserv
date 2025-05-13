@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:51:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:43:35 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ namespace Webserv
 		const std::string &getResourceContent(void) const;
 		const std::string &getResourceMime(void) const;
 		const struct firstHeader &getFirstHeader(void) const;
+		const std::string &getLocation(void) const;
 
 		void setResCode(unsigned int resCode);
 		std::size_t setReqBody(std::string &body);

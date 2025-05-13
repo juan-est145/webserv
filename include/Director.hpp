@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Director.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/13 12:53:56 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:57:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include <sys/stat.h>
 #include "AuxFunc.hpp"
-#include "Builder.hpp"
+#include "IBuilder.hpp"
 #include "Request.hpp"
 
 namespace Webserv
@@ -25,15 +25,15 @@ namespace Webserv
     class Director
     {
     private:
-        Builder *builder;
+        IBuilder *builder;
 
     public:
         Director(void);
-        Director(Builder *builder);
+        Director(IBuilder *builder);
         Director(Director &toCopy);
         Director &operator=(const Director &other);
         ~Director();
-        void SetBuilder(Builder *builder);
+        void SetBuilder(IBuilder *builder);
         void BuildDefaultResponse(const Request *rq); // CODE 200
     };
 }

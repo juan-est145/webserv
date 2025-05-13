@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/07 16:54:50 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:44:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,13 @@ namespace Webserv
 	const struct firstHeader &Request::getFirstHeader(void) const
 	{
 		return (this->_firstHeader);
+	}
+
+	const std::string &Request::getLocation(void) const
+	{
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getLocation());
 	}
 
 	void Request::setResCode(unsigned int resCode)

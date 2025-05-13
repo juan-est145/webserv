@@ -28,7 +28,7 @@ OBJS = $(SRCS:.cpp=.o)
 HEADER = $(HEADER-PATH)/main.hpp\
 $(HEADER-PATH)/ConfigParser.hpp\
 $(HEADER-PATH)/ConfigServer.hpp\
-$(HEADER-PATH)/Builder.hpp\
+$(HEADER-PATH)/IBuilder.hpp\
 $(HEADER-PATH)/Request.hpp\
 $(HEADER-PATH)/Cluster.hpp\
 $(HEADER-PATH)/Logger.hpp\

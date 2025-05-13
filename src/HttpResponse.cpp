@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/09 14:48:11 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:51:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ namespace Webserv
         ss << "HTTP/1.1 " << status << "\r\n"
            << "Content-Type: " << content << "\r\n"
            << "Content-Length: " << contentLength << "\r\n";
-/*      if (req->getResCode() == 301 || req->getResCode() == 401)
-            ss << "Location: "<<req->getLocation() << "\r\n"; */
-/*      if (req->getResCode() == 401)
-            ss << "WWW-Authenticate: "<<req->getAutheticate() << "\r\n"; */
-/*      if (req->getResCode() == 405)
-            ss << "Allow: "<<req->getAllow() << "\r\n"; */
-/*      if (req->getResCode() == 503)
-            ss << "Retry-After: "<<req->getRetry() << "\r\n"; */
+        if (req->getResCode() == 301 || req->getResCode() == 201)
+            ss << "Location: " << req->getLocation() << "\r\n";
+        /*      if (req->getResCode() == 401)
+                    ss << "WWW-Authenticate: "<<req->getAutheticate() << "\r\n"; */
+        /*      if (req->getResCode() == 405)
+                    ss << "Allow: "<<req->getAllow() << "\r\n"; */
+        /*      if (req->getResCode() == 503)
+                    ss << "Retry-After: "<<req->getRetry() << "\r\n"; */
         ss << "\r\n"
            << req->getResourceContent();
         std::string response = ss.str();
@@ -121,14 +121,17 @@ namespace Webserv
     {
         this->contentLength = contentLength;
     }
+
+    void HttpResponse::setLocation(const std::string &location)
+    {
+        this->location = location;
+    }
+
     /*void setWwwAuthenticate(std::string wwwAuthenticate)
     {
         this->wwwAuthenticate = wwwAuthenticate;
     }*/
-    /*void setLocation(std::string location)
-    {
-        this->location = location;
-    }*/
+
     /*void setAllow(std::string allow)
     {
         this->allow = allow;

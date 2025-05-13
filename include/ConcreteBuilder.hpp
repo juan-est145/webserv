@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:05:43 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/04/19 14:08:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:57:52 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,28 @@
 #define CONCRETEBUILDER_HPP
 
 #include "HttpResponse.hpp"
-#include "Builder.hpp"
+#include "IBuilder.hpp"
 
 namespace Webserv
 {
     class HttpResponse;
 
-    class ConcreteBuilder : public Builder
+    class ConcreteBuilder : public IBuilder
     {
     public:
         ConcreteBuilder(void);
         ConcreteBuilder(HttpResponse *response);
         ConcreteBuilder(ConcreteBuilder &toCopy);
         ConcreteBuilder &operator=(const ConcreteBuilder &other);
-        ~ConcreteBuilder();
+
+        HttpResponse *getResponse() const;
+
         void SetStatus(const std::string &status);
         void SetContent(const std::string &type);
         void SetContentLength(int length);
-        HttpResponse *getResponse() const;
+        void setLocation(const std::string &location);
+
+        ~ConcreteBuilder();
     };
 }
 

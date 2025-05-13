@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/13 18:18:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/13 23:57:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ namespace Webserv
 	{
 		this->builder = NULL;
 	}
-	Director::Director(Builder *builder)
+	Director::Director(IBuilder *builder)
 	{
 		this->builder = builder;
 	}
@@ -36,7 +36,7 @@ namespace Webserv
 	Director::~Director()
 	{
 	}
-	void Director::SetBuilder(Builder *builder)
+	void Director::SetBuilder(IBuilder *builder)
 	{
 		this->builder = builder;
 	}
@@ -46,6 +46,9 @@ namespace Webserv
 		this->builder->SetStatus(AuxFunc::ft_itoa(rq->getResCode()));
 		this->builder->SetContent(rq->getResourceMime());
 		this->builder->SetContentLength(rq->getResourceSize());
+		if (rq->getResCode() == 201 || rq->getResCode() == 301 || rq->getResCode() == 302)
+			this->builder->setLocation(rq->getLocation());
+
 		/*
 		if (req->getResCode() == 301 || req->getResCode() == 302)
 			builder->setLocation(rq->getLocation());
