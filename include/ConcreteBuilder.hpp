@@ -28,7 +28,7 @@ namespace Webserv
         ConcreteBuilder(ConcreteBuilder &toCopy);
         ConcreteBuilder &operator=(const ConcreteBuilder &other);
 
-        HttpResponse *getResponse() const;
+        const HttpResponse *getResponse() const;
 
         void setStatus(const std::string &status);
         void setResCode(const std::string &resCode);

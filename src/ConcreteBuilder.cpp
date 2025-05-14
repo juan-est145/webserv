@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:30:19 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:47:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:58:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ namespace Webserv
     }
 
     //*****GETTERS*****//
-    HttpResponse *ConcreteBuilder::getResponse() const
+    const HttpResponse *ConcreteBuilder::getResponse() const
     {
         return (this->_response);
     }

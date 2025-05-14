@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:15:04 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:46:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:59:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace Webserv
         virtual void setAllow(const std::string &allow) = 0;
         virtual void setDate(const std::string &date) = 0;
 
-        virtual HttpResponse *getResponse() const = 0;
+        virtual const HttpResponse *getResponse() const = 0;
 
         virtual ~IBuilder() {}
     };
