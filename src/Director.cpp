@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:34:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:01:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ namespace Webserv
 		*this = toCopy;
 	}
 
-	Director &Director::operator=(const Director &other)
+	Director &Director::operator=(const Director &toCopy)
 	{
-		this->builder = other.builder;
-		return *this;
+		if (this != &toCopy)
+			this->builder = toCopy.builder;
+		return (*this);
 	}
 	Director::~Director()
 	{
