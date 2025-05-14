@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 11:01:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:00:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ namespace Webserv
 		this->builder->setContentLength(rq->getResourceSize());
 		if (rq->getResCode() == 201 || rq->getResCode() == 301 || rq->getResCode() == 302)
 			this->builder->setLocation(rq->getLocation());
+		else if (rq->getResCode() == 405)
+            builder->setAllow(rq->getAllow());
 
 		/*
 		if (req->getResCode() == 301 || req->getResCode() == 302)

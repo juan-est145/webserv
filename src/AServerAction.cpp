@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/13 23:25:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:02:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ namespace Webserv
 		this->_resCode = 200;
 		this->_mime = "text/plain";
 		this->_location = "";
+		this->_allow = "";
 	}
 
 	AServerAction::AServerAction(const std::string path) : _path(path)
@@ -30,6 +31,7 @@ namespace Webserv
 		this->_resCode = 200;
 		this->_mime = "text/plain";
 		this->_location = "";
+		this->_allow = "";
 	}
 
 	AServerAction::AServerAction(const AServerAction &toCopy)
@@ -46,6 +48,7 @@ namespace Webserv
 			this->_resCode = toCopy._resCode;
 			this->_mime = toCopy._mime;
 			this->_location = toCopy._location;
+			this->_allow = toCopy._allow;
 		}
 		return (*this);
 	}
@@ -108,14 +111,23 @@ namespace Webserv
 		return (config->getLocations()[locIndex]);
 	}
 
-	void AServerAction::isMethodAllowed(const Location &locationFile, const std::string &method)
+	void AServerAction::isMethodAllowed(const Location &locationFile, const std::string &reqMethod)
 	{
-		std::map<std::string, bool>::const_iterator it = locationFile.getMethods().find(method);
-		if (it == locationFile.getMethods().end() || !it->second)
+		const std::map<std::string, bool> methods = locationFile.getMethods();
+		std::map<std::string, bool>::const_iterator it = methods.find(reqMethod);
+		std::vector<std::string> allowedMethods;
+		
+		if (it != locationFile.getMethods().end() && it->second)
+			return;
+		this->_resCode = 405;
+		for (it = methods.begin(); it != methods.end(); it++)
 		{
-			this->_resCode = 405;
-			throw Webserv::AServerAction::HttpException();
+			if (it->second)
+				allowedMethods.push_back(it->first);
 		}
+		for (unsigned int i = 0; i < allowedMethods.size(); i++)
+			this->_allow += i < allowedMethods.size() - 1 ? allowedMethods[i] + ", " : allowedMethods[i];
+		throw Webserv::AServerAction::HttpException();
 	}
 
 	bool AServerAction::isCgi(
@@ -177,6 +189,11 @@ namespace Webserv
 	const std::string &AServerAction::getLocation(void) const
 	{
 		return (this->_location);
+	}
+
+	const std::string &AServerAction::getAllow(void) const
+	{
+		return (this->_allow);
 	}
 
 	void AServerAction::setRescode(unsigned int resCode)

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/13 23:44:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:03:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,13 @@ namespace Webserv
 		if (this->_serverAction == NULL)
 			throw Request::RequestException();
 		return (this->_serverAction->getLocation());
+	}
+
+	const std::string &Request::getAllow(void) const
+	{
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getAllow());
 	}
 
 	void Request::setResCode(unsigned int resCode)

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/13 23:24:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:01:35 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,12 @@ namespace Webserv
 		unsigned int _resCode;
 		std::string _mime;
 		std::string _location;
+		std::string _allow;
 
 		void processHttpError(const ConfigServer *config);
 		void readResource(const std::string &path);
 		const Location &obtainLocationConf(const ConfigServer *config) const;
-		void isMethodAllowed(const Location &locationFile, const std::string &method);
+		void isMethodAllowed(const Location &locationFile, const std::string &reqMethod);
 		bool isCgi(
 			const Location &locationFile,
 			const std::string &path,
@@ -70,6 +71,7 @@ namespace Webserv
 		unsigned int getResCode(void) const;
 		const std::string &getMime(void) const;
 		const std::string &getLocation(void) const;
+		const std::string &getAllow(void) const;
 
 		void setRescode(unsigned int resCode);
 

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 11:03:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:05:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,11 @@ namespace Webserv
             void setMime(const std::string &mime);
             void setContentLength(int contentLength);
             void setLocation(const std::string &location);
+            void setAllow(const std::string &allow);
             /*
             void setWwwAuthenticate(std::string wwwAuthenticate);
             
-            void setAllow(std::string allow);
+            
             void setRetryAfter(int retryAfter);
             */
            

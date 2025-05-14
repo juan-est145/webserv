@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:30:19 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:31:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:04:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,11 @@ namespace Webserv
     void ConcreteBuilder::setLocation(const std::string &location)
     {
         this->_response->setLocation(location);
+    }
+
+    void ConcreteBuilder::setAllow(const std::string &location)
+    {
+        this->_response->setAllow(location);
     }
 
     ConcreteBuilder::~ConcreteBuilder() {}

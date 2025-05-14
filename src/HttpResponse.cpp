@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:48:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:05:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,11 @@ namespace Webserv
     void HttpResponse::setLocation(const std::string &location)
     {
         this->_headers["Location"] = location;
+    }
+
+    void HttpResponse::setAllow(const std::string &allow)
+    {
+        this->_headers["Allow"] = allow;
     }
 
     /*void setWwwAuthenticate(std::string wwwAuthenticate)
