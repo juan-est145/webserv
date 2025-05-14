@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:42:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:48:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ namespace Webserv
         return (*this);
     }
 
-    std::string HttpResponse::buildResponse(const Request *req) const
+    std::string HttpResponse::returnResponse(const Request *req) const
     {
         std::stringstream ss;
         

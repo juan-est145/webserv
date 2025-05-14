@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 10:22:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:48:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ namespace Webserv
 		director.SetBuilder(builder);
 
 		director.BuildDefaultResponse(req);
-		response = Hresp.buildResponse(req);
+		response = Hresp.returnResponse(req);
 	
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);

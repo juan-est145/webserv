@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:33:29 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:48:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace Webserv
             HttpResponse(HttpResponse &toCopy);
             HttpResponse &operator=(const HttpResponse &toCopy);
             ~HttpResponse();
-            std::string buildResponse(const Request *req) const;
+            std::string returnResponse(const Request *req) const;
             
             // Getters
             const std::string &getResCode(void) const;
