@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 10:48:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:54:11 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ namespace Webserv
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
 		std::cout << "Time to write to the client " << eventList.data.fd << std::endl;
-		std::stringstream format;
 		const Request *req = this->_clientPool[eventList.data.fd];
 		// *----CAMBIO----//
 		HttpResponse Hresp;
