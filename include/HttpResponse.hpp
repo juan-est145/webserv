@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:48:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 11:03:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ namespace Webserv
             HttpResponse(const std::string &resCode, const std::string &httpVersion);
             HttpResponse(HttpResponse &toCopy);
             HttpResponse &operator=(const HttpResponse &toCopy);
-            ~HttpResponse();
+
             std::string returnResponse(const Request *req) const;
-            
+
             // Getters
             const std::string &getResCode(void) const;
             const std::string &getHttpVersion(void) const;
@@ -64,6 +64,8 @@ namespace Webserv
             void setAllow(std::string allow);
             void setRetryAfter(int retryAfter);
             */
+           
+           ~HttpResponse();
     };
         
 }
