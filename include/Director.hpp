@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 11:01:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:43:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace Webserv
     class Director
     {
     private:
-        IBuilder *builder;
+        IBuilder *_builder;
 
     public:
         Director(void);

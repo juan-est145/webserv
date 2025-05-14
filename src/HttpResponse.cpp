@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:23:15 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:48:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,11 @@ namespace Webserv
     void HttpResponse::setAllow(const std::string &allow)
     {
         this->_headers["Allow"] = allow;
+    }
+
+    void HttpResponse::setDate(const std::string &date)
+    {
+        this->_headers["Date"] = date;
     }
 
     /*void setWwwAuthenticate(std::string wwwAuthenticate)

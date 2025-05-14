@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:00:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:45:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ namespace Webserv
 {
 	Director::Director(void)
 	{
-		this->builder = NULL;
+		this->_builder = NULL;
 	}
 	Director::Director(IBuilder *builder)
 	{
-		this->builder = builder;
+		this->_builder = builder;
 	}
 
 	Director::Director(Director &toCopy)
@@ -31,7 +31,7 @@ namespace Webserv
 	Director &Director::operator=(const Director &toCopy)
 	{
 		if (this != &toCopy)
-			this->builder = toCopy.builder;
+			this->_builder = toCopy._builder;
 		return (*this);
 	}
 	Director::~Director()
@@ -39,18 +39,21 @@ namespace Webserv
 	}
 	void Director::SetBuilder(IBuilder *builder)
 	{
-		this->builder = builder;
+		this->_builder = builder;
 	}
 	// DEFAULT
 	void Director::BuildDefaultResponse(const Request *rq)
 	{
-		this->builder->setResCode(AuxFunc::ft_itoa(rq->getResCode()));
-		this->builder->setMime(rq->getResourceMime());
-		this->builder->setContentLength(rq->getResourceSize());
+		std::string dateTime = AuxFunc::getGmtTime();
+
+		this->_builder->setResCode(AuxFunc::ft_itoa(rq->getResCode()));
+		this->_builder->setMime(rq->getResourceMime());
+		this->_builder->setContentLength(rq->getResourceSize());
+		this->_builder->setDate(dateTime);
 		if (rq->getResCode() == 201 || rq->getResCode() == 301 || rq->getResCode() == 302)
-			this->builder->setLocation(rq->getLocation());
+			this->_builder->setLocation(rq->getLocation());
 		else if (rq->getResCode() == 405)
-            builder->setAllow(rq->getAllow());
+            this->_builder->setAllow(rq->getAllow());
 
 		/*
 		if (req->getResCode() == 301 || req->getResCode() == 302)

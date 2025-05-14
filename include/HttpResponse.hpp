@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:21:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:47:52 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ namespace Webserv
             void setContentLength(int contentLength);
             void setLocation(const std::string &location);
             void setAllow(const std::string &allow);
+            void setDate(const std::string &date);
             /*
             void setWwwAuthenticate(std::string wwwAuthenticate);
             
