@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 10:34:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:42:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ namespace Webserv
     {
         this->_resCode = "200";
         this->_httpVersion = "HTTP/1.1";
+        this->_headers["Server"] = "webserv/1.1";
         /*
         this->wwwAuthenticate = NULL;
         this->location = NULL;
@@ -30,6 +31,7 @@ namespace Webserv
     {
         this->_resCode = resCode;
         this->_httpVersion = httpVersion;
+        this->_headers["Server"] = "webserv/1.1";
         /*
         this->wwwAuthenticate = wwwAuthenticate;
         this->location = location;
@@ -37,6 +39,7 @@ namespace Webserv
         this->retryAfter = retryAfter;
         */
     }
+    
     HttpResponse::HttpResponse(HttpResponse &toCopy)
     {
         *this = toCopy;
@@ -60,17 +63,6 @@ namespace Webserv
         ss << this->_httpVersion << " " << this->_resCode << "\r\n";
         for (std::map<std::string, std::string>::const_iterator it = this->_headers.begin(); it != this->_headers.end(); it++)
             ss << it->first << ": " << it->second << "\r\n";
-        
-        //    << "Content-Type: " << content << "\r\n"
-        //    << "Content-Length: " << contentLength << "\r\n";
-        // if (req->getResCode() == 301 || req->getResCode() == 201)
-        //     ss << "Location: " << req->getLocation() << "\r\n";
-        /*      if (req->getResCode() == 401)
-                    ss << "WWW-Authenticate: "<<req->getAutheticate() << "\r\n"; */
-        /*      if (req->getResCode() == 405)
-                    ss << "Allow: "<<req->getAllow() << "\r\n"; */
-        /*      if (req->getResCode() == 503)
-                    ss << "Retry-After: "<<req->getRetry() << "\r\n"; */
         ss << "\r\n" << req->getResourceContent();
         return (ss.str());
     }
