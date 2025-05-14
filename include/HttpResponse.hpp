@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:05:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:21:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ namespace Webserv
             // Getters
             const std::string &getResCode(void) const;
             const std::string &getHttpVersion(void) const;
+            std::string getLocation(void) const;
+            std::string getAllow(void) const;
             const std::map<std::string, std::string> &getHeaders(void) const;
             //std::string getWwwAuthenticate();
             //std::string getLocation();

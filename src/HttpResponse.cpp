@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:05:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:23:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@ namespace Webserv
         this->_resCode = "200";
         this->_httpVersion = "HTTP/1.1";
         this->_headers["Server"] = "webserv/1.1";
-        /*
-        this->wwwAuthenticate = NULL;
-        this->location = NULL;
-        this->allow = NULL;
-        this->retryAfter = NULL;
-        */
     }
 
     HttpResponse::HttpResponse(const std::string &resCode, const std::string &httpVersion)
@@ -32,12 +26,6 @@ namespace Webserv
         this->_resCode = resCode;
         this->_httpVersion = httpVersion;
         this->_headers["Server"] = "webserv/1.1";
-        /*
-        this->wwwAuthenticate = wwwAuthenticate;
-        this->location = location;
-        this->allow = allow;
-        this->retryAfter = retryAfter;
-        */
     }
     
     HttpResponse::HttpResponse(HttpResponse &toCopy)
@@ -68,8 +56,7 @@ namespace Webserv
     }
     // APARTADOS FALTANTES
     // WWW-Authenticate(401)
-    // Location(301)(302)
-    // OPCIONALES: ALLOW(405), RETRY-AFTER(503)
+    // RETRY-AFTER(503)
     //*************GETTERS**************//
     
     const std::string &HttpResponse::getResCode(void) const
@@ -82,6 +69,18 @@ namespace Webserv
         return (this->_httpVersion);
     }
 
+    std::string HttpResponse::getLocation(void) const
+    {
+        std::map<std::string, std::string>::const_iterator it = this->_headers.find("Location");
+        return it == this->_headers.end() ? "" : it->second;
+    }
+
+    std::string HttpResponse::getAllow(void) const
+    {
+        std::map<std::string, std::string>::const_iterator it = this->_headers.find("Allow");
+        return it == this->_headers.end() ? "" : it->second;
+    }
+
     const std::map<std::string, std::string> &HttpResponse::getHeaders(void) const
     {
         return (this->_headers);
@@ -92,14 +91,7 @@ namespace Webserv
     {
         return this->wwwAuthenticate;
     }*/
-    /*std::string getLocation() const
-    {
-        return this->location;
-    }*/
-    /*std::string getAllow() const
-    {
-        return this->allow;
-    }*/
+    
     /*int getRetryAfter() const
     {
         return this->retryAfter;
@@ -140,10 +132,6 @@ namespace Webserv
         this->wwwAuthenticate = wwwAuthenticate;
     }*/
 
-    /*void setAllow(std::string allow)
-    {
-        this->allow = allow;
-    }*/
     /*void setRetryAfter(int retryAfter)
     {
         this->retryAfter = retryAfter;
