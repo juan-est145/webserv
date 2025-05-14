@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:30:19 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/13 23:54:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:31:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,51 +16,51 @@ namespace Webserv
 {
     ConcreteBuilder::ConcreteBuilder(void)
     {
-        this->response = new HttpResponse();
+        this->_response = new HttpResponse();
     }
-    
+
     ConcreteBuilder::ConcreteBuilder(HttpResponse *response)
     {
-        this->response = response;
+        this->_response = response;
     }
 
     ConcreteBuilder::ConcreteBuilder(ConcreteBuilder &toCopy)
     {
         *this = toCopy;
     }
-    
-    ConcreteBuilder &ConcreteBuilder::operator=(const ConcreteBuilder& other)
+
+    ConcreteBuilder &ConcreteBuilder::operator=(const ConcreteBuilder &other)
     {
         if (this != &other)
-            this->response = other.response;
+            this->_response = other._response;
         return *this;
     }
 
     //*****GETTERS*****//
-    HttpResponse* ConcreteBuilder::getResponse() const
+    HttpResponse *ConcreteBuilder::getResponse() const
     {
-        return (this->response);
-    }
-    
-    //*****SETTERS*****//
-    void ConcreteBuilder::SetStatus(const std::string& status)
-    {
-        this->response->setStatus(status);
+        return (this->_response);
     }
 
-    void ConcreteBuilder::SetContent(const std::string& type)
+    //*****SETTERS*****//
+    void ConcreteBuilder::setResCode(const std::string &resCode)
     {
-        this->response->setContent(type);
+        this->_response->setResCode(resCode);
     }
-    
-    void ConcreteBuilder::SetContentLength(int length)
+
+    void ConcreteBuilder::setMime(const std::string &mime)
     {
-        this->response->setContentLength(length);
+        this->_response->setMime(mime);
+    }
+
+    void ConcreteBuilder::setContentLength(int length)
+    {
+        this->_response->setContentLength(length);
     }
 
     void ConcreteBuilder::setLocation(const std::string &location)
     {
-        this->response->setLocation(location);
+        this->_response->setLocation(location);
     }
 
     ConcreteBuilder::~ConcreteBuilder() {}

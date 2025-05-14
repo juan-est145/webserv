@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 15:05:43 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/13 23:57:52 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:32:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ namespace Webserv
 
         HttpResponse *getResponse() const;
 
-        void SetStatus(const std::string &status);
-        void SetContent(const std::string &type);
-        void SetContentLength(int length);
+        void setStatus(const std::string &status);
+        void setResCode(const std::string &resCode);
+        void setMime(const std::string &mime);
+        void setContentLength(int length);
         void setLocation(const std::string &location);
 
         ~ConcreteBuilder();

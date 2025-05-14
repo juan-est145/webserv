@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/13 23:51:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/14 10:34:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ namespace Webserv
 {
     HttpResponse::HttpResponse(void)
     {
-        this->status = "200";
-        this->content = "text/html";
-        this->contentLength = 0;
+        this->_resCode = "200";
+        this->_httpVersion = "HTTP/1.1";
         /*
         this->wwwAuthenticate = NULL;
         this->location = NULL;
@@ -27,11 +26,10 @@ namespace Webserv
         */
     }
 
-    HttpResponse::HttpResponse(std::string status, std::string content, int contentLength)
+    HttpResponse::HttpResponse(const std::string &resCode, const std::string &httpVersion)
     {
-        this->status = status;
-        this->content = content;
-        this->contentLength = contentLength;
+        this->_resCode = resCode;
+        this->_httpVersion = httpVersion;
         /*
         this->wwwAuthenticate = wwwAuthenticate;
         this->location = location;
@@ -44,52 +42,60 @@ namespace Webserv
         *this = toCopy;
     }
 
-    HttpResponse &HttpResponse::operator=(const HttpResponse &other)
+    HttpResponse &HttpResponse::operator=(const HttpResponse &toCopy)
     {
-        this->status = other.getStatus();
-        this->content = other.getContent();
-        this->contentLength = other.getContentLength();
-        return *this;
+        if (this != &toCopy)
+        {
+            this->_resCode = toCopy._resCode;
+            this->_httpVersion = toCopy._httpVersion;
+            this->_headers = toCopy._headers;
+        }
+        return (*this);
     }
 
-    std::string HttpResponse::Print(const Request *req) const
+    std::string HttpResponse::buildResponse(const Request *req) const
     {
         std::stringstream ss;
-        ss << "HTTP/1.1 " << status << "\r\n"
-           << "Content-Type: " << content << "\r\n"
-           << "Content-Length: " << contentLength << "\r\n";
-        if (req->getResCode() == 301 || req->getResCode() == 201)
-            ss << "Location: " << req->getLocation() << "\r\n";
+        
+        ss << this->_httpVersion << " " << this->_resCode << "\r\n";
+        for (std::map<std::string, std::string>::const_iterator it = this->_headers.begin(); it != this->_headers.end(); it++)
+            ss << it->first << ": " << it->second << "\r\n";
+        
+        //    << "Content-Type: " << content << "\r\n"
+        //    << "Content-Length: " << contentLength << "\r\n";
+        // if (req->getResCode() == 301 || req->getResCode() == 201)
+        //     ss << "Location: " << req->getLocation() << "\r\n";
         /*      if (req->getResCode() == 401)
                     ss << "WWW-Authenticate: "<<req->getAutheticate() << "\r\n"; */
         /*      if (req->getResCode() == 405)
                     ss << "Allow: "<<req->getAllow() << "\r\n"; */
         /*      if (req->getResCode() == 503)
                     ss << "Retry-After: "<<req->getRetry() << "\r\n"; */
-        ss << "\r\n"
-           << req->getResourceContent();
-        std::string response = ss.str();
-        return (response);
+        ss << "\r\n" << req->getResourceContent();
+        return (ss.str());
     }
     // APARTADOS FALTANTES
     // WWW-Authenticate(401)
     // Location(301)(302)
     // OPCIONALES: ALLOW(405), RETRY-AFTER(503)
     //*************GETTERS**************//
-    std::string HttpResponse::getStatus() const
+    
+    const std::string &HttpResponse::getResCode(void) const
     {
-        return status;
+        return (this->_resCode);
     }
 
-    std::string HttpResponse::getContent() const
+    const std::string &HttpResponse::getHttpVersion(void) const
     {
-        return content;
+        return (this->_httpVersion);
     }
 
-    int HttpResponse::getContentLength() const
+    const std::map<std::string, std::string> &HttpResponse::getHeaders(void) const
     {
-        return contentLength;
+        return (this->_headers);
     }
+    
+
     /*std::string getWwwAuthenticate() const
     {
         return this->wwwAuthenticate;
@@ -107,24 +113,29 @@ namespace Webserv
         return this->retryAfter;
     }*/
     //*************SETTERS**************//
-    void HttpResponse::setStatus(std::string status)
+    void HttpResponse::setResCode(const std::string &resCode)
     {
-        this->status = status;
+        this->_resCode = resCode;
     }
 
-    void HttpResponse::setContent(std::string content)
+    void HttpResponse::setHttpVersion(const std::string &httpVersion)
     {
-        this->content = content;
+        this->_httpVersion = httpVersion;
+    }
+
+    void HttpResponse::setMime(const std::string &mime)
+    {
+        this->_headers["Content-Type"] = mime;
     }
 
     void HttpResponse::setContentLength(int contentLength)
     {
-        this->contentLength = contentLength;
+        this->_headers["Content-Length"] = AuxFunc::ft_itoa(contentLength);
     }
 
     void HttpResponse::setLocation(const std::string &location)
     {
-        this->location = location;
+        this->_headers["Location"] = location;
     }
 
     /*void setWwwAuthenticate(std::string wwwAuthenticate)
