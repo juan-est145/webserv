@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 19:13:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 23:14:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,11 @@ namespace Webserv
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
 			throw Webserv::AServerAction::HttpException(505);
+		}
+		if (locationFile.getReturn().size() > 0)
+		{
+			this->redirect(locationFile.getReturn());
+			return;
 		}
 		if (locationFile.getCgiPath().size() > 0)
 		{
@@ -269,6 +274,13 @@ namespace Webserv
 			link << ' ';
 		link << readDir->d_reclen << "\n";
 		this->_content += link.str();
+	}
+
+	void ResourceReq::redirect(const std::string &uri)
+	{
+		this->_resCode = 301;
+		this->_resHeaders["Location"] = uri;
+		this->setContentType("text/html");
 	}
 
 	void ResourceReq::setContent(const std::string &_content)

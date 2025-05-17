@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 11:32:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 23:12:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ namespace Webserv
 		void directoryListing(const std::string &localPath);
 		void addDirectoryInfo(struct dirent *readDir, const std::string &localPath, DIR *dir);
 		void addFileInfo(struct dirent *readDir, const std::string &localPath, DIR *dir);
+		void redirect(const std::string &uri);
 
 	public:
 		ResourceReq(void);
