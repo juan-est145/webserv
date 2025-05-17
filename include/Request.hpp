@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 12:02:44 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:22:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ namespace Webserv
 	{
 	private:
 		int _socketFd;
+		bool _ready;
 		std::map<std::string, std::string> _reqHeader;
 		std::string _reqBody;
 		struct firstHeader _firstHeader;
@@ -47,6 +48,8 @@ namespace Webserv
 		std::pair<std::string, enum method> selectMethod(std::string &method);
 		void selectConfiguration(const std::vector<ConfigServer> &configs);
 		void extractUrlAndQuery(const std::string &path);
+		void dechunkBody(std::string &strBuff);
+		bool isEndChunk(const std::string &strBuff);
 
 	public:
 		typedef std::map<std::string, std::string>::const_iterator T_reqHeadIter;

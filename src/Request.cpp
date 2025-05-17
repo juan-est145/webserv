@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 12:37:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:22:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ namespace Webserv
 	Request::Request(void)
 	{
 		this->_firstHeader.httpVers = "";
+		this->_ready = true;
 		this->_firstHeader.method = std::make_pair("", UNKNOWN);
 		this->_firstHeader.path = "";
 		this->_firstHeader.httpVers = "";
@@ -30,6 +31,7 @@ namespace Webserv
 	Request::Request(int socketFd)
 	{
 		this->_firstHeader.httpVers = "";
+		this->_ready = true;
 		this->_firstHeader.method = std::make_pair("", UNKNOWN);
 		this->_firstHeader.path = "";
 		this->_firstHeader.httpVers = "";
@@ -50,6 +52,7 @@ namespace Webserv
 		if (this != &assign)
 		{
 			this->_reqHeader = assign._reqHeader;
+			this->_ready = assign._ready;
 			this->_reqBody = assign._reqBody;
 			this->_firstHeader = assign._firstHeader;
 			this->_serverAction = assign._serverAction;
@@ -68,17 +71,8 @@ namespace Webserv
 		encoding = this->_reqHeader.find("Transfer-Encoding");
 		if (encoding != this->_reqHeader.end() && encoding->second == "chunked")
 		{
-			while (strBuff.substr(0, 5) != "0\r\n\r\n" && strBuff.size() != 0)
-			{
-				size_t delimiter = strBuff.find("\r\n");
-				std::string lengthChk = strBuff.substr(0, delimiter);
-				unsigned long conLen = AuxFunc::hexToDecimal(lengthChk);
-				std::string chunk = strBuff.substr(delimiter + 2, conLen);
-				this->_reqBody += chunk;
-				// This is done to delete the proccessed chunk.
-				strBuff.erase(0, delimiter + 2 + chunk.size() + 2);
-				// TO DO: Check that delimiter is good
-			}
+			this->_ready = false;
+			this->dechunkBody(strBuff);
 			return;
 		}
 		this->_reqBody = strBuff;
@@ -216,6 +210,28 @@ namespace Webserv
 		}
 		this->_firstHeader.path = path.substr(0, queryIndex);
 		this->_firstHeader.query = path.substr(queryIndex + 1);
+	}
+
+	void Request::dechunkBody(std::string &strBuff)
+	{
+		while (!this->isEndChunk(strBuff) && strBuff.size() != 0)
+		{
+			size_t delimiter = strBuff.find("\r\n");
+			std::string lengthChk = strBuff.substr(0, delimiter);
+			std::string chunk = strBuff.substr(delimiter + 2, AuxFunc::hexToDecimal(lengthChk));
+			this->_reqBody += chunk;
+			// This is done to delete the proccessed chunk.
+			strBuff.erase(0, delimiter + 2 + chunk.size() + 2);
+			// TO DO: Check that delimiter is good
+		}
+	}
+
+	bool Request::isEndChunk(const std::string &strBuff)
+	{
+		if (strBuff.substr(0, 5) != "0\r\n\r\n")
+			return (false);
+		this->_ready = true;
+		return (true);
 	}
 
 	const std::map<std::string, std::string> &Request::getReqHeader(void) const
