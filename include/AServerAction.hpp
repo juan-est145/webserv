@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 17:53:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:30:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ namespace Webserv
 			const std::string &body
 		);
 		void setContentType(const std::string &mime);
+		void setContentLength(long size);
 
 	public:
 		AServerAction(void);
@@ -68,6 +69,7 @@ namespace Webserv
 		const std::string &getContent(void) const;
 		long getSize(void) const;
 		unsigned int getResCode(void) const;
+		const std::map<std::string, std::string> &getResHeaders(void) const;
 		std::string getMime(void) const;
 		std::string getLocation(void) const;
 		std::string getAllow(void) const;

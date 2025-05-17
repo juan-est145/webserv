@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:48:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:19:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,25 +107,32 @@ namespace Webserv
         this->_httpVersion = httpVersion;
     }
 
-    void HttpResponse::setMime(const std::string &mime)
+    void HttpResponse::setHeaders(const std::map<std::string, std::string> &resHeaders)
     {
-        this->_headers["Content-Type"] = mime;
+        std::map<std::string, std::string>::const_iterator it;
+        for (it = resHeaders.begin(); it != resHeaders.end(); it++)
+            this->_headers[it->first] = it->second;
     }
 
-    void HttpResponse::setContentLength(int contentLength)
-    {
-        this->_headers["Content-Length"] = AuxFunc::ft_itoa(contentLength);
-    }
+    // void HttpResponse::setMime(const std::string &mime)
+    // {
+    //     this->_headers["Content-Type"] = mime;
+    // }
 
-    void HttpResponse::setLocation(const std::string &location)
-    {
-        this->_headers["Location"] = location;
-    }
+    // void HttpResponse::setContentLength(int contentLength)
+    // {
+    //     this->_headers["Content-Length"] = AuxFunc::ft_itoa(contentLength);
+    // }
 
-    void HttpResponse::setAllow(const std::string &allow)
-    {
-        this->_headers["Allow"] = allow;
-    }
+    // void HttpResponse::setLocation(const std::string &location)
+    // {
+    //     this->_headers["Location"] = location;
+    // }
+
+    // void HttpResponse::setAllow(const std::string &allow)
+    // {
+    //     this->_headers["Allow"] = allow;
+    // }
 
     void HttpResponse::setDate(const std::string &date)
     {

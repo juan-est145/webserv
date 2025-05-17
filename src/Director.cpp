@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:45:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:07:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,14 @@ namespace Webserv
 		std::string dateTime = AuxFunc::getGmtTime();
 
 		this->_builder->setResCode(AuxFunc::ft_itoa(rq->getResCode()));
-		this->_builder->setMime(rq->getResourceMime());
-		this->_builder->setContentLength(rq->getResourceSize());
+		// this->_builder->setMime(rq->getResourceMime());
+		// this->_builder->setContentLength(rq->getResourceSize());
 		this->_builder->setDate(dateTime);
-		if (rq->getResCode() == 201 || rq->getResCode() == 301 || rq->getResCode() == 302)
-			this->_builder->setLocation(rq->getLocation());
-		else if (rq->getResCode() == 405)
-            this->_builder->setAllow(rq->getAllow());
+		this->_builder->setHeaders(rq->getResHeaders());
+		// if (rq->getResCode() == 201 || rq->getResCode() == 301 || rq->getResCode() == 302)
+		// 	this->_builder->setLocation(rq->getLocation());
+		// else if (rq->getResCode() == 405)
+        //     this->_builder->setAllow(rq->getAllow());
 
 		/*
 		if (req->getResCode() == 301 || req->getResCode() == 302)

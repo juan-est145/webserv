@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 11:33:56 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:53:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ namespace Webserv
 		if (this != &assign)
 		{
 			this->_content = assign._content;
-			this->_size = assign._size;
 			this->_resCode = assign._resCode;
+			this->_resHeaders = assign._resHeaders;
+			this->_size = assign._size;
 		}
 		return (*this);
 	}
@@ -43,7 +44,7 @@ namespace Webserv
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
 			this->processHttpError(config);
-			this->_mime = "text/html";
+			this->setContentType("text/html");
 		}
 	}
 
@@ -90,7 +91,8 @@ namespace Webserv
 		}
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
-		this->_mime = this->chooseMime(localPath);
+		this->setContentType(this->chooseMime(localPath));
+		this->setContentLength(this->_size);
 	}
 
 	std::string ResourceReq::chooseMime(const std::string &path) const
@@ -230,7 +232,7 @@ namespace Webserv
 			throw Webserv::AServerAction::HttpException();
 		}
 		this->_size = this->_content.size();
-		this->_mime = "text/html";
+		this->setContentType("text/html");
 	}
 
 	void ResourceReq::addDirectoryInfo(struct dirent *readDir, const std::string &localPath, DIR *dir)

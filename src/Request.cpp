@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 17:29:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:11:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,35 +280,21 @@ namespace Webserv
 		return (this->_serverAction->getContent());
 	}
 
-	const std::string &Request::getResourceMime(void) const
-	{
-		if (this->_serverAction == NULL)
-			throw Request::RequestException();
-		return (this->_serverAction->getMime());
-	}
-
 	const struct firstHeader &Request::getFirstHeader(void) const
 	{
 		return (this->_firstHeader);
-	}
-
-	const std::string &Request::getLocation(void) const
-	{
-		if (this->_serverAction == NULL)
-			throw Request::RequestException();
-		return (this->_serverAction->getLocation());
-	}
-
-	const std::string &Request::getAllow(void) const
-	{
-		if (this->_serverAction == NULL)
-			throw Request::RequestException();
-		return (this->_serverAction->getAllow());
 	}
 	
 	bool Request::isReady(void) const
 	{
 		return (this->_ready);
+	}
+
+	const std::map<std::string, std::string> &Request::getResHeaders(void) const
+	{
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getResHeaders());
 	}
 
 	void Request::setResCode(unsigned int resCode)

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 13:15:04 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 13:59:07 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:06:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ namespace Webserv
     protected:
         HttpResponse *_response;
     public:
-        virtual void setMime(const std::string &mime) = 0;
+        //virtual void setMime(const std::string &mime) = 0;
         virtual void setResCode(const std::string &resCode) = 0;
-        virtual void setContentLength(int length) = 0;
-        virtual void setLocation(const std::string &location) = 0;
-        virtual void setAllow(const std::string &allow) = 0;
+        // virtual void setContentLength(int length) = 0;
+        // virtual void setLocation(const std::string &location) = 0;
+        // virtual void setAllow(const std::string &allow) = 0;
         virtual void setDate(const std::string &date) = 0;
+        virtual void setHeaders(const std::map<std::string, std::string> &resHeaders) = 0;
 
         virtual const HttpResponse *getResponse() const = 0;
 

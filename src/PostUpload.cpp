@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 17:55:12 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:46:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,16 @@ namespace Webserv
 	{
 		if (this != &assign)
 		{
+			this->_content = assign._content;
+			this->_size = assign._size;
+			this->_resCode = assign._resCode;
+			this->_resHeaders = assign._resHeaders;
 			this->_body = assign._body;
 			this->_contentType = assign._contentType;
 			this->_contentLength = assign._contentLength;
 			this->_accept = assign._accept;
-			this->_resCode = assign._resCode;
-			this->_size = assign._resCode;
 		}
-		return *this;
+		return (*this);
 	}
 
 	void PostUpload::processRequest(const ConfigServer *config, const Request &req)
@@ -228,6 +230,7 @@ namespace Webserv
 	{
 		this->_content = "Resource was uploaded correctly on path " + this->_path;
 		this->_size = this->_content.length();
+		this->setContentLength(this->_size);
 		this->setContentType("text/plain");
 	}
 

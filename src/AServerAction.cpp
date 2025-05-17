@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 17:57:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 18:53:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ namespace Webserv
 		if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
 			throw std::exception();
 		this->_size = fileStat.st_size;
+		this->setContentLength(this->_size);
 		this->readResource(localPath);
 	}
 
@@ -138,6 +139,7 @@ namespace Webserv
 			if (cgi.canProcessAsCgi(path, reqHeader, this->_content, config, firstHeader, body))
 			{
 				this->_size = this->_content.size();
+				this->setContentLength(this->_size);
 				this->setContentType("text/html");
 				return (true);
 			}
@@ -160,6 +162,11 @@ namespace Webserv
 		this->_resHeaders["Content-Type"] = mime;
 	}
 
+	void AServerAction::setContentLength(long size)
+	{
+		this->_resHeaders["Content-Length"] = AuxFunc::ft_itoa((unsigned int)size);
+	}
+
 	const std::string &AServerAction::getPath(void) const
 	{
 		return (this->_path);
@@ -178,6 +185,11 @@ namespace Webserv
 	unsigned int AServerAction::getResCode(void) const
 	{
 		return (this->_resCode);
+	}
+
+	const std::map<std::string, std::string> &AServerAction::getResHeaders(void) const
+	{
+		return (this->_resHeaders);
 	}
 
 	std::string AServerAction::getMime(void) const
