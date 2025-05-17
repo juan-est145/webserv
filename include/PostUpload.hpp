@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 00:10:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 23:35:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ namespace Webserv
 		void downloadFile(std::map<std::string, std::string> &headers, std::string &body, const std::string &localPath);
 		void createBodyMessage(void);
 		void addLocationMember(const ConfigServer *config);
+		void redirect(const std::string &uri, const ConfigServer *config);
 
 	public:
 		PostUpload();

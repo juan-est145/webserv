@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 19:14:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 23:37:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,11 @@ namespace Webserv
 				throw Webserv::AServerAction::HttpException(413);
 			}
 			this->findHeaders(req);
+			if (locationFile.getReturn().size() > 0)
+			{
+				this->redirect(locationFile.getReturn(), config);
+				return;
+			}
 			if (locationFile.getCgiPath().size() > 0)
 			{
 				if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
@@ -228,6 +233,20 @@ namespace Webserv
 		this->_resHeaders["Location"] = "http://" + config->getServerName();
 		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
 		this->_resHeaders["Location"] += this->_path;
+	}
+
+	void PostUpload::redirect(const std::string &uri, const ConfigServer *config)
+	{
+		this->_resCode = 308;
+		this->setContentType("text/html");
+		if (uri.substr(0, 7) == "http://" || uri.substr(0, 8) == "https://")
+		{
+			this->_resHeaders["Location"] = uri;
+			return;
+		}
+		this->_resHeaders["Location"] = "http://" + config->getServerName();
+		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
+		this->_resHeaders["Location"] += uri;
 	}
 
 	const std::string &PostUpload::getContentType(void) const

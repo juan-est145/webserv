@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 19:07:11 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 23:35:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ namespace Webserv
 		);
 		void setContentType(const std::string &mime);
 		void setContentLength(long size);
+		virtual void redirect(const std::string &uri, const ConfigServer *config) = 0;
 
 	public:
 		AServerAction(void);
