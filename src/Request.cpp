@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 17:22:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:29:25 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -304,6 +304,11 @@ namespace Webserv
 		if (this->_serverAction == NULL)
 			throw Request::RequestException();
 		return (this->_serverAction->getAllow());
+	}
+	
+	bool Request::isReady(void) const
+	{
+		return (this->_ready);
 	}
 
 	void Request::setResCode(unsigned int resCode)

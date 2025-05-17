@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 11:25:19 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:29:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ namespace Webserv
 			}
 		}
 		this->_clientPool[eventList.data.fd] = req;
+		if (!req->isReady())
+			return;
 		req->handleReq(this->_configurations);
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
