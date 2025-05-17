@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 23:14:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 23:27:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ namespace Webserv
 		}
 		if (locationFile.getReturn().size() > 0)
 		{
-			this->redirect(locationFile.getReturn());
+			this->redirect(locationFile.getReturn(), config);
 			return;
 		}
 		if (locationFile.getCgiPath().size() > 0)
@@ -84,7 +84,7 @@ namespace Webserv
 			{
 				this->directoryListing(localPath);
 				return;
-			}				
+			}
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
 			if (stat(localPath.c_str(), &fileStat) == -1)
 			{
@@ -276,11 +276,18 @@ namespace Webserv
 		this->_content += link.str();
 	}
 
-	void ResourceReq::redirect(const std::string &uri)
+	void ResourceReq::redirect(const std::string &uri, const ConfigServer *config)
 	{
 		this->_resCode = 301;
-		this->_resHeaders["Location"] = uri;
 		this->setContentType("text/html");
+		if (uri.substr(0, 7) == "http://" || uri.substr(0, 8) == "https://")
+		{
+			this->_resHeaders["Location"] = uri;
+			return;
+		}
+		this->_resHeaders["Location"] = "http://" + config->getServerName();
+		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
+		this->_resHeaders["Location"] += uri;
 	}
 
 	void ResourceReq::setContent(const std::string &_content)
