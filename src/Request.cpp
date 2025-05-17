@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 12:06:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 12:37:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,23 @@ namespace Webserv
 	{
 		std::string strBuff(buffer, bufSize);
 		T_reqHeadIter encoding;
-		
+
 		if (this->_reqHeader.size() == 0)
 			this->extractHeaders(strBuff);
 		encoding = this->_reqHeader.find("Transfer-Encoding");
 		if (encoding != this->_reqHeader.end() && encoding->second == "chunked")
 		{
-			size_t delimiter = strBuff.find("\r\n");
-			std::string lengthChk = strBuff.substr(0, delimiter);
-			unsigned long conLen = AuxFunc::hexToDecimal(lengthChk);
-			this->_reqBody += strBuff.substr(delimiter + 2, conLen);
-			// TO DO: Check that delimiter is good
+			while (strBuff.substr(0, 5) != "0\r\n\r\n" && strBuff.size() != 0)
+			{
+				size_t delimiter = strBuff.find("\r\n");
+				std::string lengthChk = strBuff.substr(0, delimiter);
+				unsigned long conLen = AuxFunc::hexToDecimal(lengthChk);
+				std::string chunk = strBuff.substr(delimiter + 2, conLen);
+				this->_reqBody += chunk;
+				// This is done to delete the proccessed chunk.
+				strBuff.erase(0, delimiter + 2 + chunk.size() + 2);
+				// TO DO: Check that delimiter is good
+			}
 			return;
 		}
 		this->_reqBody = strBuff;
@@ -107,7 +113,7 @@ namespace Webserv
 		catch (const std::out_of_range &e)
 		{
 			// TO DO: Properly implement this
-			//this->_resCode = 400;
+			// this->_resCode = 400;
 			buffer = "";
 			return;
 		}
