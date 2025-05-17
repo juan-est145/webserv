@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 12:42:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 11:49:40 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,48 +53,55 @@ namespace Webserv
 		close(eventList.data.fd);
 	}
 
-	bool AuxFunc::isDigit(char c) {
-		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))  {
+	bool AuxFunc::isDigit(char c)
+	{
+		if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))
+		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	std::string AuxFunc::urldecode(const char *url)
 	{
 		char a, b;
 		std::string dst;
-		while (*url) {
-				if ((*url == '%') &&
-					((a = url[1]) && (b = url[2])) &&
-					(AuxFunc::isDigit(a) && AuxFunc::isDigit(b))) {
-						//Convert the firts character in hexadecimal
-						if (a >= 'a')
-							a -= 32;  
-						//Transform in decimal
-						if (a >= 'A')
-							a -= ('A' - 10);
-						else
-							a -= '0';
-						//The same with the second character
-						if (b >= 'a')
-							b -= 'a' - 'A';
-						if (b >= 'A')
-							b -= ('A' - 10);
-						else
-							b -= '0';
-						//Convert the number in hexadecimal
-						dst += 16 * a + b;
-						url += 3;
-				}
-				else if (*url == '+') {
-					dst += ' ';
-					url++;
-				} else {
-					dst += *url++;
-				}
+		while (*url)
+		{
+			if ((*url == '%') &&
+				((a = url[1]) && (b = url[2])) &&
+				(AuxFunc::isDigit(a) && AuxFunc::isDigit(b)))
+			{
+				// Convert the firts character in hexadecimal
+				if (a >= 'a')
+					a -= 32;
+				// Transform in decimal
+				if (a >= 'A')
+					a -= ('A' - 10);
+				else
+					a -= '0';
+				// The same with the second character
+				if (b >= 'a')
+					b -= 'a' - 'A';
+				if (b >= 'A')
+					b -= ('A' - 10);
+				else
+					b -= '0';
+				// Convert the number in hexadecimal
+				dst += 16 * a + b;
+				url += 3;
 			}
-			return dst;
+			else if (*url == '+')
+			{
+				dst += ' ';
+				url++;
+			}
+			else
+			{
+				dst += *url++;
+			}
+		}
+		return dst;
 	}
 
 	std::string AuxFunc::ft_itoa(int number)
@@ -162,6 +169,28 @@ namespace Webserv
 
 		std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", gmt);
 		return (std::string(buffer));
+	}
+
+	unsigned long AuxFunc::hexToDecimal(std::string hexVal)
+	{
+		int len = hexVal.size();
+		int base = 1;
+		int decVal = 0;
+
+		for (int i = len - 1; i >= 0; i--)
+		{
+			if (hexVal[i] >= '0' && hexVal[i] <= '9')
+			{
+				decVal += (int(hexVal[i]) - 48) * base;
+				base = base * 16;
+			}
+			else if (std::toupper(hexVal[i]) >= 'A' && std::toupper(hexVal[i]) <= 'F')
+			{
+				decVal += (std::toupper(hexVal[i]) - 55) * base;
+				base = base * 16;
+			}
+		}
+		return decVal;
 	}
 
 	AuxFunc::~AuxFunc(void) {}

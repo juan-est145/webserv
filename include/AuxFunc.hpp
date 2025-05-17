@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 12:42:44 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 11:51:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include <cerrno>
 #include <sstream>
 #include <ctime>
+#include <cctype>
 #include "Logger.hpp"
 #include "Location.hpp"
 
@@ -50,6 +51,7 @@ namespace Webserv
 		static std::string mapPathToResource(const Location &locationFile, std::string reqPath);
 		static std::string getHumanTime(time_t rawTime);
 		static std::string getGmtTime(void);
+		static unsigned long hexToDecimal(std::string hexVal);
 	};
 
 }
