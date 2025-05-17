@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 10:54:11 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 11:25:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ namespace Webserv
 			return;
 		}
 		buffer[bufRead] = '\0';
-		Request *req = new Request(eventList.data.fd);
+		Request *req = this->_clientPool.find(eventList.data.fd) == this->_clientPool.end() ? new Request(eventList.data.fd) : this->_clientPool[eventList.data.fd];
 		req->readReq(buffer, bufRead);
 		bodySize = req->getReqBody().size();
+		// TO DO: findExpectedSize must be able to work with chunked requests, where there is no Content-Length header
 		expectedSize = this->findExpectedSize(req);
-		// TO DO: Work with transfer encoding chunked later on
 		if (bufRead == sizeof(buffer) - 1 || bodySize < expectedSize)
 		{
 			while (bodySize < expectedSize)
@@ -85,8 +85,8 @@ namespace Webserv
 				bodySize = req->setReqBody(body);
 			}
 		}
-		req->handleReq(this->_configurations);
 		this->_clientPool[eventList.data.fd] = req;
+		req->handleReq(this->_configurations);
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}

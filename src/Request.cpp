@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 12:03:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 11:23:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,20 @@ namespace Webserv
 	void Request::readReq(const char *buffer, size_t bufSize)
 	{
 		std::string strBuff(buffer, bufSize);
-
+		T_reqHeadIter encoding = this->_reqHeader.find("Transfer-Encoding");
+		
+		if (encoding != this->_reqHeader.end() && encoding->second == "chunked")
+		{
+			std::cout << "We have a chunked request" << std::endl;
+			return;
+		}
 		this->extractHeaders(strBuff);
+		encoding = this->_reqHeader.find("Transfer-Encoding");
+		if (encoding != this->_reqHeader.end() && encoding->second == "chunked")
+		{
+			std::cout << "We have a chunked request" << std::endl;
+			return;
+		}
 		this->_reqBody = strBuff;
 	}
 
