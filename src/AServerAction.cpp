@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 12:02:07 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:57:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ namespace Webserv
 		this->_content = "";
 		this->_size = -1;
 		this->_resCode = 200;
-		this->_mime = "text/plain";
-		this->_location = "";
-		this->_allow = "";
+		this->_resHeaders["Content-Type"] = "text/plain";
 	}
 
 	AServerAction::AServerAction(const std::string path) : _path(path)
@@ -29,9 +27,7 @@ namespace Webserv
 		this->_content = "";
 		this->_size = -1;
 		this->_resCode = 200;
-		this->_mime = "text/plain";
-		this->_location = "";
-		this->_allow = "";
+		this->_resHeaders["Content-Type"] = "text/plain";
 	}
 
 	AServerAction::AServerAction(const AServerAction &toCopy)
@@ -46,9 +42,7 @@ namespace Webserv
 			this->_content = toCopy._content;
 			this->_size = toCopy._size;
 			this->_resCode = toCopy._resCode;
-			this->_mime = toCopy._mime;
-			this->_location = toCopy._location;
-			this->_allow = toCopy._allow;
+			this->_resHeaders = toCopy._resHeaders;
 		}
 		return (*this);
 	}
@@ -126,7 +120,7 @@ namespace Webserv
 				allowedMethods.push_back(it->first);
 		}
 		for (unsigned int i = 0; i < allowedMethods.size(); i++)
-			this->_allow += i < allowedMethods.size() - 1 ? allowedMethods[i] + ", " : allowedMethods[i];
+			this->_resHeaders["Allow"] += i < allowedMethods.size() - 1 ? allowedMethods[i] + ", " : allowedMethods[i];
 		throw Webserv::AServerAction::HttpException();
 	}
 
@@ -144,7 +138,7 @@ namespace Webserv
 			if (cgi.canProcessAsCgi(path, reqHeader, this->_content, config, firstHeader, body))
 			{
 				this->_size = this->_content.size();
-				this->_mime = "text/html";
+				this->setContentType("text/html");
 				return (true);
 			}
 		}
@@ -159,6 +153,11 @@ namespace Webserv
 			throw Webserv::AServerAction::HttpException();
 		}
 		return (false);
+	}
+
+	void AServerAction::setContentType(const std::string &mime)
+	{
+		this->_resHeaders["Content-Type"] = mime;
 	}
 
 	const std::string &AServerAction::getPath(void) const
@@ -181,19 +180,22 @@ namespace Webserv
 		return (this->_resCode);
 	}
 
-	const std::string &AServerAction::getMime(void) const
+	std::string AServerAction::getMime(void) const
 	{
-		return (this->_mime);
+		std::map<std::string, std::string>::const_iterator it = this->_resHeaders.find("Content-Type");
+		return it == this->_resHeaders.end() ? "" : it->second;
 	}
 
-	const std::string &AServerAction::getLocation(void) const
+	std::string AServerAction::getLocation(void) const
 	{
-		return (this->_location);
+		std::map<std::string, std::string>::const_iterator it = this->_resHeaders.find("Location");
+		return it == this->_resHeaders.end() ? "" : it->second;
 	}
 
-	const std::string &AServerAction::getAllow(void) const
+	std::string AServerAction::getAllow(void) const
 	{
-		return (this->_allow);
+		std::map<std::string, std::string>::const_iterator it = this->_resHeaders.find("Allow");
+		return it == this->_resHeaders.end() ? "" : it->second;
 	}
 
 	void AServerAction::setRescode(unsigned int resCode)

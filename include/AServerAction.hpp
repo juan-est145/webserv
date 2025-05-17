@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 12:01:35 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:53:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ namespace Webserv
 		std::string _content;
 		long _size;
 		unsigned int _resCode;
-		std::string _mime;
-		std::string _location;
-		std::string _allow;
+		std::map <std::string, std::string> _resHeaders;
 
 		void processHttpError(const ConfigServer *config);
 		void readResource(const std::string &path);
@@ -56,6 +54,7 @@ namespace Webserv
 			const struct firstHeader &firstHeader,
 			const std::string &body
 		);
+		void setContentType(const std::string &mime);
 
 	public:
 		AServerAction(void);
@@ -69,9 +68,9 @@ namespace Webserv
 		const std::string &getContent(void) const;
 		long getSize(void) const;
 		unsigned int getResCode(void) const;
-		const std::string &getMime(void) const;
-		const std::string &getLocation(void) const;
-		const std::string &getAllow(void) const;
+		std::string getMime(void) const;
+		std::string getLocation(void) const;
+		std::string getAllow(void) const;
 
 		void setRescode(unsigned int resCode);
 

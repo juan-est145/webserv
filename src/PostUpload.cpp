@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 00:11:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 17:55:12 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ namespace Webserv
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
 			this->processHttpError(config);
-			this->_mime = "text/html";
+			this->setContentType("text/html");
 		}
 	}
 
@@ -228,14 +228,14 @@ namespace Webserv
 	{
 		this->_content = "Resource was uploaded correctly on path " + this->_path;
 		this->_size = this->_content.length();
-		this->_mime = "text/plain";
+		this->setContentType("text/plain");
 	}
 
 	void PostUpload::addLocationMember(const ConfigServer *config)
 	{
-		this->_location = "http://" + config->getServerName();
-		this->_location += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
-		this->_location += this->_path;
+		this->_resHeaders["Location"] = "http://" + config->getServerName();
+		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
+		this->_resHeaders["Location"] += this->_path;
 	}
 
 	const std::string &PostUpload::getContentType(void) const
