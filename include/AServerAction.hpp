@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 18:30:39 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 19:07:11 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,11 @@ namespace Webserv
 
 		class HttpException : public std::exception
 		{
+		private:
+			unsigned int _resCode;
 		public:
+			HttpException(unsigned int resCode);
+			unsigned int getResCode(void) const;
 			virtual const char *what(void) const throw();
 		};
 	};

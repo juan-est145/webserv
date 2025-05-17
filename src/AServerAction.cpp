@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 18:53:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 19:11:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ namespace Webserv
 		resource.open(path.c_str(), std::ios::in);
 		if (!resource.is_open())
 		{
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		buffer = new char[this->_size + 1];
 		resource.read(buffer, this->_size);
@@ -114,7 +113,6 @@ namespace Webserv
 		
 		if (it != locationFile.getMethods().end() && it->second)
 			return;
-		this->_resCode = 405;
 		for (it = methods.begin(); it != methods.end(); it++)
 		{
 			if (it->second)
@@ -122,7 +120,7 @@ namespace Webserv
 		}
 		for (unsigned int i = 0; i < allowedMethods.size(); i++)
 			this->_resHeaders["Allow"] += i < allowedMethods.size() - 1 ? allowedMethods[i] + ", " : allowedMethods[i];
-		throw Webserv::AServerAction::HttpException();
+		throw Webserv::AServerAction::HttpException(405);
 	}
 
 	bool AServerAction::isCgi(
@@ -146,13 +144,11 @@ namespace Webserv
 		}
 		catch (const Webserv::Cgi::NotFoundException &e)
 		{
-			this->_resCode = 404;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(404);
 		}
 		catch (const Webserv::Cgi::CgiErrorException &e)
 		{
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		return (false);
 	}
@@ -213,6 +209,16 @@ namespace Webserv
 	void AServerAction::setRescode(unsigned int resCode)
 	{
 		this->_resCode = resCode;
+	}
+
+	AServerAction::HttpException::HttpException(unsigned int resCode)
+	{
+		this->_resCode = resCode;
+	}
+
+	unsigned int AServerAction::HttpException::getResCode(void) const
+	{
+		return (this->_resCode);
 	}
 
 	const char *AServerAction::HttpException::what(void) const throw()

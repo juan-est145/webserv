@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 18:53:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 19:13:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ namespace Webserv
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
+			this->_resCode = e.getResCode();
 			this->processHttpError(config);
 			this->setContentType("text/html");
 		}
@@ -57,8 +58,7 @@ namespace Webserv
 		this->isMethodAllowed(locationFile, req.getMethod().first);
 		if (req.getHttpVers() != "HTTP/1.1")
 		{
-			this->_resCode = 505;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(505);
 		}
 		if (locationFile.getCgiPath().size() > 0)
 		{
@@ -67,13 +67,11 @@ namespace Webserv
 		}
 		if (access(localPath.c_str(), F_OK) == -1)
 		{
-			this->_resCode = 404;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(404);
 		}
 		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
 		{
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		if (fileStat.st_mode & S_IFDIR)
 		{
@@ -85,8 +83,7 @@ namespace Webserv
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
 			if (stat(localPath.c_str(), &fileStat) == -1)
 			{
-				this->_resCode = 500;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(500);
 			}
 		}
 		this->_size = fileStat.st_size;
@@ -205,14 +202,12 @@ namespace Webserv
 		{
 			closedir(dir);
 			Logger::errorLog(errno, strerror, false);
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		if (localPath[localPath.size() - 1] != '/')
 		{
 			closedir(dir);
-			this->_resCode = 404;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(404);
 		}
 		this->_content += "<html>\n<head><title>" + title + "</title></head>\n";
 		this->_content += "<body>\n<h1>" + title + "</h1><hr><pre><a href=\"../\">../</a>\n";
@@ -228,8 +223,7 @@ namespace Webserv
 		this->_content += "</pre><hr></body>\n</html>";
 		if (closedir(dir) == -1)
 		{
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		this->_size = this->_content.size();
 		this->setContentType("text/html");
@@ -244,8 +238,7 @@ namespace Webserv
 		if (stat(directoryPath.c_str(), &fileStat) == -1)
 		{
 			closedir(dir);
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		link << "<a href=\"" << readDir->d_name << "/\">" << readDir->d_name << "/</a>";
 		for (size_t i = 0; i < 41; i++)
@@ -266,8 +259,7 @@ namespace Webserv
 		if (stat(directoryPath.c_str(), &fileStat) == -1)
 		{
 			closedir(dir);
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		link << "<a href=\"" << readDir->d_name << "\">" << readDir->d_name << "</a>";
 		for (size_t i = 0; i < 41; i++)

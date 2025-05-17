@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 18:46:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/17 19:14:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,11 @@ namespace Webserv
 			this->isMethodAllowed(locationFile, req.getMethod().first);
 			if (req.getHttpVers() != "HTTP/1.1")
 			{
-				this->_resCode = 505;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(505);
 			}
 			if (locationFile.getMaxBodySize() < req.getReqBody().size())
 			{
-				this->_resCode = 413;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(413);
 			}
 			this->findHeaders(req);
 			if (locationFile.getCgiPath().size() > 0)
@@ -81,18 +79,15 @@ namespace Webserv
 			}
 			if (access(localPath.c_str(), F_OK) == -1)
 			{
-				this->_resCode = 404;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(404);
 			}
 			else if (access(localPath.c_str(), W_OK) == -1)
 			{
-				this->_resCode = 500;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(500);
 			}
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
 			{
-				this->_resCode = 405;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(405);
 			}
 			this->uploadFile(localPath);
 			this->createBodyMessage();
@@ -100,6 +95,7 @@ namespace Webserv
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
+			this->_resCode = e.getResCode();
 			this->processHttpError(config);
 			this->setContentType("text/html");
 		}
@@ -123,8 +119,7 @@ namespace Webserv
 	{
 		if (it == reqHeaders.end())
 		{
-			this->_resCode = 400;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(400);
 		}
 	}
 
@@ -140,8 +135,7 @@ namespace Webserv
 		std::size_t pos = this->_contentType.find(delimiter);
 		if (pos == std::string::npos)
 		{
-			this->_resCode = 400;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(400);
 		}
 		return (this->_contentType.substr(pos + delimiter.length()));
 	}
@@ -164,8 +158,7 @@ namespace Webserv
 			this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
 			if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
 			{
-				this->_resCode = 400;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(400);
 			}
 			this->extractMetadata(metadata, file);
 			this->downloadFile(metadata, file, localPath);
@@ -184,8 +177,7 @@ namespace Webserv
 			separatorPos = body.find(":");
 			if (newLinePos == std::string::npos || separatorPos == std::string::npos)
 			{
-				this->_resCode = 400;
-				throw Webserv::AServerAction::HttpException();
+				throw Webserv::AServerAction::HttpException(400);
 			}
 			headers[body.substr(0, separatorPos)] = body.substr(separatorPos + 2, newLinePos - separatorPos);
 			body.erase(0, newLinePos + delimiter.length());
@@ -207,20 +199,17 @@ namespace Webserv
 		newLinePos = headers["Content-Disposition"].find(newLine);
 		if (delimiterPos == std::string::npos || newLinePos == std::string::npos)
 		{
-			this->_resCode = 400;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(400);
 		}
 		fileNameField = localPath + headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
 		if (fileNameField.find(";") != std::string::npos)
 		{
-			this->_resCode = 400;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(400);
 		}
 		std::ofstream document(fileNameField.substr(0, fileNameField.length() - 2).c_str(), std::ios::out);
 		if (!document.is_open())
 		{
-			this->_resCode = 500;
-			throw Webserv::AServerAction::HttpException();
+			throw Webserv::AServerAction::HttpException(500);
 		}
 		document << body.substr(0, body.length() - 2);
 		document.close();
