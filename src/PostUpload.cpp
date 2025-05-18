@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 11:43:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:35:52 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,9 @@ namespace Webserv
 				localPath += "/";
 			this->isMethodAllowed(locationFile, req.getMethod().first);
 			if (req.getHttpVers() != "HTTP/1.1")
-			{
 				throw Webserv::AServerAction::HttpException(505);
-			}
 			if (locationFile.getMaxBodySize() < req.getReqBody().size())
-			{
 				throw Webserv::AServerAction::HttpException(413);
-			}
 			this->findHeaders(req);
 			if (locationFile.getReturn().size() > 0)
 			{
@@ -83,17 +79,11 @@ namespace Webserv
 					return;
 			}
 			if (access(localPath.c_str(), F_OK) == -1)
-			{
 				throw Webserv::AServerAction::HttpException(404);
-			}
 			else if (access(localPath.c_str(), W_OK) == -1)
-			{
 				throw Webserv::AServerAction::HttpException(500);
-			}
 			if (this->_contentType.substr(0, strlen("multipart/form-data;")) != "multipart/form-data;")
-			{
 				throw Webserv::AServerAction::HttpException(405);
-			}
 			this->uploadFile(localPath);
 			this->createBodyMessage();
 			this->addLocationMember(config);
@@ -124,9 +114,7 @@ namespace Webserv
 	void PostUpload::checkValidHeader(std::map<std::string, std::string>::const_iterator &it, const std::map<std::string, std::string> &reqHeaders)
 	{
 		if (it == reqHeaders.end())
-		{
 			throw Webserv::AServerAction::HttpException(400);
-		}
 	}
 
 	void PostUpload::uploadFile(const std::string &localPath)
@@ -140,9 +128,7 @@ namespace Webserv
 		std::string delimiter = "; boundary=";
 		std::size_t pos = this->_contentType.find(delimiter);
 		if (pos == std::string::npos)
-		{
 			throw Webserv::AServerAction::HttpException(400);
-		}
 		return (this->_contentType.substr(pos + delimiter.length()));
 	}
 
@@ -163,9 +149,7 @@ namespace Webserv
 			file = this->_body.substr(begginingIndex, endBound - begginingIndex);
 			this->_body.erase(0, file.size() + boundary.length() + delimiter.length() + 2);
 			if (startBound == endBound || startBound == std::string::npos || endBound == std::string::npos)
-			{
 				throw Webserv::AServerAction::HttpException(400);
-			}
 			this->extractMetadata(metadata, file);
 			this->downloadFile(metadata, file, localPath);
 		}
@@ -182,9 +166,7 @@ namespace Webserv
 			newLinePos = body.find(delimiter);
 			separatorPos = body.find(":");
 			if (newLinePos == std::string::npos || separatorPos == std::string::npos)
-			{
 				throw Webserv::AServerAction::HttpException(400);
-			}
 			headers[body.substr(0, separatorPos)] = body.substr(separatorPos + 2, newLinePos - separatorPos);
 			body.erase(0, newLinePos + delimiter.length());
 		}
@@ -204,19 +186,13 @@ namespace Webserv
 		delimiterPos = headers["Content-Disposition"].find(delimiter);
 		newLinePos = headers["Content-Disposition"].find(newLine);
 		if (delimiterPos == std::string::npos || newLinePos == std::string::npos)
-		{
 			throw Webserv::AServerAction::HttpException(400);
-		}
 		fileNameField = localPath + headers["Content-Disposition"].substr(delimiterPos + delimiter.length() + 1, newLinePos - (delimiterPos + delimiter.length()));
 		if (fileNameField.find(";") != std::string::npos)
-		{
 			throw Webserv::AServerAction::HttpException(400);
-		}
 		std::ofstream document(fileNameField.substr(0, fileNameField.length() - 2).c_str(), std::ios::out);
 		if (!document.is_open())
-		{
 			throw Webserv::AServerAction::HttpException(500);
-		}
 		document << body.substr(0, body.length() - 2);
 		document.close();
 	}

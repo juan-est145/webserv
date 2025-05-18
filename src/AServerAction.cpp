@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 19:11:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:27:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@ namespace Webserv
 			this->_resHeaders = toCopy._resHeaders;
 		}
 		return (*this);
+	}
+
+	void AServerAction::prepareDirectErrCode(const ConfigServer *config, unsigned int errCode)
+	{
+		this->_resCode = errCode;
+		this->processHttpError(config);
+		this->setContentType("text/html");
 	}
 
 	void AServerAction::processHttpError(const ConfigServer *config)

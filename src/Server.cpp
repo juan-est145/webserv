@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 17:29:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:28:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,18 @@ namespace Webserv
 		}
 		buffer[bufRead] = '\0';
 		Request *req = this->_clientPool.find(eventList.data.fd) == this->_clientPool.end() ? new Request(eventList.data.fd) : this->_clientPool[eventList.data.fd];
-		req->readReq(buffer, bufRead);
+		try
+		{
+			req->readReq(buffer, bufRead);
+		}
+		catch(const Webserv::Request::InvalidReqException& e)
+		{
+			req->send400ErrorCode(this->_configurations);
+			if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
+				throw Webserv::Server::ServerException();
+			return;
+		}
 		bodySize = req->getReqBody().size();
-		// TO DO: findExpectedSize must be able to work with chunked requests, where there is no Content-Length header
 		expectedSize = this->findExpectedSize(req);
 		if (bufRead == sizeof(buffer) - 1 || bodySize < expectedSize)
 		{

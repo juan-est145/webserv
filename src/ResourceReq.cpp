@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 23:37:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:33:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ namespace Webserv
 		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
 		this->isMethodAllowed(locationFile, req.getMethod().first);
+		if (req.getReqBody().size() != 0)
+			throw Webserv::AServerAction::HttpException(400);
 		if (req.getHttpVers() != "HTTP/1.1")
-		{
 			throw Webserv::AServerAction::HttpException(505);
-		}
 		if (locationFile.getReturn().size() > 0)
 		{
 			this->redirect(locationFile.getReturn(), config);
@@ -71,13 +71,9 @@ namespace Webserv
 				return;
 		}
 		if (access(localPath.c_str(), F_OK) == -1)
-		{
 			throw Webserv::AServerAction::HttpException(404);
-		}
 		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
-		{
 			throw Webserv::AServerAction::HttpException(500);
-		}
 		if (fileStat.st_mode & S_IFDIR)
 		{
 			if (locationFile.getAutoindex() == true)
@@ -87,9 +83,7 @@ namespace Webserv
 			}
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
 			if (stat(localPath.c_str(), &fileStat) == -1)
-			{
 				throw Webserv::AServerAction::HttpException(500);
-			}
 		}
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
@@ -227,9 +221,7 @@ namespace Webserv
 		}
 		this->_content += "</pre><hr></body>\n</html>";
 		if (closedir(dir) == -1)
-		{
 			throw Webserv::AServerAction::HttpException(500);
-		}
 		this->_size = this->_content.size();
 		this->setContentType("text/html");
 	}

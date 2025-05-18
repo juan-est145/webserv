@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 23:35:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:25:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ namespace Webserv
 		AServerAction &operator=(const AServerAction &toCopy);
 
 		virtual void processRequest(const ConfigServer *config, const Request &req) = 0;
+		void prepareDirectErrCode(const ConfigServer *config, unsigned int errCode);
 
 		const std::string &getPath(void) const;
 		const std::string &getContent(void) const;

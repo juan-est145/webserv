@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 18:08:09 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:27:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ namespace Webserv
 
 		void readReq(const char *buffer, size_t bufSize);
 		void handleReq(const std::vector<ConfigServer> &configs);
+		void send400ErrorCode(const std::vector<ConfigServer> &configs);
 
 		const std::map<std::string, std::string> &getReqHeader(void) const;
 		std::pair<std::string, enum method> getMethod(void) const;
@@ -78,6 +79,12 @@ namespace Webserv
 		std::size_t setReqBody(std::string &body);
 
 		class RequestException : std::exception
+		{
+		public:
+			virtual const char *what(void) const throw();
+		};
+
+		class InvalidReqException : std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();

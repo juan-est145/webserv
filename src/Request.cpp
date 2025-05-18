@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 18:11:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:29:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,12 @@ namespace Webserv
 		this->_serverAction->processRequest(this->_configuration, *this);
 	}
 
+	void Request::send400ErrorCode(const std::vector<ConfigServer> &configs)
+	{
+		this->selectConfiguration(configs);
+		this->_serverAction = new Webserv::ResourceReq(this->getPath());
+	}
+
 	void Request::extractHeaders(std::string &buffer)
 	{
 		this->extractFirstHead(buffer);
@@ -92,7 +98,6 @@ namespace Webserv
 		std::queue<std::string> headers;
 		std::size_t pos = buffer.find(deli);
 
-		// TO DO: Set a 400 response for GET requests with a body.
 		try
 		{
 			while (pos != std::string::npos && buffer.substr(0, 2) != "\r\n")
@@ -106,10 +111,8 @@ namespace Webserv
 		}
 		catch (const std::out_of_range &e)
 		{
-			// TO DO: Properly implement this
-			// this->_resCode = 400;
 			buffer = "";
-			return;
+			throw Webserv::Request::InvalidReqException();
 		}
 		buffer = buffer.substr(2);
 	}
@@ -124,12 +127,9 @@ namespace Webserv
 		headers.pop();
 		pos = temp.find(":");
 		if (pos == std::string::npos)
-			exit(EXIT_FAILURE); // TO DO: Temp solution
+			throw Webserv::Request::InvalidReqException();
 		if (this->_reqHeader.find(temp.substr(0, pos)) != this->_reqHeader.end())
-		{
-			std::cout << "Repeated header, handle later" << std::endl;
-			exit(EXIT_FAILURE);
-		}
+			throw Webserv::Request::InvalidReqException();
 		this->_reqHeader[temp.substr(0, pos)] = temp.substr(pos + 2);
 	}
 
@@ -139,8 +139,8 @@ namespace Webserv
 		std::size_t pos = reqHeader.find(deli);
 		std::string firstLine;
 		std::string temp;
-		if (pos == std::string::npos) // TO DO: Temporary measure. Later on we should use this to set an appropiate response code.
-			exit(EXIT_FAILURE);
+		if (pos == std::string::npos)
+			throw Webserv::Request::InvalidReqException();
 		if (reqHeader.substr(0, pos).size() > 0)
 			firstLine = reqHeader.substr(0, pos);
 		reqHeader.erase(0, pos + deli.length());
@@ -148,8 +148,8 @@ namespace Webserv
 		for (int i = 0; i < 3; i++)
 		{
 			pos = firstLine.find(deli);
-			if (pos == std::string::npos && i != 2) // TO DO: Temporary measure. Later on we should use this to set an appropiate response code.
-				exit(EXIT_FAILURE);
+			if (pos == std::string::npos && i != 2)
+				throw Webserv::Request::InvalidReqException();
 			if (firstLine.substr(0, pos).size() > 0)
 				temp = firstLine.substr(0, pos);
 			firstLine.erase(0, pos + deli.length());
@@ -217,12 +217,13 @@ namespace Webserv
 		while (!this->isEndChunk(strBuff) && strBuff.size() != 0)
 		{
 			size_t delimiter = strBuff.find("\r\n");
+			if (delimiter == std::string::npos)
+				throw Webserv::Request::InvalidReqException();
 			std::string lengthChk = strBuff.substr(0, delimiter);
 			std::string chunk = strBuff.substr(delimiter + 2, AuxFunc::hexToDecimal(lengthChk));
 			this->_reqBody += chunk;
 			// This is done to delete the proccessed chunk.
 			strBuff.erase(0, delimiter + 2 + chunk.size() + 2);
-			// TO DO: Check that delimiter is good
 		}
 	}
 
@@ -284,7 +285,7 @@ namespace Webserv
 	{
 		return (this->_firstHeader);
 	}
-	
+
 	bool Request::isReady(void) const
 	{
 		return (this->_ready);
@@ -313,6 +314,11 @@ namespace Webserv
 	const char *Request::RequestException::what(void) const throw()
 	{
 		return ("An invalid value was set to private member _resCode in Request class");
+	}
+
+	const char *Request::InvalidReqException::what(void) const throw()
+	{
+		return ("Invalid request syntax");
 	}
 
 	Request::~Request()
