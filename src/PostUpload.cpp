@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 23:37:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 11:43:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,13 +111,14 @@ namespace Webserv
 		std::map<std::string, std::string>::const_iterator it[3];
 		const std::map<std::string, std::string> reqHeaders = req.getReqHeader();
 		it[0] = reqHeaders.find("Content-Type");
-		it[1] = reqHeaders.find("Content-Length");
-		it[2] = reqHeaders.find("Accept");
-		for (unsigned int i = 0; i < 3; i++)
+		it[1] = reqHeaders.find("Accept");
+		it[2] = reqHeaders.find("Content-Length");
+		// We DO NOT want to use checkValidHeader on Content-Length
+		for (unsigned int i = 0; i < (sizeof(it) / sizeof(it[0])) - 1; i++)
 			this->checkValidHeader(it[i], reqHeaders);
 		this->_contentType = it[0]->second;
-		this->_contentLength = std::atol(it[1]->second.c_str());
-		this->_accept = it[2]->second;
+		this->_accept = it[1]->second;
+		this->_contentLength = it[2] == reqHeaders.end() ? req.getReqBody().size() : std::atol(it[2]->second.c_str());
 	}
 
 	void PostUpload::checkValidHeader(std::map<std::string, std::string>::const_iterator &it, const std::map<std::string, std::string> &reqHeaders)

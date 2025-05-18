@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 13:49:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 12:07:44 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ namespace Webserv
 			int pipeFd[2],
 			const std::string &path,
 			const std::string &localPath,
+			const std::string &body,
 			const std::map<std::string, std::string> &headers,
 			const ConfigServer *config,
 			const struct firstHeader &firstHeader) const;

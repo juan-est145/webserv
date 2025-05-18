@@ -1,6 +1,8 @@
-POST /upload HTTP/1.1
+POST /cgi/cgiForm.py HTTP/1.1
 Host: localhost:3000
 Transfer-Encoding: chunked
+Content-Type: application/x-www-form-urlencoded
+Accept: */*
 
 4
 Wiki

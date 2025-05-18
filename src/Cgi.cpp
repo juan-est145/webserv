@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/09 14:04:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 12:15:30 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ namespace Webserv
 	{
 		struct stat fileStat;
 		std::string localPath = AuxFunc::mapPathToResource(*this->_locationConf, path);
-		
+
 		if (indexes.first != -1 && indexes.second != -1)
 			return (true);
 		if (access(localPath.c_str(), F_OK) == -1)
@@ -165,7 +165,7 @@ namespace Webserv
 			throw Webserv::Cgi::CgiErrorException();
 		}
 		else if (pid == 0)
-			this->childProcess(pipeFd, path, localPath, headers, config, firstHeader);
+			this->childProcess(pipeFd, path, localPath, body, headers, config, firstHeader);
 		this->parentProcess(pipeFd, body, pid, content);
 	}
 
@@ -173,6 +173,7 @@ namespace Webserv
 		int pipeFd[2],
 		const std::string &path,
 		const std::string &localPath,
+		const std::string &body,
 		const std::map<std::string, std::string> &headers,
 		const ConfigServer *config,
 		const struct firstHeader &firstHeader) const
@@ -201,7 +202,7 @@ namespace Webserv
 		std::string serverProtocol = "SERVER_PROTOCOL=HTTP";
 		std::string httpCookie = "HTTP_COOKIE=";
 
-		this->addHeaderValue(contentLength, "-1", "Content-Length", headers);
+		this->addHeaderValue(contentLength, AuxFunc::ft_itoa((unsigned int)body.size()), "Content-Length", headers);
 		this->addHeaderValue(contentType, "null", "Content-Type", headers);
 		this->addHeaderValue(httpAccept, "", "Accept", headers);
 		this->addHeaderValue(httpAcceptCharset, "", "Accept-Charset", headers);
@@ -300,7 +301,7 @@ namespace Webserv
 		if (close(pipeFd[PIPE_READ]) == -1)
 			throw Webserv::Cgi::CgiErrorException();
 		if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-    		throw Webserv::Cgi::CgiErrorException();
+			throw Webserv::Cgi::CgiErrorException();
 	}
 
 	const char *Cgi::NotFoundException::what(void) const throw()
