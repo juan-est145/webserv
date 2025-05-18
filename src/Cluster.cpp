@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/10 11:25:50 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:38:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,6 @@ namespace Webserv
 		int optVal = 1;
 		for (addressDataIter it = serverList.begin(); it != serverList.end(); it++)
 		{
-			// TO DO: Later on, we need to store the socket somewhere and associate it to
-			// server instance
 			struct addrinfo *addrinfo = it->second.addrinfo;
 			t_SocketData socketData;
 			int listenFd;

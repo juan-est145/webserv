@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 16:28:46 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/18 16:43:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ namespace Webserv
 		catch(const Webserv::Request::InvalidReqException& e)
 		{
 			req->send400ErrorCode(this->_configurations);
+			this->_clientPool[eventList.data.fd] = req;
 			if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 				throw Webserv::Server::ServerException();
 			return;
