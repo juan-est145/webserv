@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:39:31 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:45:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ namespace Webserv
 		if (it == reqHeaders.end())
 		{
 			cookie.createCookie(path, method);
-			std::cout << "We must create the cookie and the set-cookie header" << std::endl;
+			// TO DO: Here we would set the new Cookie header using the id from Cookie create Cookie
 		}
 		else
 			std::cout << "We do something with the session. Maybe create a log" << std::endl;
