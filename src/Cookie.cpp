@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:33:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:06:35 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:36:44 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,15 @@ namespace Webserv
 		return (*this);
 	}
 
-	void Cookie::createCookie(void) const
+	struct CookieData Cookie::createCookie(const std::string &path, const std::string method, const std::string id) const
 	{
-		std::string id = this->genCookieId();
-		(void)id;
+		CookieData cookieData;
+		
+		cookieData._id = id.size() == 0 ? this->genCookieId() : id;
+		cookieData._timeStamp = AuxFunc::getGmtTime();
+		cookieData._path = path;
+		cookieData._method = method;
+		return (cookieData);
 	}
 
 	std::string Cookie::genCookieId(void) const

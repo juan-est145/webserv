@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 19:51:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:28:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ namespace Webserv
 		std::string _content;
 		long _size;
 		unsigned int _resCode;
-		std::map <std::string, std::string> _resHeaders;
+		std::map<std::string, std::string> _resHeaders;
 
 		void processHttpError(const ConfigServer *config);
 		void readResource(const std::string &path);
@@ -53,11 +53,12 @@ namespace Webserv
 			const std::map<std::string, std::string> &reqHeader,
 			const ConfigServer *config,
 			const struct firstHeader &firstHeader,
-			const std::string &body
-		);
+			const std::string &body);
 		virtual void redirect(const std::string &uri, const ConfigServer *config) = 0;
-		void handleCookies(const std::map<std::string, std::string> &reqHeaders) const;
-		
+		void handleCookies(const std::map<std::string, std::string> &reqHeaders,
+						   const std::string &path,
+						   const std::string &method) const;
+
 		void setContentType(const std::string &mime);
 		void setContentLength(long size);
 
@@ -87,6 +88,7 @@ namespace Webserv
 		{
 		private:
 			unsigned int _resCode;
+
 		public:
 			HttpException(unsigned int resCode);
 			unsigned int getResCode(void) const;
