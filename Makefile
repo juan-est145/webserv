@@ -21,6 +21,7 @@ $(SRC-PATH)/ResourceReq.cpp\
 $(SRC-PATH)/PostUpload.cpp\
 $(SRC-PATH)/Cgi.cpp\
 $(SRC-PATH)/AServerAction.cpp\
+$(SRC-PATH)/Cookie.cpp\
 
 
 OBJS = $(SRCS:.cpp=.o)
@@ -44,6 +45,7 @@ $(HEADER-PATH)/PostUpload.hpp\
 $(HEADER-PATH)/Cgi.hpp\
 $(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/FirstHeader.hpp\
+$(HEADER-PATH)/Cookie.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
 CXX = $(shell which g++ c++ clang++  | head -n 1)

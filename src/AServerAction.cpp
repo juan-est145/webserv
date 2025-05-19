@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 19:20:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 19:52:00 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,12 @@ namespace Webserv
 	void AServerAction::handleCookies(const std::map<std::string, std::string> &reqHeaders) const
 	{
 		std::map<std::string, std::string>::const_iterator it = reqHeaders.find("Cookie");
+		Cookie cookie;
 		if (it == reqHeaders.end())
+		{
+			cookie.createCookie();
 			std::cout << "We must create the cookie and the set-cookie header" << std::endl;
+		}
 		else
 			std::cout << "We do something with the session. Maybe create a log" << std::endl;
 	}
