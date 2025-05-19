@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 16:33:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 19:27:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ namespace Webserv
 	{
 		try
 		{
+			this->handleCookies(req.getReqHeader());
 			this->obtainResource(config, req);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
