@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:33:20 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:05:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:06:35 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ namespace Webserv
 		const int size = sizeof(values) / sizeof(values[0]);
 		std::string id;
 	
-		srand(time(0));
+		srand(time(NULL));
 		for (int i = 0; i < size / 2; i++)
 			id += values[rand() % (size - 1)];
 		return (id);
