@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:45:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/19 20:51:02 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,8 @@ namespace Webserv
 	{
 		// TO DO: We need to know wether the cookie id has just been created or not, and if the client sends a cookie id,
 		// but it is not present in the session, we must not store it
+
+		// TO DO (optional): Set an expiration date for sessions
 		std::map<std::string, std::string>::const_iterator it = reqHeaders.find("Cookie");
 		Cookie cookie;
 		if (it == reqHeaders.end())
