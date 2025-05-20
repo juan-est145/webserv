@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:27:17 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 10:02:53 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ namespace Webserv
 		const Request &req, 
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
-		(void)sessions;
 		try
 		{
+			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
 			const Location locationFile = this->obtainLocationConf(config);
 			std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
