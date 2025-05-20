@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 23:25:48 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:22:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ namespace Webserv
 		ResourceReq(const ResourceReq &copy);
 		ResourceReq &operator=(const ResourceReq &assign);
 
-		void processRequest(const ConfigServer *config, const Request &req);
+		void processRequest(
+			const ConfigServer *config,
+			const Request &req,
+			const std::map<std::string, Webserv::CookieData> &sessions);
 
 		void setContent(const std::string &_content);
 		~ResourceReq();

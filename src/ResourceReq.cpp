@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:31:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:22:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,14 @@ namespace Webserv
 		return (*this);
 	}
 
-	void ResourceReq::processRequest(const ConfigServer *config, const Request &req)
+	void ResourceReq::processRequest(
+		const ConfigServer *config, 
+		const Request &req, 
+		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
 		{
-			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first);
+			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
 			this->obtainResource(config, req);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/14 10:54:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 07:38:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #include "HttpResponse.hpp"
 #include "Cluster.hpp"
 #include "ConfigServer.hpp"
+#include "Cookie.hpp"
 
 namespace Webserv
 {
@@ -47,6 +48,8 @@ namespace Webserv
 		int _listenFd;
 		const std::vector<ConfigServer> _configurations;
 		std::map<int, Request *> _clientPool;
+		std::map<std::string, struct CookieData> _sessions;
+
 		void addConnectionToQueue(struct epoll_event &event) const;
 		void readSocket(const struct epoll_event &eventList);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);

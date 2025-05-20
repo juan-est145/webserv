@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 23:35:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:23:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ namespace Webserv
 		PostUpload(std::string body, const std::string path);
 		PostUpload &operator=(const PostUpload &assign);
 
-		void processRequest(const ConfigServer *config, const Request &req);
+		void processRequest(
+			const ConfigServer *config,
+			const Request &req,
+			const std::map<std::string, Webserv::CookieData> &sessions);
 
 		const std::string &getContentType(void) const;
 		long getContentLength(void) const;

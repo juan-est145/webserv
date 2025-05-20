@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 16:27:32 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:26:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ namespace Webserv
 		Request &operator=(const Request &assign);
 
 		void readReq(const char *buffer, size_t bufSize);
-		void handleReq(const std::vector<ConfigServer> &configs);
+		void handleReq(
+			const std::vector<ConfigServer> &configs,
+			const std::map<std::string, struct CookieData> &sessions);
 		void send400ErrorCode(const std::vector<ConfigServer> &configs);
 
 		const std::map<std::string, std::string> &getReqHeader(void) const;

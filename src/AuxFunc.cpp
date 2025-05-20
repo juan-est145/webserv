@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 16:10:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/17 11:49:40 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:19:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,15 @@ namespace Webserv
 	{
 		std::time_t now = std::time(NULL);
 		struct tm *gmt = std::gmtime(&now);
+		char buffer[128];
+
+		std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", gmt);
+		return (std::string(buffer));
+	}
+
+	std::string AuxFunc::getGmtTime(std::time_t time)
+	{
+		struct tm *gmt = std::gmtime(&time);
 		char buffer[128];
 
 		std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", gmt);

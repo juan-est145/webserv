@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:28:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:23:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <exception>
 #include <sys/stat.h>
 #include <fstream>
+#include <ctime>
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
 #include "Location.hpp"
@@ -42,6 +43,7 @@ namespace Webserv
 		long _size;
 		unsigned int _resCode;
 		std::map<std::string, std::string> _resHeaders;
+		struct CookieData _cookie;
 
 		void processHttpError(const ConfigServer *config);
 		void readResource(const std::string &path);
@@ -57,7 +59,11 @@ namespace Webserv
 		virtual void redirect(const std::string &uri, const ConfigServer *config) = 0;
 		void handleCookies(const std::map<std::string, std::string> &reqHeaders,
 						   const std::string &path,
-						   const std::string &method) const;
+						   const std::string &method,
+						   const std::map<std::string, struct CookieData> &sessions);
+		std::string cookieSearch(
+			const std::map<std::string, struct CookieData> &sessions,
+			const std::map<std::string, std::string> &reqHeaders) const;
 
 		void setContentType(const std::string &mime);
 		void setContentLength(long size);
@@ -68,7 +74,10 @@ namespace Webserv
 		AServerAction(const AServerAction &toCopy);
 		AServerAction &operator=(const AServerAction &toCopy);
 
-		virtual void processRequest(const ConfigServer *config, const Request &req) = 0;
+		virtual void processRequest(
+			const ConfigServer *config,
+			const Request &req,
+			const std::map<std::string, Webserv::CookieData> &sessions) = 0;
 		void prepareDirectErrCode(const ConfigServer *config, unsigned int errCode);
 
 		const std::string &getPath(void) const;

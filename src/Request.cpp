@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 16:48:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:26:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,13 @@ namespace Webserv
 		this->_reqBody = strBuff;
 	}
 
-	void Request::handleReq(const std::vector<ConfigServer> &configs)
+	void Request::handleReq(
+		const std::vector<ConfigServer> &configs, 
+		const std::map<std::string, struct CookieData> &sessions)
 	{
 		this->selectConfiguration(configs);
 		this->getMethod().second == POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath()) : this->_serverAction = new Webserv::ResourceReq(this->getPath());
-		this->_serverAction->processRequest(this->_configuration, *this);
+		this->_serverAction->processRequest(this->_configuration, *this, sessions);
 	}
 
 	void Request::send400ErrorCode(const std::vector<ConfigServer> &configs)

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 16:35:52 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:27:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,11 @@ namespace Webserv
 		return (*this);
 	}
 
-	void PostUpload::processRequest(const ConfigServer *config, const Request &req)
+	void PostUpload::processRequest(const ConfigServer *config, 
+		const Request &req, 
+		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
+		(void)sessions;
 		try
 		{
 			const Location locationFile = this->obtainLocationConf(config);

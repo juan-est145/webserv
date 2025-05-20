@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:33:22 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:36:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 07:41:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ namespace Webserv
 		std::string _timeStamp;
 		std::string _method;
 		std::string _path;
+		std::time_t _expirationDate;
 	};
 
 	class Cookie

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/19 20:51:02 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:19:29 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,21 +163,50 @@ namespace Webserv
 	void AServerAction::handleCookies(
 		const std::map<std::string, std::string> &reqHeaders,
 		const std::string &path,
-		const std::string &method) const
+		const std::string &method,
+		const std::map<std::string, struct CookieData> &sessions)
 	{
 		// TO DO: We need to know wether the cookie id has just been created or not, and if the client sends a cookie id,
 		// but it is not present in the session, we must not store it
 
 		// TO DO (optional): Set an expiration date for sessions
-		std::map<std::string, std::string>::const_iterator it = reqHeaders.find("Cookie");
+
+		std::string cookieId = this->cookieSearch(sessions, reqHeaders);
 		Cookie cookie;
-		if (it == reqHeaders.end())
+
+		if (cookieId.size() <= 0)
 		{
-			cookie.createCookie(path, method);
+			this->_cookie = cookie.createCookie(path, method);
+			this->_cookie._expirationDate = std::time(NULL);
+			this->_resHeaders["Set-Cookie"] = "sessionId=" + this->_cookie._id + "; HttpOnly; Expires=" + AuxFunc::getGmtTime(this->_cookie._expirationDate);
 			// TO DO: Here we would set the new Cookie header using the id from Cookie create Cookie
 		}
 		else
-			std::cout << "We do something with the session. Maybe create a log" << std::endl;
+		{
+			this->_cookie = cookie.createCookie(path, method, cookieId);
+			this->_cookie._expirationDate = sessions.find(cookieId)->second._expirationDate;
+		}
+	}
+
+	std::string AServerAction::cookieSearch(
+		const std::map<std::string, struct CookieData> &sessions,
+		const std::map<std::string, std::string> &reqHeaders) const
+	{
+		std::map<std::string, std::string>::const_iterator cookieHeader;
+		std::size_t cookieIndex;
+		std::string cookieId;
+		const std::string delimiter = "sessionId=";
+
+		cookieHeader = reqHeaders.find("Cookie");
+		if (cookieHeader == reqHeaders.end())
+			return ("");
+		cookieIndex = cookieHeader->second.find(delimiter);
+		if (cookieIndex == std::string::npos)
+			return ("");
+		cookieId = cookieHeader->second.substr(cookieIndex + delimiter.size());
+		if (sessions.find(cookieId) == sessions.end())
+			return ("");
+		return (cookieId);
 	}
 
 	void AServerAction::setContentType(const std::string &mime)
