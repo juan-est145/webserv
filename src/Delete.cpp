@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/20 12:51:15 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:31:08 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ namespace Webserv
         }
         return(*this);
     }
-    void deleteArchive(std::string archToDelete)
+    void Delete::deleteArchive(std::string archToDelete)
     {
         int r = std::remove(archToDelete.c_str());
         int result;
@@ -38,6 +38,6 @@ namespace Webserv
         result = 200;
         else
         result = 404;
-        
+        this->setRescode(result);
     }
 }
