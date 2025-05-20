@@ -6,12 +6,17 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:23:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:32:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ASERVERACTION_HPP
 #define ASERVERACTION_HPP
+
+// The timeout is defined in seconds. A default value of 86400 corresponds to 24 hours
+#ifndef COOKIE_TIMEOUT
+#define COOKIE_TIMEOUT 86400
+#endif
 
 #include <iostream>
 #include <string>
