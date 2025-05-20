@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:26:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:50:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ namespace Webserv
 
 	void Server::processClientConn(int eventListIndex)
 	{
+		this->deleteExpiredSessions();
 		const struct epoll_event *eventList = Cluster::cluster->getEventList();
 		if (eventList[eventListIndex].events & EPOLLIN)
 			this->readSocket(eventList[eventListIndex]);
@@ -99,6 +100,7 @@ namespace Webserv
 		if (!req->isReady())
 			return;
 		req->handleReq(this->_configurations, this->_sessions);
+		this->_sessions[req->getCookie()._id] = req->getCookie();
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}
@@ -136,6 +138,24 @@ namespace Webserv
 		const Request::T_reqHeadIter conLenKey = req->getReqHeader().find("Content-Length");
 		std::size_t expectedSize = conLenKey == req->getReqHeader().end() ? 0 : std::atol(conLenKey->second.c_str());
 		return (expectedSize);
+	}
+
+	void Server::deleteExpiredSessions(void)
+	{
+		std::map<std::string, struct CookieData>::iterator it;
+		std::time_t currTime = std::time(NULL);
+		std::stack<std::string> expiredSessId;
+		
+		for  (it = this->_sessions.begin(); it != this->_sessions.end(); it++)
+		{
+			if (currTime >= it->second._expirationDate)
+				expiredSessId.push(it->first);
+		}
+		while (expiredSessId.size() != 0)
+		{
+			this->_sessions.erase(expiredSessId.top());
+			expiredSessId.pop();
+		}
 	}
 
 	const char *Server::ServerException::what(void) const throw()

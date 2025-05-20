@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:31:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:35:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,6 @@ namespace Webserv
 			this->_cookie = cookie.createCookie(path, method);
 			this->_cookie._expirationDate = std::time(NULL) + COOKIE_TIMEOUT;
 			this->_resHeaders["Set-Cookie"] = "sessionId=" + this->_cookie._id + "; HttpOnly; Expires=" + AuxFunc::getGmtTime(this->_cookie._expirationDate);
-			// TO DO: Here we would set the new Cookie header using the id from Cookie create Cookie
 		}
 		else
 		{
@@ -260,6 +259,11 @@ namespace Webserv
 	{
 		std::map<std::string, std::string>::const_iterator it = this->_resHeaders.find("Allow");
 		return it == this->_resHeaders.end() ? "" : it->second;
+	}
+
+	const struct CookieData &AServerAction::getCookie(void) const
+	{
+		return (this->_cookie);
 	}
 
 	void AServerAction::setRescode(unsigned int resCode)

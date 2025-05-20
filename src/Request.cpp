@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:26:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:38:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,6 +299,13 @@ namespace Webserv
 		if (this->_serverAction == NULL)
 			throw Request::RequestException();
 		return (this->_serverAction->getResHeaders());
+	}
+
+	const struct CookieData &Request::getCookie(void) const
+	{
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->getCookie());
 	}
 
 	void Request::setResCode(unsigned int resCode)

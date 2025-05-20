@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 07:38:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 08:45:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <cstdio>
 #include <map>
 #include <vector>
+#include <stack>
 #include <algorithm>
 #include "Logger.hpp"
 #include "Request.hpp"
@@ -55,6 +56,7 @@ namespace Webserv
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void writeOperations(const struct epoll_event &eventList);
 		std::size_t findExpectedSize(Request *req) const;
+		void deleteExpiredSessions(void);
 
 	public:
 		Server(void);
