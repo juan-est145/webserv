@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 12:15:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:44:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ namespace Webserv
 		std::string reqMethod = "REQUEST_METHOD=" + firstHeader.method.first;
 		std::string scriptName = "SCRIPT_NAME=" + (this->_pathInfo.size() <= 0 ? path : path.substr(0, path.rfind(this->_pathInfo)));
 		std::string serverName = "SERVER_NAME=" + config->getServerName();
-		std::string port = "SERVER_PORT=" + config->getPort();
+		std::string port = "SERVER_PORT=" + AuxFunc::ft_itoa(config->getPort());
 		std::string serverProtocol = "SERVER_PROTOCOL=HTTP";
 		std::string httpCookie = "HTTP_COOKIE=";
 
