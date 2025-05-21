@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/20 17:31:08 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:26:18 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,17 @@
 
 namespace Webserv
 {
-    Delete::Delete()
+    Delete::Delete() : AServerAction()
     {
-        archive = "";
+        this->_resCode = 204;
     }
-    Delete::Delete(const Delete &copy)
+
+    Delete::Delete(const std::string path) : AServerAction(path) 
+    {
+        this->_resCode = 204;
+    }
+
+    Delete::Delete(const Delete &copy): AServerAction(copy)
     {
         *this = copy;
     }
@@ -26,7 +32,10 @@ namespace Webserv
     {
         if (this != &assign)
         {
-            this->archive = assign.archive;
+            this->_content = assign._content;
+			this->_resCode = assign._resCode;
+			this->_resHeaders = assign._resHeaders;
+			this->_size = assign._size;
         }
         return(*this);
     }
@@ -34,10 +43,62 @@ namespace Webserv
     {
         int r = std::remove(archToDelete.c_str());
         int result;
-        if(r == 0)
-        result = 200;
-        else
-        result = 404;
-        this->setRescode(result);
+        if(r != 0)
+        {
+            result = 404;
+            this->setRescode(result);
+        }
+    }
+
+    void Delete::processRequest(
+		const ConfigServer *config, 
+		const Request &req, 
+		const std::map<std::string, Webserv::CookieData> &sessions)
+	{
+		try
+		{
+			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
+			this->obtainResource(config, req);
+		}
+		catch (const Webserv::AServerAction::HttpException &e)
+		{
+			this->_resCode = e.getResCode();
+			this->processHttpError(config);
+			this->setContentType("text/html");
+		}
+	}
+    void Delete::obtainResource(const ConfigServer *config, const Request &req)
+    {
+        struct stat fileStat;
+		const Location locationFile = this->obtainLocationConf(config);
+		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
+
+		this->isMethodAllowed(locationFile, req.getMethod().first);
+		if (req.getReqBody().size() != 0)
+			throw Webserv::AServerAction::HttpException(400);
+		if (req.getHttpVers() != "HTTP/1.1")
+			throw Webserv::AServerAction::HttpException(505);
+		if (locationFile.getReturn().size() > 0)
+		{
+			this->redirect(locationFile.getReturn(), config);
+			return;
+		}
+		if (access(localPath.c_str(), F_OK) == -1)
+			throw Webserv::AServerAction::HttpException(404);
+		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
+			throw Webserv::AServerAction::HttpException(500);
+		if (fileStat.st_mode & S_IFDIR)
+		{
+			if (locationFile.getAutoindex() == true)
+			{
+				return;
+			}
+			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
+			if (stat(localPath.c_str(), &fileStat) == -1)
+				throw Webserv::AServerAction::HttpException(500);
+		}
+		this->_size = fileStat.st_size;
+		this->setContentLength(this->_size);
+        deleteArchive(localPath);
     }
 }
