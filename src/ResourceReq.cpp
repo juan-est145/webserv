@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:22:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:59:39 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,7 @@ namespace Webserv
 			if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody()))
 				return;
 		}
-		if (access(localPath.c_str(), F_OK) == -1)
-			throw Webserv::AServerAction::HttpException(404);
-		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
-			throw Webserv::AServerAction::HttpException(500);
+		this->checkPermissions(localPath, fileStat);
 		if (fileStat.st_mode & S_IFDIR)
 		{
 			if (locationFile.getAutoindex() == true)
@@ -86,8 +83,7 @@ namespace Webserv
 				return;
 			}
 			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
-			if (stat(localPath.c_str(), &fileStat) == -1)
-				throw Webserv::AServerAction::HttpException(500);
+			this->checkPermissions(localPath, fileStat);
 		}
 		this->_size = fileStat.st_size;
 		this->readResource(localPath);
@@ -284,6 +280,14 @@ namespace Webserv
 		this->_resHeaders["Location"] = "http://" + config->getServerName();
 		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
 		this->_resHeaders["Location"] += uri;
+	}
+
+	void ResourceReq::checkPermissions(const std::string &localPath, struct stat &fileStat) const
+	{
+		if (access(localPath.c_str(), F_OK) == -1)
+			throw Webserv::AServerAction::HttpException(404);
+		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
+			throw Webserv::AServerAction::HttpException(500);
 	}
 
 	void ResourceReq::setContent(const std::string &_content)
