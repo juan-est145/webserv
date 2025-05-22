@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/22 16:37:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:43:42 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace Webserv
 	
 	void Delete::deleteFile(const std::string &localPath)
 	{
-		if (!std::remove(localPath.c_str()))
+		if (std::remove(localPath.c_str()) == -1)
 			throw Webserv::AServerAction::HttpException(500);
 	}
 
