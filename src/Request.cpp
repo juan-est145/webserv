@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/22 15:02:59 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:38:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,7 @@ namespace Webserv
 	{
 		*this = copy;
 	}
-	Delete::~Delete()
-	{
-
-	}
+	
 	Request &Request::operator=(const Request &assign)
 	{
 		if (this != &assign)

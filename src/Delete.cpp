@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Delete.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/22 15:24:36 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:37:30 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,48 @@
 
 namespace Webserv
 {
-    Delete::Delete() : AServerAction()
-    {
-        this->_resCode = 204;
-    }
+	Delete::Delete() : AServerAction()
+	{
+		this->_resCode = 204;
+	}
 
-    Delete::Delete(const std::string path) : AServerAction(path) 
-    {
-        this->_resCode = 204;
-    }
+	Delete::Delete(const std::string path) : AServerAction(path)
+	{
+		this->_resCode = 204;
+	}
 
-    Delete::Delete(const Delete &copy): AServerAction(copy)
-    {
-        *this = copy;
-    }
-    Delete &Delete::operator=(const Delete &assign)
-    {
-        if (this != &assign)
-        {
-            this->_content = assign._content;
+	Delete::Delete(const Delete &copy) : AServerAction(copy)
+	{
+		*this = copy;
+	}
+	
+	Delete &Delete::operator=(const Delete &assign)
+	{
+		if (this != &assign)
+		{
+			this->_content = assign._content;
 			this->_resCode = assign._resCode;
 			this->_resHeaders = assign._resHeaders;
 			this->_size = assign._size;
-        }
-        return(*this);
-    }
-    void Delete::deleteArchive(std::string archToDelete)
-    {
-        int r = std::remove(archToDelete.c_str());
-        if(r != 0)
-        {
-            throw Webserv::AServerAction::HttpException(404);
-        }
-    }
+		}
+		return (*this);
+	}
+	
+	void Delete::deleteFile(const std::string &localPath)
+	{
+		if (!std::remove(localPath.c_str()))
+			throw Webserv::AServerAction::HttpException(500);
+	}
 
-    void Delete::processRequest(
-		const ConfigServer *config, 
-		const Request &req, 
+	void Delete::processRequest(
+		const ConfigServer *config,
+		const Request &req,
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
 		{
 			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
-			this->obtainResource(config, req);
+			this->mainAction(config, req);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -65,15 +64,14 @@ namespace Webserv
 			this->setContentType("text/html");
 		}
 	}
-    void Delete::obtainResource(const ConfigServer *config, const Request &req)
-    {
-        struct stat fileStat;
+
+	void Delete::mainAction(const ConfigServer *config, const Request &req)
+	{
+		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
 		this->isMethodAllowed(locationFile, req.getMethod().first);
-		if (req.getReqBody().size() != 0)
-			throw Webserv::AServerAction::HttpException(400);
 		if (req.getHttpVers() != "HTTP/1.1")
 			throw Webserv::AServerAction::HttpException(505);
 		if (locationFile.getReturn().size() > 0)
@@ -86,19 +84,12 @@ namespace Webserv
 		else if (access(localPath.c_str(), W_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
 			throw Webserv::AServerAction::HttpException(500);
 		if (fileStat.st_mode & S_IFDIR)
-		{
-			if (locationFile.getAutoindex() == true)
-			{
-				return;
-			}
-			localPath += localPath[localPath.size() - 1] == '/' ? locationFile.getIndexLocation() : "/" + locationFile.getIndexLocation();
-			if (stat(localPath.c_str(), &fileStat) == -1)
-				throw Webserv::AServerAction::HttpException(500);
-		}
-		this->_size = fileStat.st_size;
+			throw Webserv::AServerAction::HttpException(405);
+		this->_size = 0;
 		this->setContentLength(this->_size);
-        deleteArchive(localPath);
-    }
+		this->deleteFile(localPath);
+	}
+
 	void Delete::redirect(const std::string &uri, const ConfigServer *config)
 	{
 		this->_resCode = 308;
@@ -112,4 +103,6 @@ namespace Webserv
 		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
 		this->_resHeaders["Location"] += uri;
 	}
+
+	Delete::~Delete() {}
 }

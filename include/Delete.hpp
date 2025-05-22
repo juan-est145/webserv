@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Delete.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:24:44 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/22 14:55:46 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:34:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ namespace Webserv
             Delete &operator=(const Delete &assign);
             ~Delete();
 
-            void deleteArchive(std::string archToDelete);
+            void deleteFile(const std::string &localPath);
             void processRequest(
             const ConfigServer *config, 
             const Request &req, 
             const std::map<std::string, Webserv::CookieData> &sessions);
-            void obtainResource(const ConfigServer *config, const Request &req);
+            void mainAction(const ConfigServer *config, const Request &req);
             void redirect(const std::string &uri, const ConfigServer *config);
     };
 }
