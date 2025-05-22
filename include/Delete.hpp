@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:24:44 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/21 15:51:36 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:55:46 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ namespace Webserv
             const Request &req, 
             const std::map<std::string, Webserv::CookieData> &sessions);
             void obtainResource(const ConfigServer *config, const Request &req);
+            void redirect(const std::string &uri, const ConfigServer *config);
     };
 }
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:38:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:02:59 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ namespace Webserv
 	{
 		*this = copy;
 	}
+	Delete::~Delete()
+	{
 
+	}
 	Request &Request::operator=(const Request &assign)
 	{
 		if (this != &assign)
@@ -83,7 +86,13 @@ namespace Webserv
 		const std::map<std::string, struct CookieData> &sessions)
 	{
 		this->selectConfiguration(configs);
-		this->getMethod().second == POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath()) : this->_serverAction = new Webserv::ResourceReq(this->getPath());
+		//this->getMethod().second == POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath()) : this->_serverAction = new Webserv::ResourceReq(this->getPath());
+		if(this->getMethod().second == POST)
+			this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath());
+		else if(this->getMethod().second == DELETE)
+			this->_serverAction = new Webserv::Delete(this->getPath());
+		else
+			this->_serverAction = new Webserv::ResourceReq(this->getPath());
 		this->_serverAction->processRequest(this->_configuration, *this, sessions);
 	}
 

@@ -6,7 +6,7 @@
 /*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/21 18:26:18 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:24:36 by mfuente-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ namespace Webserv
     void Delete::deleteArchive(std::string archToDelete)
     {
         int r = std::remove(archToDelete.c_str());
-        int result;
         if(r != 0)
         {
-            result = 404;
-            this->setRescode(result);
+            throw Webserv::AServerAction::HttpException(404);
         }
     }
 
@@ -85,7 +83,7 @@ namespace Webserv
 		}
 		if (access(localPath.c_str(), F_OK) == -1)
 			throw Webserv::AServerAction::HttpException(404);
-		else if (access(localPath.c_str(), R_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
+		else if (access(localPath.c_str(), W_OK) == -1 || stat(localPath.c_str(), &fileStat) == -1)
 			throw Webserv::AServerAction::HttpException(500);
 		if (fileStat.st_mode & S_IFDIR)
 		{
@@ -101,4 +99,17 @@ namespace Webserv
 		this->setContentLength(this->_size);
         deleteArchive(localPath);
     }
+	void Delete::redirect(const std::string &uri, const ConfigServer *config)
+	{
+		this->_resCode = 308;
+		this->setContentType("text/html");
+		if (uri.substr(0, 7) == "http://" || uri.substr(0, 8) == "https://")
+		{
+			this->_resHeaders["Location"] = uri;
+			return;
+		}
+		this->_resHeaders["Location"] = "http://" + config->getServerName();
+		this->_resHeaders["Location"] += config->getPort() == 80 ? "" : ":" + AuxFunc::ft_itoa(config->getPort());
+		this->_resHeaders["Location"] += uri;
+	}
 }
