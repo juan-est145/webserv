@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 11:04:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 18:19:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,24 +90,17 @@ namespace Webserv
 	{
 		const std::vector<Webserv::Location> locations = config->getLocations();
 		unsigned int locIndex = 0;
-		unsigned int matchingChars = 0;
 		unsigned int maxMatch = 0;
+		unsigned int currentMatch = 0;
 
 		for (unsigned int i = 0; i < locations.size(); i++)
 		{
-			matchingChars = 0;
 			std::string path = locations[i].getPath();
-			for (unsigned int letter = 0; letter < std::min(path.size(), this->_path.size()); letter++)
-			{
-				if (path[letter] != this->_path[letter])
-					break;
-				matchingChars++;
-			}
-			if (matchingChars > maxMatch)
-			{
-				maxMatch = matchingChars;
+			if (path.size() > this->_path.size() || path != this->_path.substr(0, path.size()))
+				continue;
+			currentMatch = path.size();
+			if (currentMatch > maxMatch)
 				locIndex = i;
-			}
 		}
 		return (config->getLocations()[locIndex]);
 	}
