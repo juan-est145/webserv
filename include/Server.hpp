@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:45:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:07:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ namespace Webserv
 		Server &operator=(const Server &assign);
 		void processClientConn(int eventListIndex);
 
-		class ServerException : std::exception
+		class ServerException : public std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();

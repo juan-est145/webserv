@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 19:52:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:07:27 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,6 @@ namespace Webserv
 		value = errorCodes.find(this->_resCode);
 		this->createErrorPage(std::make_pair(value->first, value->second));
 		this->setContentLength(this->_content.size());
-		//this->_content = 
-		// if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
-		// 	throw std::exception();
-		// this->_size = fileStat.st_size;
-		// this->setContentLength(this->_size);
-		// this->readResource(localPath);
 	}
 
 	void AServerAction::readResource(const std::string &path)

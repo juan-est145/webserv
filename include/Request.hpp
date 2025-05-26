@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/22 14:54:37 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:07:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,13 +82,13 @@ namespace Webserv
 		void setResCode(unsigned int resCode);
 		std::size_t setReqBody(std::string &body);
 
-		class RequestException : std::exception
+		class RequestException : public std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();
 		};
 
-		class InvalidReqException : std::exception
+		class InvalidReqException : public std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();

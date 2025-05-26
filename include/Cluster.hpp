@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 11:19:23 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 20:05:50 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ namespace Webserv
 		void initVirtualServers(void);
 		void deleteAcceptSocket(int fd);
 
-		class ClusterException : std::exception
+		class ClusterException : public std::exception
 		{
 		public:
 			virtual const char *what(void) const throw();
