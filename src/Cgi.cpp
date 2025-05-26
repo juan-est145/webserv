@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mfuente- <mfuente-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/23 16:51:35 by mfuente-         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:44:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,7 +277,7 @@ namespace Webserv
 			close(pipeFd[PIPE_READ]);
 			throw Webserv::Cgi::CgiErrorException();
 		}
-		if (waitpid(pid, &status, WNOHANG) == -1)
+		if (waitpid(pid, &status, 0) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
 			close(pipeFd[PIPE_READ]);
