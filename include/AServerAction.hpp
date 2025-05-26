@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:34:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:41:53 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ namespace Webserv
 		std::string cookieSearch(
 			const std::map<std::string, struct CookieData> &sessions,
 			const std::map<std::string, std::string> &reqHeaders) const;
+		void findErrorFile(std::map<short, std::string>::const_iterator &errorPage, const ConfigServer *config);
+		void createErrorPage(const std::pair<int, std::string> error);
 
 		void setContentType(const std::string &mime);
 		void setContentLength(long size);

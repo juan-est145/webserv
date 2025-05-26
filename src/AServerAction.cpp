@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 18:19:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 19:52:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,38 @@ namespace Webserv
 
 	void AServerAction::processHttpError(const ConfigServer *config)
 	{
-		struct stat fileStat;
 		std::map<short, std::string>::const_iterator errorPage = config->getErrorPages().find(this->_resCode);
-		std::string localPath = "www/errorPages/error" + AuxFunc::ft_itoa(this->_resCode) + ".html";
-
+		std::map<int, std::string> errorCodes;
+		errorCodes[400] = "Bad request";
+		errorCodes[401] = "Unauthorized";
+		errorCodes[402] = "Payment requirement";
+		errorCodes[403] = "Forbidden";
+		errorCodes[404] = "Not found";
+		errorCodes[405] = "Method not allowed";
+		errorCodes[406] = "Not acceptable";
+		errorCodes[413] = "Content Too Large";
+		errorCodes[500] = "Internal server error";
+		errorCodes[501] = "Not implemented";
+		errorCodes[502] = "Bad gateway";
+		errorCodes[503] = "Service unavailable";
+		errorCodes[504] = "Gateway timeout";
+		errorCodes[505] = "HTTP version not suported";
+		std::map<int, std::string>::iterator value;
+		
 		if (errorPage->second.length() > 0)
-			localPath = config->getRoot() + errorPage->second;
-		if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
-			throw std::exception();
-		this->_size = fileStat.st_size;
-		this->setContentLength(this->_size);
-		this->readResource(localPath);
+		{
+			this->findErrorFile(errorPage, config);
+			return;
+		}
+		value = errorCodes.find(this->_resCode);
+		this->createErrorPage(std::make_pair(value->first, value->second));
+		this->setContentLength(this->_content.size());
+		//this->_content = 
+		// if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
+		// 	throw std::exception();
+		// this->_size = fileStat.st_size;
+		// this->setContentLength(this->_size);
+		// this->readResource(localPath);
 	}
 
 	void AServerAction::readResource(const std::string &path)
@@ -159,11 +180,6 @@ namespace Webserv
 		const std::string &method,
 		const std::map<std::string, struct CookieData> &sessions)
 	{
-		// TO DO: We need to know wether the cookie id has just been created or not, and if the client sends a cookie id,
-		// but it is not present in the session, we must not store it
-
-		// TO DO (optional): Set an expiration date for sessions
-
 		std::string cookieId = this->cookieSearch(sessions, reqHeaders);
 		Cookie cookie;
 
@@ -199,6 +215,52 @@ namespace Webserv
 		if (sessions.find(cookieId) == sessions.end())
 			return ("");
 		return (cookieId);
+	}
+
+	void AServerAction::findErrorFile(std::map<short, std::string>::const_iterator &errorPage, const ConfigServer *config)
+	{
+		struct stat fileStat;
+		std::string localPath = config->getRoot() + errorPage->second;
+
+		if (stat(localPath.c_str(), &fileStat) == -1 || !S_ISREG(fileStat.st_mode))
+			throw std::exception();
+		this->_size = fileStat.st_size;
+		this->setContentLength(this->_size);
+		this->readResource(localPath);
+	}
+
+	void AServerAction::createErrorPage(const std::pair<int, std::string> error)
+	{
+		std::stringstream message;
+		
+		message << "<!DOCTYPE html>\n";
+		message << "<html lang=\"es\">\n";
+		message << "<head>\n";
+		message << "<meta charset=\"UTF-8\">\n";
+		message << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n";
+		message << "<title>" << error.second << "</title>\n";
+		message << "</head>\n";
+		message << "<body>\n";
+		message << "<center>\n";
+		message << "<h1>" << error.first << "</h1>\n";
+		message << "</center>\n";
+		message << "<hr>\n";
+		message << "<center>" << error.second << "</center>\n";
+		message << "</body>\n";
+		message << "</html>\n";
+		this->_content = message.str();
+// <head>
+//     <meta charset="UTF-8">
+//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+//     <title>Moved permanently</title>
+// </head>
+// <body>
+//     <div class="container">
+//         <h1>403</h1>
+//         <p>Moved permanently</p>
+//     </div>
+// </body>
+// </html>
 	}
 
 	void AServerAction::setContentType(const std::string &mime)
