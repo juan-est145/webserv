@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/22 16:38:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 11:04:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ namespace Webserv
 		const std::map<std::string, struct CookieData> &sessions)
 	{
 		this->selectConfiguration(configs);
-		//this->getMethod().second == POST ? this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath()) : this->_serverAction = new Webserv::ResourceReq(this->getPath());
 		if(this->getMethod().second == POST)
 			this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath());
 		else if(this->getMethod().second == DELETE)

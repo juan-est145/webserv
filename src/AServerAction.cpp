@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:35:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/26 11:04:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ namespace Webserv
 		std::map<std::string, bool>::const_iterator it = methods.find(reqMethod);
 		std::vector<std::string> allowedMethods;
 
-		if (it != locationFile.getMethods().end() && it->second)
+		if (it != methods.end() && it->second)
 			return;
 		for (it = methods.begin(); it != methods.end(); it++)
 		{
