@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 16:41:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:27:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,23 @@ namespace Webserv
 		if (it == this->_sockets.end() || it->second.socketType != ACCEPT_SOCKET)
 			return;
 		this->_sockets.erase(it);
+	}
+
+	void Cluster::addPipeSocket(int fd, Server *server)
+	{
+		t_SocketData socketData;
+
+		socketData.socketType = PIPE_SOCKET;
+		socketData.server = server;
+		this->_sockets[fd] = socketData;
+	}
+
+	Server *Cluster::findServer(int fd)
+	{
+		std::map<int, SocketData>::const_iterator it = this->_sockets.find(fd);
+		if (it == this->_sockets.end())
+			return (NULL);
+		return (it->second.server);
 	}
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const

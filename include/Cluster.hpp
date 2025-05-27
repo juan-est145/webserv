@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 20:05:50 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:27:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ namespace Webserv
 		{
 			LISTEN_SOCKET,
 			ACCEPT_SOCKET,
+			PIPE_SOCKET,
 		};
 		typedef struct AddressData
 		{
@@ -66,6 +67,8 @@ namespace Webserv
 
 		void initVirtualServers(void);
 		void deleteAcceptSocket(int fd);
+		void addPipeSocket(int fd, Server *server);
+		Server *findServer(int fd);
 
 		class ClusterException : public std::exception
 		{

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:08:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:28:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,11 +269,17 @@ namespace Webserv
 		char buffer[1024];
 		int status = 0;
 		int bytesRead = 0;
+		Cluster *cluster = Cluster::getInstance();
 
 		memset(buffer, '\0', sizeof(buffer));
 		if (write(pipeFd[PIPE_WRITE], body.c_str(), body.size()) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
+			close(pipeFd[PIPE_READ]);
+			throw Webserv::Cgi::CgiErrorException();
+		}
+		if (close(pipeFd[PIPE_WRITE]) == -1)
+		{
 			close(pipeFd[PIPE_READ]);
 			throw Webserv::Cgi::CgiErrorException();
 		}
@@ -283,14 +289,10 @@ namespace Webserv
 			throw Webserv::Server::ServerException();
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
+		cluster->addPipeSocket(pipeFd[PIPE_READ], cluster->findServer(this->_req->getSocketFd()));
 		// if (waitpid(pid, &status, 0) == -1)
 		// {
 		// 	close(pipeFd[PIPE_WRITE]);
-		// 	close(pipeFd[PIPE_READ]);
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// }
-		// if (close(pipeFd[PIPE_WRITE]) == -1)
-		// {
 		// 	close(pipeFd[PIPE_READ]);
 		// 	throw Webserv::Cgi::CgiErrorException();
 		// }
