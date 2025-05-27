@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:18:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:57:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,10 @@ namespace Webserv
 			close(pipeFd[PIPE_READ]);
 			throw Webserv::Cgi::CgiErrorException();
 		}
+
+		ARequest *cgiReq = new CgiReq(pipeFd, NULL);
+
+		
 		// if (waitpid(pid, &status, 0) == -1)
 		// {
 		// 	close(pipeFd[PIPE_WRITE]);

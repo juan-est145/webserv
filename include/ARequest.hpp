@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:22:13 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:25:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:57:35 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace Webserv
 {
     class ARequest
     {
-    private:
+    protected:
     public:
         ARequest(void);
         ARequest(const ARequest &toCopy);

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/18 12:07:44 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:53:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
 #include "FirstHeader.hpp"
+#include "CgiReq.hpp"
 
 namespace Webserv
 {
