@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:22:13 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:04:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 19:06:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ namespace Webserv
 
     public:
         ARequest(void);
+        ARequest(int socketFd);
         ARequest(const ARequest &toCopy);
         ARequest &operator=(const ARequest &toCopy);
 
