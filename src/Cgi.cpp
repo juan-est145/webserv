@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:57:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:08:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 namespace Webserv
 {
-	Cgi::Cgi() : _locationConf(NULL)
+	Cgi::Cgi() : _locationConf(NULL), _req(NULL)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Location &location) : _locationConf(&location)
+	Cgi::Cgi(const Location &location, const Request &req) : _locationConf(&location), _req(&req)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
@@ -278,9 +278,11 @@ namespace Webserv
 			throw Webserv::Cgi::CgiErrorException();
 		}
 
-		ARequest *cgiReq = new CgiReq(pipeFd, NULL);
-
-		
+		ARequest *cgiReq = new CgiReq(pipeFd, this->_req);
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, this->_req->getSocketFd(), Cluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], Cluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();
 		// if (waitpid(pid, &status, 0) == -1)
 		// {
 		// 	close(pipeFd[PIPE_WRITE]);

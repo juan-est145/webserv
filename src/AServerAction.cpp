@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 20:07:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:06:38 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ namespace Webserv
 		errorCodes[504] = "Gateway timeout";
 		errorCodes[505] = "HTTP version not suported";
 		std::map<int, std::string>::iterator value;
-		
+
 		if (errorPage->second.length() > 0)
 		{
 			this->findErrorFile(errorPage, config);
@@ -144,9 +144,10 @@ namespace Webserv
 		const std::map<std::string, std::string> &reqHeader,
 		const ConfigServer *config,
 		const struct firstHeader &firstHeader,
-		const std::string &body)
+		const std::string &body,
+		const Request &req)
 	{
-		Cgi cgi(locationFile);
+		Cgi cgi(locationFile, req);
 		try
 		{
 			if (cgi.canProcessAsCgi(path, reqHeader, this->_content, config, firstHeader, body))
@@ -226,7 +227,7 @@ namespace Webserv
 	void AServerAction::createErrorPage(const std::pair<int, std::string> error)
 	{
 		std::stringstream message;
-		
+
 		message << "<!DOCTYPE html>\n";
 		message << "<html lang=\"es\">\n";
 		message << "<head>\n";
@@ -243,18 +244,18 @@ namespace Webserv
 		message << "</body>\n";
 		message << "</html>\n";
 		this->_content = message.str();
-// <head>
-//     <meta charset="UTF-8">
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-//     <title>Moved permanently</title>
-// </head>
-// <body>
-//     <div class="container">
-//         <h1>403</h1>
-//         <p>Moved permanently</p>
-//     </div>
-// </body>
-// </html>
+		// <head>
+		//     <meta charset="UTF-8">
+		//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		//     <title>Moved permanently</title>
+		// </head>
+		// <body>
+		//     <div class="container">
+		//         <h1>403</h1>
+		//         <p>Moved permanently</p>
+		//     </div>
+		// </body>
+		// </html>
 	}
 
 	void AServerAction::setContentType(const std::string &mime)

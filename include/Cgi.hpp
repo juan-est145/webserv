@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:53:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:05:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,13 @@
 #include "ConfigServer.hpp"
 #include "FirstHeader.hpp"
 #include "CgiReq.hpp"
+#include "Request.hpp"
+#include "Cluster.hpp"
 
 namespace Webserv
 {
 	class Location;
+	class Request;
 
 	class Cgi
 	{
@@ -47,6 +50,7 @@ namespace Webserv
 		typedef int urlSegmentIndex;
 
 		const Location *_locationConf;
+		const Request *_req;
 		std::string _interpreter;
 		std::string _pathInfo;
 
@@ -89,7 +93,7 @@ namespace Webserv
 
 	public:
 		Cgi(void);
-		Cgi(const Location &location);
+		Cgi(const Location &location, const Request &req);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
 

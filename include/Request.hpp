@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 20:07:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:05:00 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@
 #include "PostUpload.hpp"
 #include "FirstHeader.hpp"
 #include "Delete.hpp"
+#include "ARequest.hpp"
 
 namespace Webserv
 {
 	class ConfigServer;
 	class AServerAction;
 
-	class Request
+	class Request : public ARequest
 	{
 	private:
-		int _socketFd;
 		bool _ready;
 		std::map<std::string, std::string> _reqHeader;
 		std::string _reqBody;

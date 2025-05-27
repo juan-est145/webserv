@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:22:13 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:57:35 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:04:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ namespace Webserv
     class ARequest
     {
     protected:
+        int _socketFd;
+
     public:
         ARequest(void);
         ARequest(const ARequest &toCopy);
@@ -28,6 +30,7 @@ namespace Webserv
 
         virtual void readReq(const char *buffer, size_t bufSize) = 0;
 
+        int getSocketFd(void) const;
         ~ARequest();
     };
 

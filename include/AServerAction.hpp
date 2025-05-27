@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 19:41:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:58:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ namespace Webserv
 			const std::map<std::string, std::string> &reqHeader,
 			const ConfigServer *config,
 			const struct firstHeader &firstHeader,
-			const std::string &body);
+			const std::string &body,
+			const Request &req);
 		virtual void redirect(const std::string &uri, const ConfigServer *config) = 0;
 		void handleCookies(const std::map<std::string, std::string> &reqHeaders,
 						   const std::string &path,
