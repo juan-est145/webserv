@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 18:44:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 17:18:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,31 +277,31 @@ namespace Webserv
 			close(pipeFd[PIPE_READ]);
 			throw Webserv::Cgi::CgiErrorException();
 		}
-		if (waitpid(pid, &status, 0) == -1)
-		{
-			close(pipeFd[PIPE_WRITE]);
-			close(pipeFd[PIPE_READ]);
-			throw Webserv::Cgi::CgiErrorException();
-		}
-		if (close(pipeFd[PIPE_WRITE]) == -1)
-		{
-			close(pipeFd[PIPE_READ]);
-			throw Webserv::Cgi::CgiErrorException();
-		}
-		while ((bytesRead = read(pipeFd[PIPE_READ], buffer, sizeof(buffer))) > 0)
-		{
-			content += buffer;
-			memset(buffer, '\0', sizeof(buffer));
-		}
-		if (bytesRead == -1)
-		{
-			close(pipeFd[PIPE_READ]);
-			throw Webserv::Cgi::CgiErrorException();
-		}
-		if (close(pipeFd[PIPE_READ]) == -1)
-			throw Webserv::Cgi::CgiErrorException();
-		if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-			throw Webserv::Cgi::CgiErrorException();
+		// if (waitpid(pid, &status, 0) == -1)
+		// {
+		// 	close(pipeFd[PIPE_WRITE]);
+		// 	close(pipeFd[PIPE_READ]);
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// }
+		// if (close(pipeFd[PIPE_WRITE]) == -1)
+		// {
+		// 	close(pipeFd[PIPE_READ]);
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// }
+		// while ((bytesRead = read(pipeFd[PIPE_READ], buffer, sizeof(buffer))) > 0)
+		// {
+		// 	content += buffer;
+		// 	memset(buffer, '\0', sizeof(buffer));
+		// }
+		// if (bytesRead == -1)
+		// {
+		// 	close(pipeFd[PIPE_READ]);
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// }
+		// if (close(pipeFd[PIPE_READ]) == -1)
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		// 	throw Webserv::Cgi::CgiErrorException();
 	}
 
 	const char *Cgi::NotFoundException::what(void) const throw()
