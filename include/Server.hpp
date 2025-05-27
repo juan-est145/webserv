@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 20:07:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:32:10 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace Webserv
 	private:
 		int _listenFd;
 		const std::vector<ConfigServer> _configurations;
-		std::map<int, Request *> _clientPool;
+		std::map<int, ARequest *> _clientPool;
 		std::map<std::string, struct CookieData> _sessions;
 
 		void addConnectionToQueue(struct epoll_event &event) const;

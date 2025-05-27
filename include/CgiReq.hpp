@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:26:11 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:54:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:49:00 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ namespace Webserv
 
     public:
         CgiReq(void);
-        CgiReq(int *pipeFd, const Request *ogReq);
+        CgiReq(int *pipeFd, Request *ogReq);
         CgiReq(const CgiReq &toCopy);
         CgiReq &operator=(const CgiReq &toCopy);
 

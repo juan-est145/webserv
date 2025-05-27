@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 16:40:19 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:30:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace Webserv
 			return;
 		}
 		buffer[bufRead] = '\0';
-		Request *req = this->_clientPool.find(eventList.data.fd) == this->_clientPool.end() ? new Request(eventList.data.fd) : this->_clientPool[eventList.data.fd];
+		ARequest *req = this->_clientPool.find(eventList.data.fd) == this->_clientPool.end() ? new Request(eventList.data.fd) : this->_clientPool[eventList.data.fd];
 		try
 		{
 			req->readReq(buffer, bufRead);

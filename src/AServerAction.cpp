@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:06:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:53:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,18 +244,6 @@ namespace Webserv
 		message << "</body>\n";
 		message << "</html>\n";
 		this->_content = message.str();
-		// <head>
-		//     <meta charset="UTF-8">
-		//     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		//     <title>Moved permanently</title>
-		// </head>
-		// <body>
-		//     <div class="container">
-		//         <h1>403</h1>
-		//         <p>Moved permanently</p>
-		//     </div>
-		// </body>
-		// </html>
 	}
 
 	void AServerAction::setContentType(const std::string &mime)
@@ -319,6 +307,12 @@ namespace Webserv
 	void AServerAction::setRescode(unsigned int resCode)
 	{
 		this->_resCode = resCode;
+	}
+
+	std::size_t AServerAction::setContent(const std::string &content)
+	{
+		this->_content.length() == 0 ? this->_content = content : this->_content.append(content);
+		return (this->_content.length());
 	}
 
 	AServerAction::HttpException::HttpException(unsigned int resCode)

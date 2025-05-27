@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 17:58:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:56:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ namespace Webserv
 		const struct CookieData &getCookie(void) const;
 
 		void setRescode(unsigned int resCode);
+		std::size_t setContent(const std::string &content);
 
 		virtual ~AServerAction();
 

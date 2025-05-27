@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:05:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:46:50 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ namespace Webserv
 		const struct CookieData &getCookie(void) const;
 
 		void setResCode(unsigned int resCode);
+		std::size_t setResourceContent(const std::string &content);
 		std::size_t setReqBody(std::string &body);
 
 		class RequestException : public std::exception

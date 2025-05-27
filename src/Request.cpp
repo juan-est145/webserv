@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 11:04:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 18:55:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,6 +318,13 @@ namespace Webserv
 		if (resCode < 100 || resCode > 511 || this->_serverAction == NULL)
 			throw Webserv::Request::RequestException();
 		this->_serverAction->setRescode(resCode);
+	}
+
+	std::size_t Request::setResourceContent(const std::string &content)
+	{
+		if (this->_serverAction == NULL)
+			throw Request::RequestException();
+		return (this->_serverAction->setContent(content));
 	}
 
 	std::size_t Request::setReqBody(std::string &body)
