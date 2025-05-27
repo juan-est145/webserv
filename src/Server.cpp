@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:50:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:40:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ namespace Webserv
 		char buffer[1024];
 		std::size_t bodySize;
 		std::size_t expectedSize;
-		std::cout << "Reading from client " << eventList.data.fd << std::endl;
 		memset(buffer, '\0', sizeof(buffer));
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
@@ -107,7 +106,6 @@ namespace Webserv
 
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
-		std::cout << "Time to write to the client " << eventList.data.fd << std::endl;
 		const Request *req = this->_clientPool[eventList.data.fd];
 		// *----CAMBIO----//
 		HttpResponse Hresp;

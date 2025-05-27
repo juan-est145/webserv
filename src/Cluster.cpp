@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 20:08:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:41:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,6 @@ namespace Webserv
 			{
 				if (g_stop)
 					break;
-				std::cout << "Failed here" << std::endl;
 				close(this->_epollFd);
 				Webserv::Logger::errorLog(errno, strerror, false);
 				throw Cluster::ClusterException();
@@ -194,7 +193,6 @@ namespace Webserv
 		struct sockaddr_storage clientAddr;
 		t_SocketData socketDesc;
 		socklen_t addrSize = sizeof(clientAddr);
-		std::cout << "We have a connection" << std::endl;
 		int newSocket = accept(listenSocket, (sockaddr *)&clientAddr, &addrSize);
 		if (newSocket < 0)
 		{
