@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 19:04:19 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 19:07:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:07:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ namespace Webserv
     {
         if (this != &toCopy)
             this->_socketFd = toCopy._socketFd;
+        return (*this);
     }
 
     int ARequest::getSocketFd(void) const
