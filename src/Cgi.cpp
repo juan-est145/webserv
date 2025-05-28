@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 19:48:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 22:09:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 namespace Webserv
 {
-	Cgi::Cgi() : _locationConf(NULL), _req(NULL)
+	Cgi::Cgi() : _locationConf(NULL), _reqData(NULL)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Location &location, Request &req) : _locationConf(&location), _req(&req)
+	Cgi::Cgi(const Location &location, struct RequestData &reqData) : _locationConf(&location), _reqData(&reqData)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Cgi &toCopy) : _locationConf(toCopy._locationConf)
+	Cgi::Cgi(const Cgi &toCopy) : _locationConf(toCopy._locationConf), _reqData(toCopy._reqData)
 	{
 		*this = toCopy;
 	}
@@ -42,21 +42,15 @@ namespace Webserv
 		return (*this);
 	}
 
-	bool Cgi::canProcessAsCgi(
-		const std::string &path,
-		const std::map<std::string, std::string> &headers,
-		std::string &content,
-		const ConfigServer *config,
-		const struct firstHeader &firstHeader,
-		const std::string &body)
+	bool Cgi::canProcessAsCgi(std::string &content, const ConfigServer *config)
 	{
-		std::string cgiPath(path);
+		std::string cgiPath(this->_reqData->_firstHeader.path);
 		std::vector<std::string> segmentedPath = this->obtainSegmentedPath(cgiPath);
 		std::pair<cgiExtenIndex, urlSegmentIndex> indexes = this->selectCgiExtensions(segmentedPath);
 		if (!this->isValidCgiRoute(cgiPath, segmentedPath, indexes))
 			return (false);
 		this->extractPathInfoAndInter(indexes, cgiPath, segmentedPath);
-		this->execCgi(cgiPath, this->findCgiFile(cgiPath, segmentedPath, indexes), headers, content, config, firstHeader, body);
+		this->execCgi(cgiPath, this->findCgiFile(cgiPath, segmentedPath, indexes), content, config);
 		return (true);
 	}
 
@@ -145,13 +139,10 @@ namespace Webserv
 	}
 
 	void Cgi::execCgi(
-		const std::string &path,
-		const std::string &localPath,
-		const std::map<std::string, std::string> &headers,
-		std::string &content,
-		const ConfigServer *config,
-		const struct firstHeader &firstHeader,
-		const std::string &body) const
+		const std::string &cgiPath, 
+		const std::string &localPath, 
+		std::string &content, 
+		const ConfigServer *config) const
 	{
 		int pipeFd[2];
 
@@ -165,18 +156,15 @@ namespace Webserv
 			throw Webserv::Cgi::CgiErrorException();
 		}
 		else if (pid == 0)
-			this->childProcess(pipeFd, path, localPath, body, headers, config, firstHeader);
-		this->parentProcess(pipeFd, body, pid, content);
+			this->childProcess(pipeFd, cgiPath, localPath, config);
+		this->parentProcess(pipeFd, pid, content);
 	}
 
 	void Cgi::childProcess(
 		int pipeFd[2],
-		const std::string &path,
+		const std::string &cgiPath,
 		const std::string &localPath,
-		const std::string &body,
-		const std::map<std::string, std::string> &headers,
-		const ConfigServer *config,
-		const struct firstHeader &firstHeader) const
+		const ConfigServer *config) const
 	{
 		char *args[] = {
 			(char *)this->_interpreter.c_str(),
@@ -194,23 +182,23 @@ namespace Webserv
 		std::string userAgent = "HTTP_USER_AGENT=";
 		std::string pathInfo = "PATH_INFO=" + this->_pathInfo;
 		std::string pathTranslated = "PATH_TRANSLATED=" + localPath;
-		std::string queryString = "QUERY_STRING=" + firstHeader.query;
-		std::string reqMethod = "REQUEST_METHOD=" + firstHeader.method.first;
-		std::string scriptName = "SCRIPT_NAME=" + (this->_pathInfo.size() <= 0 ? path : path.substr(0, path.rfind(this->_pathInfo)));
+		std::string queryString = "QUERY_STRING=" + this->_reqData->_firstHeader.query;
+		std::string reqMethod = "REQUEST_METHOD=" + this->_reqData->_firstHeader.method.first;
+		std::string scriptName = "SCRIPT_NAME=" + (this->_pathInfo.size() <= 0 ? cgiPath : cgiPath.substr(0, cgiPath.rfind(this->_pathInfo)));
 		std::string serverName = "SERVER_NAME=" + config->getServerName();
 		std::string port = "SERVER_PORT=" + AuxFunc::ft_itoa(config->getPort());
 		std::string serverProtocol = "SERVER_PROTOCOL=HTTP";
 		std::string httpCookie = "HTTP_COOKIE=";
 
-		this->addHeaderValue(contentLength, AuxFunc::ft_itoa((unsigned int)body.size()), "Content-Length", headers);
-		this->addHeaderValue(contentType, "null", "Content-Type", headers);
-		this->addHeaderValue(httpAccept, "", "Accept", headers);
-		this->addHeaderValue(httpAcceptCharset, "", "Accept-Charset", headers);
-		this->addHeaderValue(httpAcceptEncoding, "", "Accept-Encoding", headers);
-		this->addHeaderValue(httpAcceptLanguage, "", "Accept-Language", headers);
-		this->addHeaderValue(httpHost, "", "Host", headers);
-		this->addHeaderValue(userAgent, "", "User-Agent", headers);
-		this->addHeaderValue(httpCookie, "", "Cookie", headers);
+		this->addHeaderValue(contentLength, AuxFunc::ft_itoa((unsigned int)this->_reqData->_reqBody.size()), "Content-Length", this->_reqData->_reqHeader);
+		this->addHeaderValue(contentType, "null", "Content-Type", this->_reqData->_reqHeader);
+		this->addHeaderValue(httpAccept, "", "Accept", this->_reqData->_reqHeader);
+		this->addHeaderValue(httpAcceptCharset, "", "Accept-Charset", this->_reqData->_reqHeader);
+		this->addHeaderValue(httpAcceptEncoding, "", "Accept-Encoding", this->_reqData->_reqHeader);
+		this->addHeaderValue(httpAcceptLanguage, "", "Accept-Language", this->_reqData->_reqHeader);
+		this->addHeaderValue(httpHost, "", "Host", this->_reqData->_reqHeader);
+		this->addHeaderValue(userAgent, "", "User-Agent", this->_reqData->_reqHeader);
+		this->addHeaderValue(httpCookie, "", "Cookie", this->_reqData->_reqHeader);
 		char *env[] = {
 			(char *)contentLength.data(),
 			(char *)contentType.data(),

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:08:27 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:50:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,23 @@ namespace Webserv
 	}
 
 	void PostUpload::processRequest(const ConfigServer *config, 
-		Request &req, 
+		struct RequestData &reqData, 
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
 		{
-			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
+			this->handleCookies(reqData._reqHeader, reqData._firstHeader.path, reqData._firstHeader.method.first, sessions);
 			const Location locationFile = this->obtainLocationConf(config);
 			std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
 			if (localPath[localPath.size() - 1] != '/')
 				localPath += "/";
-			this->isMethodAllowed(locationFile, req.getMethod().first);
-			if (req.getHttpVers() != "HTTP/1.1")
+			this->isMethodAllowed(locationFile, reqData._firstHeader.method.first);
+			if (reqData._firstHeader.httpVers != "HTTP/1.1")
 				throw Webserv::AServerAction::HttpException(505);
-			if (locationFile.getMaxBodySize() < req.getReqBody().size())
+			if (locationFile.getMaxBodySize() < reqData._reqBody.size())
 				throw Webserv::AServerAction::HttpException(413);
-			this->findHeaders(req);
+			this->findHeaders(reqData);
 			if (locationFile.getReturn().size() > 0)
 			{
 				this->redirect(locationFile.getReturn(), config);
@@ -78,7 +78,7 @@ namespace Webserv
 			}
 			if (locationFile.getCgiPath().size() > 0)
 			{
-				if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody(), req))
+				if (this->isCgi(locationFile, config, reqData))
 					return;
 			}
 			if (access(localPath.c_str(), F_OK) == -1)
@@ -99,19 +99,19 @@ namespace Webserv
 		}
 	}
 
-	void PostUpload::findHeaders(Request &req)
+	void PostUpload::findHeaders(const struct RequestData &reqData)
 	{
 		std::map<std::string, std::string>::const_iterator it[3];
-		const std::map<std::string, std::string> reqHeaders = req.getReqHeader();
-		it[0] = reqHeaders.find("Content-Type");
-		it[1] = reqHeaders.find("Accept");
-		it[2] = reqHeaders.find("Content-Length");
+		
+		it[0] = reqData._reqHeader.find("Content-Type");
+		it[1] = reqData._reqHeader.find("Accept");
+		it[2] = reqData._reqHeader.find("Content-Length");
 		// We DO NOT want to use checkValidHeader on Content-Length
 		for (unsigned int i = 0; i < (sizeof(it) / sizeof(it[0])) - 1; i++)
-			this->checkValidHeader(it[i], reqHeaders);
+			this->checkValidHeader(it[i], reqData._reqHeader);
 		this->_contentType = it[0]->second;
 		this->_accept = it[1]->second;
-		this->_contentLength = it[2] == reqHeaders.end() ? req.getReqBody().size() : std::atol(it[2]->second.c_str());
+		this->_contentLength = it[2] == reqData._reqHeader.end() ? reqData._reqBody.size() : std::atol(it[2]->second.c_str());
 	}
 
 	void PostUpload::checkValidHeader(std::map<std::string, std::string>::const_iterator &it, const std::map<std::string, std::string> &reqHeaders)

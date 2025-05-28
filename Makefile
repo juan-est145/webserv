@@ -53,6 +53,7 @@ $(HEADER-PATH)/Cookie.hpp\
 $(HEADER-PATH)/Delete.hpp\
 $(HEADER-PATH)/ARequest.hpp\
 $(HEADER-PATH)/CgiReq.hpp\
+$(HEADER-PATH)/RequestData.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
 CXX = $(shell which g++ c++ clang++  | head -n 1)

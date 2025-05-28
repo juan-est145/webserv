@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:03:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:22:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 #include "Logger.hpp"
 #include "ResourceReq.hpp"
 #include "PostUpload.hpp"
-#include "FirstHeader.hpp"
 #include "Delete.hpp"
 #include "ARequest.hpp"
+#include "RequestData.hpp"
 
 namespace Webserv
 {
@@ -37,9 +37,7 @@ namespace Webserv
 	{
 	private:
 		bool _ready;
-		std::map<std::string, std::string> _reqHeader;
-		std::string _reqBody;
-		struct firstHeader _firstHeader;
+		struct RequestData _requestData;
 		AServerAction *_serverAction;
 		ConfigServer *_configuration;
 

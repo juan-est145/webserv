@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:07:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:41:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ namespace Webserv
 
 	void ResourceReq::processRequest(
 		const ConfigServer *config, 
-		Request &req, 
+		struct RequestData &reqData, 
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
 		{
-			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
-			this->obtainResource(config, req);
+			this->handleCookies(reqData._reqHeader, reqData._firstHeader.path, reqData._firstHeader.method.first, sessions);
+			this->obtainResource(config, reqData);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -53,16 +53,16 @@ namespace Webserv
 		}
 	}
 
-	void ResourceReq::obtainResource(const ConfigServer *config, Request &req)
+	void ResourceReq::obtainResource(const ConfigServer *config, struct RequestData &reqData)
 	{
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
-		this->isMethodAllowed(locationFile, req.getMethod().first);
-		if (req.getReqBody().size() != 0)
+		this->isMethodAllowed(locationFile, reqData._firstHeader.method.first);
+		if (reqData._reqBody.size() != 0)
 			throw Webserv::AServerAction::HttpException(400);
-		if (req.getHttpVers() != "HTTP/1.1")
+		if (reqData._firstHeader.httpVers != "HTTP/1.1")
 			throw Webserv::AServerAction::HttpException(505);
 		if (locationFile.getReturn().size() > 0)
 		{
@@ -71,7 +71,7 @@ namespace Webserv
 		}
 		if (locationFile.getCgiPath().size() > 0)
 		{
-			if (this->isCgi(locationFile, req.getPath(), req.getReqHeader(), config, req.getFirstHeader(), req.getReqBody(), req))
+			if (this->isCgi(locationFile, config, reqData))
 				return;
 		}
 		this->checkPermissions(localPath, fileStat);

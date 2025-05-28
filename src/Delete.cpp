@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:09:09 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:52:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ namespace Webserv
 
 	void Delete::processRequest(
 		const ConfigServer *config,
-		Request &req,
+		struct RequestData &reqData,
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
 		{
-			this->handleCookies(req.getReqHeader(), req.getPath(), req.getMethod().first, sessions);
-			this->mainAction(config, req);
+			this->handleCookies(reqData._reqHeader, reqData._firstHeader.path, reqData._firstHeader.method.first, sessions);
+			this->mainAction(config, reqData);
 		}
 		catch (const Webserv::AServerAction::HttpException &e)
 		{
@@ -65,14 +65,14 @@ namespace Webserv
 		}
 	}
 
-	void Delete::mainAction(const ConfigServer *config, Request &req)
+	void Delete::mainAction(const ConfigServer *config, struct RequestData &reqData)
 	{
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);
 		std::string localPath = AuxFunc::mapPathToResource(locationFile, this->_path);
 
-		this->isMethodAllowed(locationFile, req.getMethod().first);
-		if (req.getHttpVers() != "HTTP/1.1")
+		this->isMethodAllowed(locationFile, reqData._firstHeader.method.first);
+		if (reqData._firstHeader.httpVers != "HTTP/1.1")
 			throw Webserv::AServerAction::HttpException(505);
 		if (locationFile.getReturn().size() > 0)
 		{

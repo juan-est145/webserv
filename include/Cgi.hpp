@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:51:07 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 22:07:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@
 #include "Location.hpp"
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
-#include "FirstHeader.hpp"
-#include "CgiReq.hpp"
+#include "RequestData.hpp"
 #include "Cluster.hpp"
 
 namespace Webserv
@@ -49,7 +48,7 @@ namespace Webserv
 		typedef int urlSegmentIndex;
 
 		const Location *_locationConf;
-		Request *_req;
+		struct RequestData *_reqData;
 		std::string _interpreter;
 		std::string _pathInfo;
 
@@ -67,22 +66,12 @@ namespace Webserv
 			const std::string &path,
 			const std::vector<std::string> segmentedPath,
 			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes) const;
-		void execCgi(
-			const std::string &path,
-			const std::string &localPath,
-			const std::map<std::string, std::string> &headers,
-			std::string &content,
-			const ConfigServer *config,
-			const struct firstHeader &firstHeader,
-			const std::string &body) const;
+		void execCgi(const std::string &cgiPath, const std::string &localPath, std::string &content, const ConfigServer *config) const;
 		void childProcess(
 			int pipeFd[2],
-			const std::string &path,
+			const std::string &cgiPath,
 			const std::string &localPath,
-			const std::string &body,
-			const std::map<std::string, std::string> &headers,
-			const ConfigServer *config,
-			const struct firstHeader &firstHeader) const;
+			const ConfigServer *config) const;
 		void addHeaderValue(
 			std::string &env,
 			std::string errorValue,
@@ -92,17 +81,11 @@ namespace Webserv
 
 	public:
 		Cgi(void);
-		Cgi(const Location &location, Request &req);
+		Cgi(const Location &location, struct RequestData &reqData);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
 
-		bool canProcessAsCgi(
-			const std::string &path,
-			const std::map<std::string, std::string> &headers,
-			std::string &content,
-			const ConfigServer *config,
-			const struct firstHeader &firstHeader,
-			const std::string &body);
+		bool canProcessAsCgi(std::string &content, const ConfigServer *config);
 
 		~Cgi();
 

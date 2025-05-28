@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:06:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:55:30 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,17 +140,13 @@ namespace Webserv
 
 	bool AServerAction::isCgi(
 		const Location &locationFile,
-		const std::string &path,
-		const std::map<std::string, std::string> &reqHeader,
 		const ConfigServer *config,
-		const struct firstHeader &firstHeader,
-		const std::string &body,
-		Request &req)
+		struct RequestData &reqData)
 	{
-		Cgi cgi(locationFile, req);
+		Cgi cgi(locationFile, reqData);
 		try
 		{
-			if (cgi.canProcessAsCgi(path, reqHeader, this->_content, config, firstHeader, body))
+			if (cgi.canProcessAsCgi(this->_content, config))
 			{
 				this->_size = this->_content.size();
 				this->setContentLength(this->_size);

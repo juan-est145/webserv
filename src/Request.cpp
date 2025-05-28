@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 19:09:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:42:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,28 +16,28 @@ namespace Webserv
 {
 	Request::Request(void): ARequest()
 	{
-		this->_firstHeader.httpVers = "";
+		this->_requestData._firstHeader.httpVers = "";
 		this->_ready = true;
-		this->_firstHeader.method = std::make_pair("", UNKNOWN);
-		this->_firstHeader.path = "";
-		this->_firstHeader.httpVers = "";
-		this->_firstHeader.query = "";
+		this->_requestData._firstHeader.method = std::make_pair("", UNKNOWN);
+		this->_requestData._firstHeader.path = "";
+		this->_requestData._firstHeader.httpVers = "";
+		this->_requestData._firstHeader.query = "";
 		this->_socketFd = -1;
-		this->_reqBody = "";
+		this->_requestData._reqBody = "";
 		this->_configuration = NULL;
 		this->_serverAction = NULL;
 	}
 
 	Request::Request(int socketFd): ARequest(socketFd)
 	{
-		this->_firstHeader.httpVers = "";
+		this->_requestData._firstHeader.httpVers = "";
 		this->_ready = true;
-		this->_firstHeader.method = std::make_pair("", UNKNOWN);
-		this->_firstHeader.path = "";
-		this->_firstHeader.httpVers = "";
-		this->_firstHeader.query = "";
+		this->_requestData._firstHeader.method = std::make_pair("", UNKNOWN);
+		this->_requestData._firstHeader.path = "";
+		this->_requestData._firstHeader.httpVers = "";
+		this->_requestData._firstHeader.query = "";
 		this->_socketFd = socketFd;
-		this->_reqBody = "";
+		this->_requestData._reqBody = "";
 		this->_configuration = NULL;
 		this->_serverAction = NULL;
 	}
@@ -51,10 +51,10 @@ namespace Webserv
 	{
 		if (this != &assign)
 		{
-			this->_reqHeader = assign._reqHeader;
+			this->_requestData._reqHeader = assign._requestData._reqHeader;
 			this->_ready = assign._ready;
-			this->_reqBody = assign._reqBody;
-			this->_firstHeader = assign._firstHeader;
+			this->_requestData._reqBody = assign._requestData._reqBody;
+			this->_requestData._firstHeader = assign._requestData._firstHeader;
 			this->_serverAction = assign._serverAction;
 			this->_configuration = assign._configuration;
 		}
@@ -66,16 +66,16 @@ namespace Webserv
 		std::string strBuff(buffer, bufSize);
 		T_reqHeadIter encoding;
 
-		if (this->_reqHeader.size() == 0)
+		if (this->_requestData._reqHeader.size() == 0)
 			this->extractHeaders(strBuff);
-		encoding = this->_reqHeader.find("Transfer-Encoding");
-		if (encoding != this->_reqHeader.end() && encoding->second == "chunked")
+		encoding = this->_requestData._reqHeader.find("Transfer-Encoding");
+		if (encoding != this->_requestData._reqHeader.end() && encoding->second == "chunked")
 		{
 			this->_ready = false;
 			this->dechunkBody(strBuff);
 			return;
 		}
-		this->_reqBody = strBuff;
+		this->_requestData._reqBody = strBuff;
 	}
 
 	void Request::handleReq(
@@ -84,12 +84,12 @@ namespace Webserv
 	{
 		this->selectConfiguration(configs);
 		if(this->getMethod().second == POST)
-			this->_serverAction = new Webserv::PostUpload(this->_reqBody, this->getPath());
+			this->_serverAction = new Webserv::PostUpload(this->_requestData._reqBody, this->getPath());
 		else if(this->getMethod().second == DELETE)
 			this->_serverAction = new Webserv::Delete(this->getPath());
 		else
 			this->_serverAction = new Webserv::ResourceReq(this->getPath());
-		this->_serverAction->processRequest(this->_configuration, *this, sessions);
+		this->_serverAction->processRequest(this->_configuration, this->_requestData, sessions);
 	}
 
 	void Request::send400ErrorCode(const std::vector<ConfigServer> &configs)
@@ -136,9 +136,9 @@ namespace Webserv
 		pos = temp.find(":");
 		if (pos == std::string::npos)
 			throw Webserv::Request::InvalidReqException();
-		if (this->_reqHeader.find(temp.substr(0, pos)) != this->_reqHeader.end())
+		if (this->_requestData._reqHeader.find(temp.substr(0, pos)) != this->_requestData._reqHeader.end())
 			throw Webserv::Request::InvalidReqException();
-		this->_reqHeader[temp.substr(0, pos)] = temp.substr(pos + 2);
+		this->_requestData._reqHeader[temp.substr(0, pos)] = temp.substr(pos + 2);
 	}
 
 	void Request::extractFirstHead(std::string &reqHeader)
@@ -164,13 +164,13 @@ namespace Webserv
 			switch (i)
 			{
 			case 0:
-				this->_firstHeader.method = this->selectMethod(temp);
+				this->_requestData._firstHeader.method = this->selectMethod(temp);
 				break;
 			case 1:
 				this->extractUrlAndQuery(temp);
 				break;
 			case 2:
-				this->_firstHeader.httpVers = temp;
+				this->_requestData._firstHeader.httpVers = temp;
 				break;
 			default:
 				break;
@@ -198,8 +198,8 @@ namespace Webserv
 		for (std::vector<ConfigServer>::const_iterator it = configs.begin(); it != configs.end(); it++)
 		{
 			std::string hostConfig = it->getPort() == 80 ? it->getServerName() : it->getServerName() + ":" + AuxFunc::ft_itoa(it->getPort());
-			std::map<std::string, std::string>::iterator hostRequest = this->_reqHeader.find("Host");
-			if (hostRequest != this->_reqHeader.end() && hostRequest->second == hostConfig)
+			std::map<std::string, std::string>::iterator hostRequest = this->_requestData._reqHeader.find("Host");
+			if (hostRequest != this->_requestData._reqHeader.end() && hostRequest->second == hostConfig)
 			{
 				configuration = it;
 				break;
@@ -213,11 +213,11 @@ namespace Webserv
 		size_t queryIndex = path.rfind("?");
 		if (queryIndex == std::string::npos)
 		{
-			this->_firstHeader.path = path;
+			this->_requestData._firstHeader.path = path;
 			return;
 		}
-		this->_firstHeader.path = path.substr(0, queryIndex);
-		this->_firstHeader.query = path.substr(queryIndex + 1);
+		this->_requestData._firstHeader.path = path.substr(0, queryIndex);
+		this->_requestData._firstHeader.query = path.substr(queryIndex + 1);
 	}
 
 	void Request::dechunkBody(std::string &strBuff)
@@ -229,7 +229,7 @@ namespace Webserv
 				throw Webserv::Request::InvalidReqException();
 			std::string lengthChk = strBuff.substr(0, delimiter);
 			std::string chunk = strBuff.substr(delimiter + 2, AuxFunc::hexToDecimal(lengthChk));
-			this->_reqBody += chunk;
+			this->_requestData._reqBody += chunk;
 			// This is done to delete the proccessed chunk.
 			strBuff.erase(0, delimiter + 2 + chunk.size() + 2);
 		}
@@ -245,22 +245,22 @@ namespace Webserv
 
 	const std::map<std::string, std::string> &Request::getReqHeader(void) const
 	{
-		return (this->_reqHeader);
+		return (this->_requestData._reqHeader);
 	}
 
 	std::pair<std::string, enum method> Request::getMethod(void) const
 	{
-		return (this->_firstHeader.method);
+		return (this->_requestData._firstHeader.method);
 	}
 
 	const std::string &Request::getPath(void) const
 	{
-		return (this->_firstHeader.path);
+		return (this->_requestData._firstHeader.path);
 	}
 
 	const std::string &Request::getHttpVers(void) const
 	{
-		return (this->_firstHeader.httpVers);
+		return (this->_requestData._firstHeader.httpVers);
 	}
 
 	unsigned int Request::getResCode(void) const
@@ -279,7 +279,7 @@ namespace Webserv
 
 	const std::string &Request::getReqBody(void) const
 	{
-		return (this->_reqBody);
+		return (this->_requestData._reqBody);
 	}
 
 	const std::string &Request::getResourceContent(void) const
@@ -291,7 +291,7 @@ namespace Webserv
 
 	const struct firstHeader &Request::getFirstHeader(void) const
 	{
-		return (this->_firstHeader);
+		return (this->_requestData._firstHeader);
 	}
 
 	bool Request::isReady(void) const
@@ -329,8 +329,8 @@ namespace Webserv
 
 	std::size_t Request::setReqBody(std::string &body)
 	{
-		this->_reqBody.length() == 0 ? this->_reqBody = body : this->_reqBody.append(body);
-		return (this->_reqBody.length());
+		this->_requestData._reqBody.length() == 0 ? this->_requestData._reqBody = body : this->_requestData._reqBody.append(body);
+		return (this->_requestData._reqBody.length());
 	}
 
 	const char *Request::RequestException::what(void) const throw()

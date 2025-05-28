@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:06:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:44:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 #include "ConfigServer.hpp"
 #include "Location.hpp"
 #include "ConfigServer.hpp"
-#include "FirstHeader.hpp"
+#include "RequestData.hpp"
 #include "Cgi.hpp"
 #include "Cookie.hpp"
 
@@ -53,14 +53,7 @@ namespace Webserv
 		void readResource(const std::string &path);
 		const Location &obtainLocationConf(const ConfigServer *config) const;
 		void isMethodAllowed(const Location &locationFile, const std::string &reqMethod);
-		bool isCgi(
-			const Location &locationFile,
-			const std::string &path,
-			const std::map<std::string, std::string> &reqHeader,
-			const ConfigServer *config,
-			const struct firstHeader &firstHeader,
-			const std::string &body,
-			Request &req);
+		bool isCgi(const Location &locationFile, const ConfigServer *config, struct RequestData &reqData);
 		virtual void redirect(const std::string &uri, const ConfigServer *config) = 0;
 		void handleCookies(const std::map<std::string, std::string> &reqHeaders,
 						   const std::string &path,
@@ -83,7 +76,7 @@ namespace Webserv
 
 		virtual void processRequest(
 			const ConfigServer *config,
-			Request &req,
+			struct RequestData &reqData,
 			const std::map<std::string, Webserv::CookieData> &sessions) = 0;
 		void prepareDirectErrCode(const ConfigServer *config, unsigned int errCode);
 
