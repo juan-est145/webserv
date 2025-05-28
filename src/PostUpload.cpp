@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:52:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:08:27 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ namespace Webserv
 	}
 
 	void PostUpload::processRequest(const ConfigServer *config, 
-		const Request &req, 
+		Request &req, 
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
@@ -99,7 +99,7 @@ namespace Webserv
 		}
 	}
 
-	void PostUpload::findHeaders(const Request &req)
+	void PostUpload::findHeaders(Request &req)
 	{
 		std::map<std::string, std::string>::const_iterator it[3];
 		const std::map<std::string, std::string> reqHeaders = req.getReqHeader();

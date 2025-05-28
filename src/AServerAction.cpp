@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:53:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:06:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ namespace Webserv
 		const ConfigServer *config,
 		const struct firstHeader &firstHeader,
 		const std::string &body,
-		const Request &req)
+		Request &req)
 	{
 		Cgi cgi(locationFile, req);
 		try

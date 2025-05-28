@@ -5,6 +5,7 @@ SRC-PATH = src
 HEADER-PATH = include
 
 SRCS = $(SRC-PATH)/main.cpp\
+$(SRC-PATH)/AServerAction.cpp\
 $(SRC-PATH)/ConfigParser.cpp\
 $(SRC-PATH)/ConfigServer.cpp\
 $(SRC-PATH)/Request.cpp\
@@ -20,7 +21,6 @@ $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/ResourceReq.cpp\
 $(SRC-PATH)/PostUpload.cpp\
 $(SRC-PATH)/Cgi.cpp\
-$(SRC-PATH)/AServerAction.cpp\
 $(SRC-PATH)/Cookie.cpp\
 $(SRC-PATH)/Delete.cpp\
 $(SRC-PATH)/ARequest.cpp\
@@ -31,6 +31,7 @@ $(SRC-PATH)/CgiReq.cpp\
 OBJS = $(SRCS:.cpp=.o)
 
 HEADER = $(HEADER-PATH)/main.hpp\
+$(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/ConfigParser.hpp\
 $(HEADER-PATH)/ConfigServer.hpp\
 $(HEADER-PATH)/IBuilder.hpp\
@@ -47,7 +48,6 @@ $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/ResourceReq.hpp\
 $(HEADER-PATH)/PostUpload.hpp\
 $(HEADER-PATH)/Cgi.hpp\
-$(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/FirstHeader.hpp\
 $(HEADER-PATH)/Cookie.hpp\
 $(HEADER-PATH)/Delete.hpp\

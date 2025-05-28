@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:51:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:07:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ namespace Webserv
 
 	void ResourceReq::processRequest(
 		const ConfigServer *config, 
-		const Request &req, 
+		Request &req, 
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
@@ -53,7 +53,7 @@ namespace Webserv
 		}
 	}
 
-	void ResourceReq::obtainResource(const ConfigServer *config, const Request &req)
+	void ResourceReq::obtainResource(const ConfigServer *config, Request &req)
 	{
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);

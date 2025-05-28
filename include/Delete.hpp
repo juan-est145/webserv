@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:24:44 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/28 20:56:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:09:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ namespace Webserv
         void deleteFile(const std::string &localPath);
         void processRequest(
             const ConfigServer *config,
-            const Request &req,
+            Request &req,
             const std::map<std::string, Webserv::CookieData> &sessions);
-        void mainAction(const ConfigServer *config, const Request &req);
+        void mainAction(const ConfigServer *config, Request &req);
         void redirect(const std::string &uri, const ConfigServer *config);
     };
 }

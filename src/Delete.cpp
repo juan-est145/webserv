@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/22 16:43:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:09:09 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace Webserv
 
 	void Delete::processRequest(
 		const ConfigServer *config,
-		const Request &req,
+		Request &req,
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
@@ -65,7 +65,7 @@ namespace Webserv
 		}
 	}
 
-	void Delete::mainAction(const ConfigServer *config, const Request &req)
+	void Delete::mainAction(const ConfigServer *config, Request &req)
 	{
 		struct stat fileStat;
 		const Location locationFile = this->obtainLocationConf(config);

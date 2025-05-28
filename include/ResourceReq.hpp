@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:59:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:07:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ namespace Webserv
 	class ResourceReq : public AServerAction
 	{
 	private:
-		void obtainResource(const ConfigServer *config, const Request &req);
+		void obtainResource(const ConfigServer *config, Request &req);
 		std::string chooseMime(const std::string &path) const;
 		std::pair<std::string, std::string> binaryMimeSearch(
 			std::pair<std::string, std::string> *mimes,
@@ -55,7 +55,7 @@ namespace Webserv
 
 		void processRequest(
 			const ConfigServer *config,
-			const Request &req,
+			Request &req,
 			const std::map<std::string, Webserv::CookieData> &sessions);
 
 		void setContent(const std::string &_content);
