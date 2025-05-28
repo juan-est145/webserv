@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:14:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:28:57 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,12 +141,12 @@ namespace Webserv
 	bool AServerAction::isCgi(
 		const Location &locationFile,
 		const ConfigServer *config,
-		struct RequestData &reqData)
+		const struct RequestData &reqData)
 	{
 		Cgi cgi(locationFile, reqData);
 		try
 		{
-			if (cgi.canProcessAsCgi(this->_content, config, this->_reqFd))
+			if (cgi.canProcessAsCgi(config, this->_reqFd))
 			{
 				this->_size = this->_content.size();
 				this->setContentLength(this->_size);

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:22:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:30:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace Webserv
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Location &location, struct RequestData &reqData) : _locationConf(&location), _reqData(&reqData)
+	Cgi::Cgi(const Location &location, const struct RequestData &reqData) : _locationConf(&location), _reqData(&reqData)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";

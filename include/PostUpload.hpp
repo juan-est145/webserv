@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:10:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:31:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ namespace Webserv
 
 		void processRequest(
 			const ConfigServer *config,
-			struct RequestData &reqData,
+			const struct RequestData &reqData,
 			const std::map<std::string, Webserv::CookieData> &sessions);
 
 		const std::string &getContentType(void) const;

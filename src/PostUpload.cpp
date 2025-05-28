@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:10:17 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:31:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ namespace Webserv
 	}
 
 	void PostUpload::processRequest(const ConfigServer *config, 
-		struct RequestData &reqData, 
+		const struct RequestData &reqData, 
 		const std::map<std::string, Webserv::CookieData> &sessions)
 	{
 		try
