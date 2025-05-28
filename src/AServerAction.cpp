@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:55:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:14:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace Webserv
 {
-	AServerAction::AServerAction(void) : _path("")
+	AServerAction::AServerAction(void) : _path(""), _reqFd(-1)
 	{
 		this->_content = "";
 		this->_size = -1;
@@ -22,7 +22,7 @@ namespace Webserv
 		this->_resHeaders["Content-Type"] = "text/plain";
 	}
 
-	AServerAction::AServerAction(const std::string path) : _path(path)
+	AServerAction::AServerAction(const std::string path, const int &reqFd) : _path(path), _reqFd(reqFd)
 	{
 		this->_content = "";
 		this->_size = -1;
@@ -30,7 +30,7 @@ namespace Webserv
 		this->_resHeaders["Content-Type"] = "text/plain";
 	}
 
-	AServerAction::AServerAction(const AServerAction &toCopy)
+	AServerAction::AServerAction(const AServerAction &toCopy): _path(toCopy._path), _reqFd(toCopy._reqFd)
 	{
 		*this = toCopy;
 	}
@@ -146,7 +146,7 @@ namespace Webserv
 		Cgi cgi(locationFile, reqData);
 		try
 		{
-			if (cgi.canProcessAsCgi(this->_content, config))
+			if (cgi.canProcessAsCgi(this->_content, config, this->_reqFd))
 			{
 				this->_size = this->_content.size();
 				this->setContentLength(this->_size);

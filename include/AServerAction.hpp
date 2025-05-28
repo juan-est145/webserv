@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:44:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:06:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ namespace Webserv
 	{
 	protected:
 		const std::string _path;
+		const int _reqFd;
 		std::string _content;
 		long _size;
 		unsigned int _resCode;
@@ -70,7 +71,7 @@ namespace Webserv
 
 	public:
 		AServerAction(void);
-		AServerAction(const std::string path);
+		AServerAction(const std::string path, const int &reqFd);
 		AServerAction(const AServerAction &toCopy);
 		AServerAction &operator=(const AServerAction &toCopy);
 

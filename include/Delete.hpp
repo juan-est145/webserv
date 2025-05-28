@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 15:24:44 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:52:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:11:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace Webserv
     {
     public:
         Delete();
-        Delete(const std::string path);
+        Delete(const std::string path, const int &reqFd);
         Delete(const Delete &copy);
         Delete &operator=(const Delete &assign);
         ~Delete();

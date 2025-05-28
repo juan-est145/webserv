@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:50:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:10:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace Webserv
 	public:
 		PostUpload();
 		PostUpload(const PostUpload &copy);
-		PostUpload(std::string body, const std::string path);
+		PostUpload(std::string body, const std::string path, const int &reqFd);
 		PostUpload &operator=(const PostUpload &assign);
 
 		void processRequest(

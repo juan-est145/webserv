@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 22:07:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:18:53 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@
 #include "ConfigServer.hpp"
 #include "RequestData.hpp"
 #include "Cluster.hpp"
+#include "CgiReq.hpp"
 
 namespace Webserv
 {
@@ -66,18 +67,14 @@ namespace Webserv
 			const std::string &path,
 			const std::vector<std::string> segmentedPath,
 			const std::pair<Cgi::cgiExtenIndex, Cgi::urlSegmentIndex> &indexes) const;
-		void execCgi(const std::string &cgiPath, const std::string &localPath, std::string &content, const ConfigServer *config) const;
-		void childProcess(
-			int pipeFd[2],
-			const std::string &cgiPath,
-			const std::string &localPath,
-			const ConfigServer *config) const;
+		void execCgi(const std::string &cgiPath, const std::string &localPath, const ConfigServer *config, const int reqFd) const;
+		void childProcess(int pipeFd[2], const std::string &cgiPath, const std::string &localPath, const ConfigServer *config) const;
 		void addHeaderValue(
 			std::string &env,
 			std::string errorValue,
 			const std::string &searchValue,
 			const std::map<std::string, std::string> &headers) const;
-		void parentProcess(int *pipeFd, const std::string &body, pid_t &pid, std::string &content) const;
+		void parentProcess(int pipeFd[2], pid_t &pid, const int reqFd) const;
 
 	public:
 		Cgi(void);
@@ -85,7 +82,7 @@ namespace Webserv
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
 
-		bool canProcessAsCgi(std::string &content, const ConfigServer *config);
+		bool canProcessAsCgi(const ConfigServer *config, const int reqFd);
 
 		~Cgi();
 

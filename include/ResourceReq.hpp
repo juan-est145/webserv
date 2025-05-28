@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:38:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:07:41 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ namespace Webserv
 
 	public:
 		ResourceReq(void);
-		ResourceReq(const std::string path);
+		ResourceReq(const std::string path, const int &reqFd);
 		ResourceReq(const ResourceReq &copy);
 		ResourceReq &operator=(const ResourceReq &assign);
 

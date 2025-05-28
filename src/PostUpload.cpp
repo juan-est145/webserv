@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:49 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:50:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:10:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace Webserv
 		this->_resCode = 201;
 	}
 
-	PostUpload::PostUpload(std::string body, const std::string path) : AServerAction(path)
+	PostUpload::PostUpload(std::string body, const std::string path, const int &reqFd) : AServerAction(path, reqFd)
 	{
 		this->_body = body;
 		this->_contentType = "";

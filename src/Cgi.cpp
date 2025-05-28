@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 22:09:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:22:08 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace Webserv
 		return (*this);
 	}
 
-	bool Cgi::canProcessAsCgi(std::string &content, const ConfigServer *config)
+	bool Cgi::canProcessAsCgi(const ConfigServer *config, const int reqFd)
 	{
 		std::string cgiPath(this->_reqData->_firstHeader.path);
 		std::vector<std::string> segmentedPath = this->obtainSegmentedPath(cgiPath);
@@ -50,7 +50,7 @@ namespace Webserv
 		if (!this->isValidCgiRoute(cgiPath, segmentedPath, indexes))
 			return (false);
 		this->extractPathInfoAndInter(indexes, cgiPath, segmentedPath);
-		this->execCgi(cgiPath, this->findCgiFile(cgiPath, segmentedPath, indexes), content, config);
+		this->execCgi(cgiPath, this->findCgiFile(cgiPath, segmentedPath, indexes), config, reqFd);
 		return (true);
 	}
 
@@ -140,9 +140,9 @@ namespace Webserv
 
 	void Cgi::execCgi(
 		const std::string &cgiPath, 
-		const std::string &localPath, 
-		std::string &content, 
-		const ConfigServer *config) const
+		const std::string &localPath,
+		const ConfigServer *config,
+		const int reqFd) const
 	{
 		int pipeFd[2];
 
@@ -157,7 +157,7 @@ namespace Webserv
 		}
 		else if (pid == 0)
 			this->childProcess(pipeFd, cgiPath, localPath, config);
-		this->parentProcess(pipeFd, pid, content);
+		this->parentProcess(pipeFd, pid, reqFd);
 	}
 
 	void Cgi::childProcess(
@@ -252,13 +252,13 @@ namespace Webserv
 		env += headers.find(searchValue) == headers.end() ? errorValue : headers.find(searchValue)->second;
 	}
 
-	void Cgi::parentProcess(int *pipeFd, const std::string &body, pid_t &pid, std::string &content) const
+	void Cgi::parentProcess(int pipeFd[2], pid_t &pid, const int reqFd) const
 	{
 		//int status = 0;
 		
 		Cluster *cluster = Cluster::getInstance();
 
-		if (write(pipeFd[PIPE_WRITE], body.c_str(), body.size()) == -1)
+		if (write(pipeFd[PIPE_WRITE], this->_reqData->_reqBody.c_str(), this->_reqData->_reqBody.size()) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
 			close(pipeFd[PIPE_READ]);
@@ -270,9 +270,9 @@ namespace Webserv
 			throw Webserv::Cgi::CgiErrorException();
 		}
 
-		ARequest *cgiReq = new CgiReq(pipeFd, this->_req);
-		Server *server = cluster->findServer(this->_req->getSocketFd());
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, this->_req->getSocketFd(), Cluster::cluster->getEvent()))
+		ARequest *cgiReq = new CgiReq(pipeFd, reqFd);
+		Server *server = cluster->findServer(reqFd);
+		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, reqFd, Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();

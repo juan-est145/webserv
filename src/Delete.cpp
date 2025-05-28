@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 16:44:06 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/28 21:52:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:11:31 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ namespace Webserv
 		this->_resCode = 204;
 	}
 
-	Delete::Delete(const std::string path) : AServerAction(path)
+	Delete::Delete(const std::string path, const int &reqFd) : AServerAction(path, reqFd)
 	{
 		this->_resCode = 204;
 	}

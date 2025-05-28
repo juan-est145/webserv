@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:29:40 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:41:51 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:08:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ namespace Webserv
 {
 	ResourceReq::ResourceReq(void) : AServerAction() {}
 
-	ResourceReq::ResourceReq(const std::string path) : AServerAction(path) {}
+	ResourceReq::ResourceReq(const std::string path, const int &reqFd) : AServerAction(path, reqFd) {}
 
 	ResourceReq::ResourceReq(const ResourceReq &copy) : AServerAction(copy)
 	{

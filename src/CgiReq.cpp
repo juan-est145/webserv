@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 18:33:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 19:59:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:20:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 namespace Webserv
 {
-    CgiReq::CgiReq(void) : _ogReq(NULL)
+    CgiReq::CgiReq(void) : ARequest()
     {
         this->_pipeFd[PIPE_READ] = -1;
         this->_pipeFd[PIPE_WRITE] = -1;
     }
 
-    CgiReq::CgiReq(int *pipeFd, Request *ogReq) : _ogReq(ogReq)
+    CgiReq::CgiReq(int *pipeFd, int _ogReqSock) : ARequest(pipeFd[PIPE_READ])
     {
         this->_pipeFd[PIPE_READ] = pipeFd[PIPE_READ];
         this->_pipeFd[PIPE_WRITE] = pipeFd[PIPE_WRITE];
     }
 
-    CgiReq::CgiReq(const CgiReq &toCopy) : _ogReq(toCopy._ogReq)
+    CgiReq::CgiReq(const CgiReq &toCopy) : ARequest(toCopy)
     {
         *this = toCopy;
     }
@@ -47,9 +47,9 @@ namespace Webserv
        this->_ogReq->setResourceContent(strBuff);
     }
 
-    const Request *CgiReq::getOgReq(void) const
+    int CgiReq::getOgReqSock(void) const
     {
-        return (this->_ogReq);
+        return (this->_ogReqSock);
     }
 
     std::size_t CgiReq::setResourceContent(const std::string &content)
