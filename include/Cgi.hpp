@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 19:05:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 20:51:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@
 #include "ConfigServer.hpp"
 #include "FirstHeader.hpp"
 #include "CgiReq.hpp"
-#include "Request.hpp"
 #include "Cluster.hpp"
 
 namespace Webserv

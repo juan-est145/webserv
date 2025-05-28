@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/22 16:58:52 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 20:59:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 #include <sstream>
 #include "AServerAction.hpp"
 #include "Request.hpp"
+#include "Cookie.hpp"
 
 namespace Webserv
 {

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:21:36 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 20:51:07 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,6 @@ namespace Webserv
 	class ConfigServer;
 	class Location;
 	class AuxFunc;
-	class Request;
-	class Cookie;
-	struct CookieData;
 
 	class AServerAction
 	{

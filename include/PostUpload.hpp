@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/20 08:23:45 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:00:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <exception>
 #include "AServerAction.hpp"
 #include "Request.hpp"
+#include "Cookie.hpp"
 
 namespace Webserv
 {
