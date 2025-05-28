@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/14 12:43:33 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:47:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 namespace Webserv
 {
     class Builder;
+    class Request;
 
     class Director
     {

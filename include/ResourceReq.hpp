@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:24:38 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:45:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,10 @@
 #include <dirent.h>
 #include <sstream>
 #include "AServerAction.hpp"
-#include "Request.hpp"
 #include "Cookie.hpp"
 
 namespace Webserv
 {
-	class Request;
-
 	class ResourceReq : public AServerAction
 	{
 	private:

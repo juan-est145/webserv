@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 21:22:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:49:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <vector>
 #include <utility>
 #include "Logger.hpp"
+#include "AServerAction.hpp"
 #include "ResourceReq.hpp"
 #include "PostUpload.hpp"
 #include "Delete.hpp"

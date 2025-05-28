@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:18:18 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:41:53 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,13 +120,14 @@ namespace Webserv
 		int bytesRead = 0;
 		int status = 0;
 		ARequest *cgiReq = this->_clientPool.find(eventList.data.fd)->second;
-		const Request *ogReq = dynamic_cast<const CgiReq *>(cgiReq)->getOgReq();
+		int ogReqFd = dynamic_cast<const CgiReq *>(cgiReq)->getOgReqSock();
+		Request *ogReq = dynamic_cast<Request *>(this->_clientPool.find(ogReqFd)->second);
 
 		(void)status;
 		memset(buffer, '\0', sizeof(buffer));
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{
-			cgiReq->setResourceContent(std::string(buffer));
+			ogReq->setResourceContent(std::string(buffer));
 			memset(buffer, '\0', sizeof(buffer));
 		}
 		// TO DO: Think about failures in Cgi execution and send 500 errors
@@ -152,7 +153,7 @@ namespace Webserv
 
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
-		const Request *req = this->obtainOriginalReq(eventList.data.fd);
+		const Request *req = dynamic_cast<const Request *>(this->_clientPool.find(eventList.data.fd)->second);
 		// *----CAMBIO----//
 		HttpResponse Hresp;
 		std::string response;
@@ -200,15 +201,6 @@ namespace Webserv
 			this->_sessions.erase(expiredSessId.top());
 			expiredSessId.pop();
 		}
-	}
-
-	const Request *Server::obtainOriginalReq(int fd)
-	{
-		const ARequest *req = this->_clientPool[fd];
-		if (dynamic_cast<const Request *>(req))
-			return (dynamic_cast<const Request *>(req));
-		const CgiReq *cgiReq = dynamic_cast<const CgiReq *>(req);
-		return (cgiReq->getOgReq());
 	}
 
 	const char *Server::ServerException::what(void) const throw()

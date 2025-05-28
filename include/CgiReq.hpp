@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:26:11 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:20:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:40:42 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,9 @@ namespace Webserv
         CgiReq(int *pipeFd, int _ogReqSock);
         CgiReq(const CgiReq &toCopy);
         CgiReq &operator=(const CgiReq &toCopy);
-
-        void readReq(const char *buffer, size_t bufSize);
         
         int getOgReqSock(void) const;
-        
-        std::size_t setResourceContent(const std::string &content);
-        
+                
         ~CgiReq();
     };
 }

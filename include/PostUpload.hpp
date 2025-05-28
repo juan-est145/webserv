@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:31:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:45:32 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,10 @@
 #include <fstream>
 #include <exception>
 #include "AServerAction.hpp"
-#include "Request.hpp"
 #include "Cookie.hpp"
 
 namespace Webserv
 {
-	class Request;
-
 	class PostUpload : public AServerAction
 	{
 	private:

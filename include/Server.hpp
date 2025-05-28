@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 19:56:20 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:47:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include <algorithm>
 #include "Logger.hpp"
 #include "Request.hpp"
+#include "ARequest.hpp"
 #include "Director.hpp"
 #include "ConcreteBuilder.hpp"
 #include "HttpResponse.hpp"
@@ -40,7 +41,6 @@
 namespace Webserv
 {
 	class ConfigServer;
-	class Request;
 	class AuxFunc;
 
 	class Server
@@ -57,7 +57,6 @@ namespace Webserv
 		void writeOperations(const struct epoll_event &eventList);
 		std::size_t findExpectedSize(Request *req) const;
 		void deleteExpiredSessions(void);
-		const Request *obtainOriginalReq(int fd);
 
 	public:
 		Server(void);
