@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:22:13 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 19:06:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 20:17:19 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ namespace Webserv
         ARequest &operator=(const ARequest &toCopy);
 
         virtual void readReq(const char *buffer, size_t bufSize) = 0;
+        virtual std::size_t setResourceContent(const std::string &content) = 0;
 
         int getSocketFd(void) const;
-        ~ARequest();
+        virtual ~ARequest();
     };
 
 }

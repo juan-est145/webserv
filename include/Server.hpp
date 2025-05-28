@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:32:10 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:56:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,13 @@ namespace Webserv
 		std::map<int, ARequest *> _clientPool;
 		std::map<std::string, struct CookieData> _sessions;
 
-		void addConnectionToQueue(struct epoll_event &event) const;
 		void readSocket(const struct epoll_event &eventList);
+		void readPipe(const struct epoll_event &eventList);
 		void readFile(struct epoll_event &eventList, struct epoll_event &eventConf);
 		void writeOperations(const struct epoll_event &eventList);
 		std::size_t findExpectedSize(Request *req) const;
 		void deleteExpiredSessions(void);
+		const Request *obtainOriginalReq(int fd);
 
 	public:
 		Server(void);
@@ -64,6 +65,7 @@ namespace Webserv
 		Server(const Server &copy);
 		Server &operator=(const Server &assign);
 		void processClientConn(int eventListIndex);
+		void addClientPool(int fd, ARequest *req);
 
 		class ServerException : public std::exception
 		{

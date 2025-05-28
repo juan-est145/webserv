@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:30:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 20:18:18 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,20 @@ namespace Webserv
 	{
 		this->deleteExpiredSessions();
 		const struct epoll_event *eventList = Cluster::cluster->getEventList();
-		if (eventList[eventListIndex].events & EPOLLIN)
+		const std::map<int, Cluster::SocketData> socketData = Cluster::cluster->getSockets();
+		std::map<int, Cluster::SocketData>::const_iterator socketInfo = socketData.find(eventList[eventListIndex].data.fd);
+		
+		if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == Cluster::ACCEPT_SOCKET)
 			this->readSocket(eventList[eventListIndex]);
+		else if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == Cluster::PIPE_SOCKET)
+			this->readPipe(eventList[eventListIndex]);
 		else
 			this->writeOperations(eventList[eventListIndex]);
+	}
+
+	void Server::addClientPool(int fd, ARequest *req)
+	{
+		this->_clientPool[fd] = req;
 	}
 
 	void Server::readSocket(const struct epoll_event &eventList)
@@ -64,7 +74,7 @@ namespace Webserv
 			return;
 		}
 		buffer[bufRead] = '\0';
-		ARequest *req = this->_clientPool.find(eventList.data.fd) == this->_clientPool.end() ? new Request(eventList.data.fd) : this->_clientPool[eventList.data.fd];
+		Request *req = this->_clientPool.find(eventList.data.fd) == this->_clientPool.end() ? new Request(eventList.data.fd) : dynamic_cast<Request *>(this->_clientPool[eventList.data.fd]);
 		try
 		{
 			req->readReq(buffer, bufRead);
@@ -104,9 +114,45 @@ namespace Webserv
 			throw Webserv::Server::ServerException();
 	}
 
+	void Server::readPipe(const struct epoll_event &eventList)
+	{
+		char buffer[1024];
+		int bytesRead = 0;
+		int status = 0;
+		ARequest *cgiReq = this->_clientPool.find(eventList.data.fd)->second;
+		const Request *ogReq = dynamic_cast<const CgiReq *>(cgiReq)->getOgReq();
+
+		(void)status;
+		memset(buffer, '\0', sizeof(buffer));
+		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
+		{
+			cgiReq->setResourceContent(std::string(buffer));
+			memset(buffer, '\0', sizeof(buffer));
+		}
+		// TO DO: Think about failures in Cgi execution and send 500 errors
+		//if (bytesRead == -1)
+		// {
+		// 	close(pipeFd[PIPE_READ]);
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// }
+		// if (close(eventList.data.fd) == -1)
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		// 	throw Webserv::Cgi::CgiErrorException();
+		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, Cluster::cluster->getEvent()))
+		// 	throw Webserv::Server::ServerException();
+		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, cgiReq->getSocketFd(), Cluster::cluster->getEvent()))
+		// 	throw Webserv::Server::ServerException();
+		close(eventList.data.fd);
+		AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, Cluster::cluster->getEvent());
+		AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), Cluster::cluster->getEvent());
+		this->_clientPool.erase(cgiReq->getSocketFd());
+		delete cgiReq;
+	}
+
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
-		const Request *req = this->_clientPool[eventList.data.fd];
+		const Request *req = this->obtainOriginalReq(eventList.data.fd);
 		// *----CAMBIO----//
 		HttpResponse Hresp;
 		std::string response;
@@ -154,6 +200,15 @@ namespace Webserv
 			this->_sessions.erase(expiredSessId.top());
 			expiredSessId.pop();
 		}
+	}
+
+	const Request *Server::obtainOriginalReq(int fd)
+	{
+		const ARequest *req = this->_clientPool[fd];
+		if (dynamic_cast<const Request *>(req))
+			return (dynamic_cast<const Request *>(req));
+		const CgiReq *cgiReq = dynamic_cast<const CgiReq *>(req);
+		return (cgiReq->getOgReq());
 	}
 
 	const char *Server::ServerException::what(void) const throw()

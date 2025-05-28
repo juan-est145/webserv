@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/26 20:12:25 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 20:14:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,22 @@
 
 bool g_stop = false;
 
-void intSigHandler(int signum)
+void sigHandler(int signum)
 {
     if (signum == SIGINT)
         g_stop = true;
+    else if (signum == SIGCHLD)
+    {
+        while (waitpid(-1, NULL, WNOHANG) > 0);
+    }
 }
+
 
 int main(int argc, char *argv[])
 {
     std::string confFile = argc < 2 ? "./config/default.conf" : argv[1];
-    signal(SIGINT, &intSigHandler);
+    signal(SIGINT, &sigHandler);
+    signal(SIGCHLD, &sigHandler);
     try
     {
         Webserv::ConfigParser parser;

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:05:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:05:03 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace Webserv
 		typedef int urlSegmentIndex;
 
 		const Location *_locationConf;
-		const Request *_req;
+		Request *_req;
 		std::string _interpreter;
 		std::string _pathInfo;
 
@@ -93,7 +93,7 @@ namespace Webserv
 
 	public:
 		Cgi(void);
-		Cgi(const Location &location, const Request &req);
+		Cgi(const Location &location, Request &req);
 		Cgi(const Cgi &toCopy);
 		Cgi &operator=(const Cgi &toCopy);
 

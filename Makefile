@@ -23,6 +23,9 @@ $(SRC-PATH)/Cgi.cpp\
 $(SRC-PATH)/AServerAction.cpp\
 $(SRC-PATH)/Cookie.cpp\
 $(SRC-PATH)/Delete.cpp\
+$(SRC-PATH)/ARequest.cpp\
+$(SRC-PATH)/CgiReq.cpp\
+
 
 
 OBJS = $(SRCS:.cpp=.o)
@@ -48,6 +51,8 @@ $(HEADER-PATH)/AServerAction.hpp\
 $(HEADER-PATH)/FirstHeader.hpp\
 $(HEADER-PATH)/Cookie.hpp\
 $(HEADER-PATH)/Delete.hpp\
+$(HEADER-PATH)/ARequest.hpp\
+$(HEADER-PATH)/CgiReq.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
 CXX = $(shell which g++ c++ clang++  | head -n 1)

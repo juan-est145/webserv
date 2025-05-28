@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:55:54 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:09:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace Webserv
 {
-	Request::Request(void)
+	Request::Request(void): ARequest()
 	{
 		this->_firstHeader.httpVers = "";
 		this->_ready = true;
@@ -28,7 +28,7 @@ namespace Webserv
 		this->_serverAction = NULL;
 	}
 
-	Request::Request(int socketFd)
+	Request::Request(int socketFd): ARequest(socketFd)
 	{
 		this->_firstHeader.httpVers = "";
 		this->_ready = true;
@@ -42,7 +42,7 @@ namespace Webserv
 		this->_serverAction = NULL;
 	}
 
-	Request::Request(const Request &copy)
+	Request::Request(const Request &copy): ARequest(copy)
 	{
 		*this = copy;
 	}

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:28:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:48:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ namespace Webserv
 		this->_pathInfo = "";
 	}
 
-	Cgi::Cgi(const Location &location, const Request &req) : _locationConf(&location), _req(&req)
+	Cgi::Cgi(const Location &location, Request &req) : _locationConf(&location), _req(&req)
 	{
 		this->_interpreter = "";
 		this->_pathInfo = "";
@@ -266,12 +266,10 @@ namespace Webserv
 
 	void Cgi::parentProcess(int *pipeFd, const std::string &body, pid_t &pid, std::string &content) const
 	{
-		char buffer[1024];
-		int status = 0;
-		int bytesRead = 0;
+		//int status = 0;
+		
 		Cluster *cluster = Cluster::getInstance();
 
-		memset(buffer, '\0', sizeof(buffer));
 		if (write(pipeFd[PIPE_WRITE], body.c_str(), body.size()) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
@@ -285,11 +283,13 @@ namespace Webserv
 		}
 
 		ARequest *cgiReq = new CgiReq(pipeFd, this->_req);
+		Server *server = cluster->findServer(this->_req->getSocketFd());
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, this->_req->getSocketFd(), Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], Cluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
-		cluster->addPipeSocket(pipeFd[PIPE_READ], cluster->findServer(this->_req->getSocketFd()));
+		cluster->addPipeSocket(pipeFd[PIPE_READ], server);
+		server->addClientPool(pipeFd[PIPE_READ], cgiReq);
 		// if (waitpid(pid, &status, 0) == -1)
 		// {
 		// 	close(pipeFd[PIPE_WRITE]);

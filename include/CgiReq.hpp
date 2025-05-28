@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:26:11 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:49:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/28 19:58:45 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ namespace Webserv
         CgiReq &operator=(const CgiReq &toCopy);
 
         void readReq(const char *buffer, size_t bufSize);
-
+        
+        const Request *getOgReq(void) const;
+        
+        std::size_t setResourceContent(const std::string &content);
+        
         ~CgiReq();
     };
 }
