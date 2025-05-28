@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:56:55 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/28 23:47:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:28:20 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@
 #include <sys/stat.h>
 #include "AuxFunc.hpp"
 #include "IBuilder.hpp"
-#include "Request.hpp"
 
 namespace Webserv
 {
     class Builder;
-    class Request;
 
     class Director
     {
@@ -34,8 +32,8 @@ namespace Webserv
         Director(Director &toCopy);
         Director &operator=(const Director &toCopy);
         
-        void SetBuilder(IBuilder *builder);
-        void BuildDefaultResponse(const Request *rq); // CODE 200
+        void setBuilder(IBuilder *builder);
+        void buildDefaultResponse(unsigned int resCode, const std::map<std::string, std::string> &resHeaders);
 
         ~Director();
     };

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 18:48:38 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/17 18:07:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:28:11 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,20 +37,20 @@ namespace Webserv
 	Director::~Director()
 	{
 	}
-	void Director::SetBuilder(IBuilder *builder)
+	void Director::setBuilder(IBuilder *builder)
 	{
 		this->_builder = builder;
 	}
 	// DEFAULT
-	void Director::BuildDefaultResponse(const Request *rq)
+	void Director::buildDefaultResponse(unsigned int resCode, const std::map<std::string, std::string> &resHeaders)
 	{
 		std::string dateTime = AuxFunc::getGmtTime();
 
-		this->_builder->setResCode(AuxFunc::ft_itoa(rq->getResCode()));
+		this->_builder->setResCode(AuxFunc::ft_itoa(resCode));
 		// this->_builder->setMime(rq->getResourceMime());
 		// this->_builder->setContentLength(rq->getResourceSize());
 		this->_builder->setDate(dateTime);
-		this->_builder->setHeaders(rq->getResHeaders());
+		this->_builder->setHeaders(resHeaders);
 		// if (rq->getResCode() == 201 || rq->getResCode() == 301 || rq->getResCode() == 302)
 		// 	this->_builder->setLocation(rq->getLocation());
 		// else if (rq->getResCode() == 405)

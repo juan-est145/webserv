@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:52:49 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:23:21 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,8 @@
 namespace Webserv
 {
 	class Location;
-	class Request;
 	class Cluster;
-	class Request;
+	class ARequest;
 
 	class Cgi
 	{

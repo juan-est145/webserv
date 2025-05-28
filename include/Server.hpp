@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 00:03:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:42:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include <algorithm>
 #include "Logger.hpp"
 #include "ARequest.hpp"
+#include "Request.hpp"
 #include "Director.hpp"
 #include "ConcreteBuilder.hpp"
 #include "HttpResponse.hpp"
@@ -42,7 +43,6 @@ namespace Webserv
 	class ConfigServer;
 	class AuxFunc;
 	class Request;
-	class ARequest;
 
 	class Server
 	{

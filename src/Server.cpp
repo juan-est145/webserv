@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:41:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:34:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,10 +159,10 @@ namespace Webserv
 		std::string response;
 		Director director;
 		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); 
-		director.SetBuilder(builder);
+		director.setBuilder(builder);
 
-		director.BuildDefaultResponse(req);
-		response = Hresp.returnResponse(req);
+		director.buildDefaultResponse(req->getResCode(), req->getResHeaders());
+		response = Hresp.returnResponse(req->getResourceContent());
 	
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);

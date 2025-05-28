@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/17 18:19:22 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:32:58 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ namespace Webserv
         return (*this);
     }
 
-    std::string HttpResponse::returnResponse(const Request *req) const
+    std::string HttpResponse::returnResponse(const std::string &content) const
     {
         std::stringstream ss;
         
         ss << this->_httpVersion << " " << this->_resCode << "\r\n";
         for (std::map<std::string, std::string>::const_iterator it = this->_headers.begin(); it != this->_headers.end(); it++)
             ss << it->first << ": " << it->second << "\r\n";
-        ss << "\r\n" << req->getResourceContent();
+        ss << "\r\n" << content;
         return (ss.str());
     }
     // APARTADOS FALTANTES

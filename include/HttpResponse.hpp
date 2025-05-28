@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/17 18:19:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 00:33:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,9 @@
 #include <iostream>
 #include <map>
 #include <sys/stat.h>
-#include "Request.hpp"
 
 namespace Webserv
 {
-    class Request;
-
     class HttpResponse
     {
     private:
@@ -39,7 +36,7 @@ namespace Webserv
         HttpResponse(HttpResponse &toCopy);
         HttpResponse &operator=(const HttpResponse &toCopy);
 
-        std::string returnResponse(const Request *req) const;
+        std::string returnResponse(const std::string &content) const;
 
         // Getters
         const std::string &getResCode(void) const;
