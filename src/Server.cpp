@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 00:34:16 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:30:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,13 @@ namespace Webserv
 	void Server::processClientConn(int eventListIndex)
 	{
 		this->deleteExpiredSessions();
-		const struct epoll_event *eventList = Cluster::cluster->getEventList();
-		const std::map<int, Cluster::SocketData> socketData = Cluster::cluster->getSockets();
-		std::map<int, Cluster::SocketData>::const_iterator socketInfo = socketData.find(eventList[eventListIndex].data.fd);
+		const struct epoll_event *eventList = ICluster::cluster->getEventList();
+		const std::map<int, ICluster::SocketData> socketData = ICluster::cluster->getSockets();
+		std::map<int, ICluster::SocketData>::const_iterator socketInfo = socketData.find(eventList[eventListIndex].data.fd);
 		
-		if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == Cluster::ACCEPT_SOCKET)
+		if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == ICluster::ACCEPT_SOCKET)
 			this->readSocket(eventList[eventListIndex]);
-		else if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == Cluster::PIPE_SOCKET)
+		else if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == ICluster::PIPE_SOCKET)
 			this->readPipe(eventList[eventListIndex]);
 		else
 			this->writeOperations(eventList[eventListIndex]);
@@ -69,8 +69,8 @@ namespace Webserv
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
 		{
-			AuxFunc::handleRecvError(Cluster::cluster->getEvent(), eventList, bufRead, Cluster::cluster->getEpollFd());
-			Cluster::getInstance()->deleteAcceptSocket(eventList.data.fd);
+			AuxFunc::handleRecvError(ICluster::cluster->getEvent(), eventList, bufRead, ICluster::cluster->getEpollFd());
+			ICluster::cluster->deleteAcceptSocket(eventList.data.fd);
 			return;
 		}
 		buffer[bufRead] = '\0';
@@ -83,7 +83,7 @@ namespace Webserv
 		{
 			req->send400ErrorCode(this->_configurations);
 			this->_clientPool[eventList.data.fd] = req;
-			if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
+			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
 				throw Webserv::Server::ServerException();
 			return;
 		}
@@ -97,7 +97,7 @@ namespace Webserv
 				bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 				if (bufRead <= 0)
 				{
-					AuxFunc::handleRecvError(Cluster::cluster->getEvent(), eventList, bufRead, Cluster::cluster->getEpollFd());
+					AuxFunc::handleRecvError(ICluster::cluster->getEvent(), eventList, bufRead, ICluster::cluster->getEpollFd());
 					return;
 				}
 				buffer[bufRead] = '\0';
@@ -110,7 +110,7 @@ namespace Webserv
 			return;
 		req->handleReq(this->_configurations, this->_sessions);
 		this->_sessions[req->getCookie()._id] = req->getCookie();
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}
 
@@ -145,8 +145,8 @@ namespace Webserv
 		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, cgiReq->getSocketFd(), Cluster::cluster->getEvent()))
 		// 	throw Webserv::Server::ServerException();
 		close(eventList.data.fd);
-		AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, Cluster::cluster->getEvent());
-		AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), Cluster::cluster->getEvent());
+		AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent());
+		AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), ICluster::cluster->getEvent());
 		this->_clientPool.erase(cgiReq->getSocketFd());
 		delete cgiReq;
 	}
@@ -172,7 +172,7 @@ namespace Webserv
 		// The lines below are comented because we now don't close the connection on server. Later on we might need to change this
 		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 		// 	throw Server::ServerException();
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLIN, eventList.data.fd, Cluster::cluster->getEvent()))
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);

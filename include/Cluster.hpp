@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:11:46 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 00:42:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:27:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,42 +24,33 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <netdb.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <algorithm>
 #include <bitset>
 #include <sstream>
-#include "Server.hpp"
 #include "ConfigServer.hpp"
+#include "ICluster.hpp"
+#include "Server.hpp"
 
 namespace Webserv
 {
-	class Server;
 	class ConfigServer;
 	class Request;
 
-	class Cluster
+	class Cluster : public ICluster
 	{
 	public:
-		enum SocketType
-		{
-			LISTEN_SOCKET,
-			ACCEPT_SOCKET,
-			PIPE_SOCKET,
-		};
 		typedef struct AddressData
 		{
 			struct addrinfo *addrinfo;
 			std::vector<ConfigServer> _configurations;
 		} t_AddressData;
-		typedef struct SocketData
-		{
-			enum SocketType socketType;
-			Server *server;
-		} t_SocketData;
 
-		static Cluster *cluster;
 
-		static Cluster *getInstance(const std::vector<ConfigServer> &configurations);
-		static Cluster *getInstance(void);
+		static ICluster *getInstance(const std::vector<ConfigServer> &configurations);
+		static ICluster *getInstance(void);
 		const std::vector<ConfigServer> &getConfigurations(void) const;
 		int getEpollFd(void) const;
 		const std::map<int, SocketData> &getSockets(void) const;
@@ -68,8 +59,8 @@ namespace Webserv
 
 		void initVirtualServers(void);
 		void deleteAcceptSocket(int fd);
-		void addPipeSocket(int fd, Server *server);
-		Server *findServer(int fd);
+		void addPipeSocket(int fd, IServer *server);
+		IServer *findServer(int fd);
 
 		class ClusterException : public std::exception
 		{

@@ -6,20 +6,12 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:12:09 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 00:23:21 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:34:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CGI_HPP
 #define CGI_HPP
-
-#ifndef PIPE_READ
-#define PIPE_READ 0
-#endif
-
-#ifndef PIPE_WRITE
-#define PIPE_WRITE 1
-#endif
 
 #include <iostream>
 #include <string>
@@ -34,14 +26,14 @@
 #include "AuxFunc.hpp"
 #include "ConfigServer.hpp"
 #include "RequestData.hpp"
-#include "Cluster.hpp"
+#include "ICluster.hpp"
 #include "CgiReq.hpp"
 
 namespace Webserv
 {
 	class Location;
 	class Cluster;
-	class ARequest;
+	class Request;
 
 	class Cgi
 	{

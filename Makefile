@@ -25,7 +25,7 @@ $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/Cgi.cpp\
 $(SRC-PATH)/Cookie.cpp\
 $(SRC-PATH)/CgiReq.cpp\
-
+$(SRC-PATH)/ServerActionGenerator.cpp\
 
 
 OBJS = $(SRCS:.cpp=.o)
@@ -40,6 +40,7 @@ $(HEADER-PATH)/Delete.hpp\
 $(HEADER-PATH)/IBuilder.hpp\
 $(HEADER-PATH)/ARequest.hpp\
 $(HEADER-PATH)/Request.hpp\
+$(HEADER-PATH)/ICluster.hpp\
 $(HEADER-PATH)/Cluster.hpp\
 $(HEADER-PATH)/Logger.hpp\
 $(HEADER-PATH)/Location.hpp\
@@ -48,12 +49,14 @@ $(HEADER-PATH)/AuxFunc.hpp\
 $(HEADER-PATH)/HttpResponse.hpp\
 $(HEADER-PATH)/ConcreteBuilder.hpp\
 $(HEADER-PATH)/Director.hpp\
+$(HEADER-PATH)/IServer.hpp\
 $(HEADER-PATH)/Server.hpp\
 $(HEADER-PATH)/Cgi.hpp\
 $(HEADER-PATH)/FirstHeader.hpp\
 $(HEADER-PATH)/Cookie.hpp\
 $(HEADER-PATH)/CgiReq.hpp\
 $(HEADER-PATH)/RequestData.hpp\
+$(HEADER-PATH)/ServerActionGenerator.hpp\
 
 # TO DO: Remember to change the order of compilers to c++ clang++ g++ when evaluating project
 CXX = $(shell which g++ c++ clang++  | head -n 1)

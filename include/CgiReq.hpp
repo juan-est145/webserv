@@ -6,21 +6,27 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:26:11 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:40:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:34:28 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CGIREQ_HPP
 #define CGIREQ_HPP
 
+#ifndef PIPE_READ
+#define PIPE_READ 0
+#endif
+
+#ifndef PIPE_WRITE
+#define PIPE_WRITE 1
+#endif
+
 #include <string>
 #include <iostream>
 #include "ARequest.hpp"
-#include "Request.hpp"
 
 namespace Webserv
 {
-    class Request;
 
     class CgiReq : public ARequest
     {

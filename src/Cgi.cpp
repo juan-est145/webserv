@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:30:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:32:15 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,7 +256,7 @@ namespace Webserv
 	{
 		//int status = 0;
 		
-		Cluster *cluster = Cluster::getInstance();
+		(void)pid;
 
 		if (write(pipeFd[PIPE_WRITE], this->_reqData->_reqBody.c_str(), this->_reqData->_reqBody.size()) == -1)
 		{
@@ -271,12 +271,12 @@ namespace Webserv
 		}
 
 		ARequest *cgiReq = new CgiReq(pipeFd, reqFd);
-		Server *server = cluster->findServer(reqFd);
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, reqFd, Cluster::cluster->getEvent()))
-			throw Webserv::Server::ServerException();
-		if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], Cluster::cluster->getEvent()))
-			throw Webserv::Server::ServerException();
-		cluster->addPipeSocket(pipeFd[PIPE_READ], server);
+		IServer *server = ICluster::cluster->findServer(reqFd);
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, reqFd, ICluster::cluster->getEvent()))
+			throw Webserv::IServer::ServerException();
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, pipeFd[PIPE_READ], ICluster::cluster->getEvent()))
+			throw Webserv::IServer::ServerException();
+		ICluster::cluster->addPipeSocket(pipeFd[PIPE_READ], server);
 		server->addClientPool(pipeFd[PIPE_READ], cgiReq);
 		// if (waitpid(pid, &status, 0) == -1)
 		// {

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:24:38 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/27 18:27:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:27:14 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ extern bool g_stop;
 
 namespace Webserv
 {
-	Cluster *Cluster::cluster = NULL;
+	ICluster *ICluster::cluster = NULL;
 
 	Cluster::Cluster(void) : _configurations(std::vector<ConfigServer>())
 	{
@@ -39,14 +39,14 @@ namespace Webserv
 		return (*this);
 	}
 
-	Cluster *Cluster::getInstance(const std::vector<ConfigServer> &configurations)
+	ICluster *Cluster::getInstance(const std::vector<ConfigServer> &configurations)
 	{
 		if (cluster == NULL)
 			cluster = new Cluster(configurations);
 		return (cluster);
 	}
 
-	Cluster *Cluster::getInstance(void)
+	ICluster *Cluster::getInstance(void)
 	{
 		if (cluster == NULL)
 			throw Cluster::ClusterException();
@@ -215,7 +215,7 @@ namespace Webserv
 		this->_sockets.erase(it);
 	}
 
-	void Cluster::addPipeSocket(int fd, Server *server)
+	void Cluster::addPipeSocket(int fd, IServer *server)
 	{
 		t_SocketData socketData;
 
@@ -224,7 +224,7 @@ namespace Webserv
 		this->_sockets[fd] = socketData;
 	}
 
-	Server *Cluster::findServer(int fd)
+	IServer *Cluster::findServer(int fd)
 	{
 		std::map<int, SocketData>::const_iterator it = this->_sockets.find(fd);
 		if (it == this->_sockets.end())
@@ -234,27 +234,27 @@ namespace Webserv
 
 	const std::vector<ConfigServer> &Cluster::getConfigurations(void) const
 	{
-		return (Cluster::cluster->_configurations);
+		return (dynamic_cast<Cluster *>(Cluster::cluster)->_configurations);
 	}
 
 	int Cluster::getEpollFd(void) const
 	{
-		return (Cluster::cluster->_epollFd);
+		return (dynamic_cast<Cluster *>(Cluster::cluster)->_epollFd);
 	}
 
 	const std::map<int, Cluster::SocketData> &Cluster::getSockets(void) const
 	{
-		return (Cluster::cluster->_sockets);
+		return (dynamic_cast<Cluster *>(Cluster::cluster)->_sockets);
 	}
 
 	const struct epoll_event *Cluster::getEventList(void) const
 	{
-		return (Cluster::cluster->_eventList);
+		return (dynamic_cast<Cluster *>(Cluster::cluster)->_eventList);
 	}
 
 	struct epoll_event &Cluster::getEvent(void) const
 	{
-		return (Cluster::cluster->_event);
+		return (dynamic_cast<Cluster *>(Cluster::cluster)->_event);
 	}
 
 	const char *Cluster::ClusterException::what(void) const throw()
@@ -264,14 +264,14 @@ namespace Webserv
 
 	Cluster::~Cluster() 
 	{
-		std::vector<Server *> servers;
+		std::vector<IServer *> servers;
 		for (socketIter it = this->_sockets.begin(); it != this->_sockets.end(); it++)
 		{
 			close(it->first);
 			if (std::find(servers.begin(), servers.end(), it->second.server) == servers.end())
 				servers.push_back(it->second.server);
 		}
-		for (std::vector<Server *>::iterator it = servers.begin(); it != servers.end(); it++)
+		for (std::vector<IServer *>::iterator it = servers.begin(); it != servers.end(); it++)
 			delete *it;
 		close(this->_epollFd);
 	}

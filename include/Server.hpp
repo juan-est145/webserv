@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 00:42:05 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:30:10 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 #include <string>
 #include <unistd.h>
 #include <cerrno>
-#include <netdb.h>
-#include <sys/types.h>
 #include <sys/socket.h>
 #include <exception>
 #include <cstdio>
@@ -34,7 +32,7 @@
 #include "Director.hpp"
 #include "ConcreteBuilder.hpp"
 #include "HttpResponse.hpp"
-#include "Cluster.hpp"
+#include "ICluster.hpp"
 #include "ConfigServer.hpp"
 #include "Cookie.hpp"
 
@@ -44,7 +42,7 @@ namespace Webserv
 	class AuxFunc;
 	class Request;
 
-	class Server
+	class Server : public IServer
 	{
 	private:
 		int _listenFd;

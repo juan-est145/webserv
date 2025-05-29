@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:49:14 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:15:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,9 @@
 #include <utility>
 #include "Logger.hpp"
 #include "AServerAction.hpp"
-#include "ResourceReq.hpp"
-#include "PostUpload.hpp"
-#include "Delete.hpp"
 #include "ARequest.hpp"
 #include "RequestData.hpp"
+#include "ServerActionGenerator.hpp"
 
 namespace Webserv
 {
@@ -77,6 +75,7 @@ namespace Webserv
 		bool isReady(void) const;
 		const std::map<std::string, std::string> &getResHeaders(void) const;
 		const struct CookieData &getCookie(void) const;
+		const struct RequestData &getRequestData(void) const;
 
 		void setResCode(unsigned int resCode);
 		std::size_t setResourceContent(const std::string &content);

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:21:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:16:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,12 +83,13 @@ namespace Webserv
 		const std::map<std::string, struct CookieData> &sessions)
 	{
 		this->selectConfiguration(configs);
-		if(this->getMethod().second == POST)
-			this->_serverAction = new Webserv::PostUpload(this->_requestData._reqBody, this->getPath(), this->_socketFd);
-		else if(this->getMethod().second == DELETE)
-			this->_serverAction = new Webserv::Delete(this->getPath(), this->_socketFd);
-		else
-			this->_serverAction = new Webserv::ResourceReq(this->getPath(), this->_socketFd);
+		this->_serverAction = ServerActionGenerator::createServerAction(this->_requestData, this->_socketFd);
+		// if(this->getMethod().second == POST)
+		// 	this->_serverAction = new Webserv::PostUpload(this->_requestData._reqBody, this->getPath(), this->_socketFd);
+		// else if(this->getMethod().second == DELETE)
+		// 	this->_serverAction = new Webserv::Delete(this->getPath(), this->_socketFd);
+		// else
+		// 	this->_serverAction = new Webserv::ResourceReq(this->getPath(), this->_socketFd);
 		this->_serverAction->processRequest(this->_configuration, this->_requestData, sessions);
 	}
 
@@ -311,6 +312,11 @@ namespace Webserv
 		if (this->_serverAction == NULL)
 			throw Request::RequestException();
 		return (this->_serverAction->getCookie());
+	}
+
+	const struct RequestData &Request::getRequestData(void) const
+	{
+		return (this->_requestData);
 	}
 
 	void Request::setResCode(unsigned int resCode)

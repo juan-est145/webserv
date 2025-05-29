@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 20:14:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 11:02:24 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ int main(int argc, char *argv[])
     try
     {
         Webserv::ConfigParser parser;
-        Webserv::Cluster *cluster = NULL;
+        Webserv::ICluster *cluster = NULL;
         parser.initConfigParser(confFile);
-        cluster = Webserv::Cluster::cluster->getInstance(parser.getServers());
+        cluster = Webserv::Cluster::getInstance(parser.getServers());
         cluster->initVirtualServers();
     }
     catch (const Webserv::Server::ServerException &e)

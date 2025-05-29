@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 18:33:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:40:30 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:39:42 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ namespace Webserv
     {
         this->_pipeFd[PIPE_READ] = -1;
         this->_pipeFd[PIPE_WRITE] = -1;
+        this->_ogReqSock = -1;
     }
 
     CgiReq::CgiReq(int *pipeFd, int _ogReqSock) : ARequest(pipeFd[PIPE_READ])
     {
         this->_pipeFd[PIPE_READ] = pipeFd[PIPE_READ];
         this->_pipeFd[PIPE_WRITE] = pipeFd[PIPE_WRITE];
+        this->_ogReqSock = _ogReqSock;
     }
 
     CgiReq::CgiReq(const CgiReq &toCopy) : ARequest(toCopy)
