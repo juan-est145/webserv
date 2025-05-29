@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 11:02:24 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:02:54 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void sigHandler(int signum)
         g_stop = true;
     else if (signum == SIGCHLD)
     {
+        std::cout << "We have cached the child" << std::endl;
         while (waitpid(-1, NULL, WNOHANG) > 0);
     }
 }

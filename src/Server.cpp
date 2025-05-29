@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 21:04:59 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:02:47 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,11 +136,16 @@ namespace Webserv
 
 		(void)status;
 		memset(buffer, '\0', sizeof(buffer));
+		//while (waitpid(-1, NULL, WNOHANG) > 0);
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{
-			content += buffer; 
+			std::cout << "The fd is " << eventList.data.fd << std::endl;
+			std::cout << "We have read " << bytesRead << " bytes" << std::endl;
+			content += buffer;
+			std::cout << content << std::endl;
 			memset(buffer, '\0', sizeof(buffer));
 		}
+		std::cout << "We are out" << std::endl;
 		ogReq->setResourceContent(content);
 		// TO DO: Think about failures in Cgi execution and send 500 errors
 		//if (bytesRead == -1)
