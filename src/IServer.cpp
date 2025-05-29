@@ -1,36 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IServer.hpp                                        :+:      :+:    :+:   */
+/*   IServer.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/29 11:20:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:46:54 by juestrel         ###   ########.fr       */
+/*   Created: 2025/05/29 12:49:22 by juestrel          #+#    #+#             */
+/*   Updated: 2025/05/29 12:53:04 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ISERVER_HPP
-#define ISERVER_HPP
-
-#include "ARequest.hpp"
+#include "../include/IServer.hpp"
 
 namespace Webserv
 {
-	class IServer
+	const char *IServer::ServerException::what(void) const throw()
 	{
-	public:
-		virtual void processClientConn(int eventListIndex) = 0;
-		virtual void addClientPool(int fd, ARequest *req) = 0;
-		virtual ~IServer() {};
-
-		class ServerException : public std::exception
-		{
-		public:
-			virtual const char *what(void) const throw();
-		};
-	};
-
+		return ("The server found a problem and must stop now");
+	}
 }
-
-#endif

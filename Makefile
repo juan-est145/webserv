@@ -21,6 +21,7 @@ $(SRC-PATH)/AuxFunc.cpp\
 $(SRC-PATH)/HttpResponse.cpp\
 $(SRC-PATH)/ConcreteBuilder.cpp\
 $(SRC-PATH)/Director.cpp\
+$(SRC-PATH)/IServer.cpp\
 $(SRC-PATH)/Server.cpp\
 $(SRC-PATH)/Cgi.cpp\
 $(SRC-PATH)/Cookie.cpp\

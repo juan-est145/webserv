@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:05 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:30:10 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:51:16 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include <cerrno>
 #include <sys/socket.h>
-#include <exception>
 #include <cstdio>
 #include <map>
 #include <vector>
@@ -65,11 +64,11 @@ namespace Webserv
 		void processClientConn(int eventListIndex);
 		void addClientPool(int fd, ARequest *req);
 
-		class ServerException : public std::exception
-		{
-		public:
-			virtual const char *what(void) const throw();
-		};
+		// class ServerException : public std::exception
+		// {
+		// public:
+		// 	virtual const char *what(void) const throw();
+		// };
 		~Server();
 	};
 }

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:30:56 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:51:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,10 +203,10 @@ namespace Webserv
 		}
 	}
 
-	const char *Server::ServerException::what(void) const throw()
-	{
-		return ("The server found a problem and must stop now");
-	}
+	// const char *Server::ServerException::what(void) const throw()
+	// {
+		
+	// }
 
 	Server::~Server() {}
 }

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/29 10:29:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 11:21:41 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 12:46:46 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ namespace Webserv
 		virtual int getEpollFd(void) const = 0;
 		virtual const struct epoll_event *getEventList(void) const = 0;
 		virtual const std::map<int, SocketData> &getSockets(void) const = 0;
-		virtual ~ICluster();
+		virtual ~ICluster() {};
 	};
 }
 
