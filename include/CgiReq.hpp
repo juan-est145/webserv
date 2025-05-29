@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/27 17:26:11 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:34:28 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 23:22:36 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,16 @@ namespace Webserv
     private:
         int _ogReqSock;
         int _pipeFd[2];
+        pid_t _childPid;
 
     public:
         CgiReq(void);
-        CgiReq(int *pipeFd, int _ogReqSock);
+        CgiReq(int *pipeFd, int _ogReqSock, pid_t childPid);
         CgiReq(const CgiReq &toCopy);
         CgiReq &operator=(const CgiReq &toCopy);
         
         int getOgReqSock(void) const;
+        pid_t getChildPid(void) const;
                 
         ~CgiReq();
     };

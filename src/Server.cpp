@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 22:02:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 23:23:37 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,8 @@ namespace Webserv
 
 		(void)status;
 		memset(buffer, '\0', sizeof(buffer));
+		if (waitpid(dynamic_cast<const CgiReq *>(cgiReq)->getChildPid(), NULL,  WNOHANG) == 0)
+			return;
 		//while (waitpid(-1, NULL, WNOHANG) > 0);
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{

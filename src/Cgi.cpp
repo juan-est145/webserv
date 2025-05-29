@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 22:02:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 23:21:51 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,7 +270,7 @@ namespace Webserv
 			throw Webserv::Cgi::CgiErrorException();
 		}
 		std::cout << "We have written to " << pipeFd[PIPE_WRITE] << " this text " << this->_reqData->_reqBody << std::endl;
-		ARequest *cgiReq = new CgiReq(pipeFd, reqFd);
+		ARequest *cgiReq = new CgiReq(pipeFd, reqFd, pid);
 		IServer *server = ICluster::cluster->findServer(reqFd);
 		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, reqFd, ICluster::cluster->getEvent()))
 			throw Webserv::IServer::ServerException();
