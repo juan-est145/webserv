@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 20:49:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:04:59 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ namespace Webserv
 		char buffer[1024];
 		std::size_t bodySize;
 		std::size_t expectedSize;
+		unsigned long currentPool;
+		
 		memset(buffer, '\0', sizeof(buffer));
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
@@ -106,11 +108,19 @@ namespace Webserv
 			}
 		}
 		this->_clientPool[eventList.data.fd] = req;
+		currentPool = this->_clientPool.size();
 		if (!req->isReady())
 			return;
 		req->handleReq(this->_configurations, this->_sessions);
 		this->_sessions[req->getCookie()._id] = req->getCookie();
-		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
+		if (currentPool != this->_clientPool.size())
+		{
+			std::cout << "A cgi script has been loaded. The old pool was " << currentPool << " and now is at " << this->_clientPool.size() << std::endl;
+			return;
+		}
+		else
+			std::cout << "No cgi added" << std::endl;
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}
 
