@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:51:06 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:49:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ namespace Webserv
 			return;
 		req->handleReq(this->_configurations, this->_sessions);
 		this->_sessions[req->getCookie()._id] = req->getCookie();
-		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}
 
@@ -122,14 +122,16 @@ namespace Webserv
 		ARequest *cgiReq = this->_clientPool.find(eventList.data.fd)->second;
 		int ogReqFd = dynamic_cast<const CgiReq *>(cgiReq)->getOgReqSock();
 		Request *ogReq = dynamic_cast<Request *>(this->_clientPool.find(ogReqFd)->second);
+		std::string content;
 
 		(void)status;
 		memset(buffer, '\0', sizeof(buffer));
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{
-			ogReq->setResourceContent(std::string(buffer));
+			content += buffer; 
 			memset(buffer, '\0', sizeof(buffer));
 		}
+		ogReq->setResourceContent(content);
 		// TO DO: Think about failures in Cgi execution and send 500 errors
 		//if (bytesRead == -1)
 		// {
@@ -144,11 +146,11 @@ namespace Webserv
 		// 	throw Webserv::Server::ServerException();
 		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, cgiReq->getSocketFd(), Cluster::cluster->getEvent()))
 		// 	throw Webserv::Server::ServerException();
-		close(eventList.data.fd);
 		AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent());
 		AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), ICluster::cluster->getEvent());
 		this->_clientPool.erase(cgiReq->getSocketFd());
 		delete cgiReq;
+		close(eventList.data.fd);
 	}
 
 	void Server::writeOperations(const struct epoll_event &eventList)
@@ -163,7 +165,7 @@ namespace Webserv
 
 		director.buildDefaultResponse(req->getResCode(), req->getResHeaders());
 		response = Hresp.returnResponse(req->getResourceContent());
-	
+		
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;

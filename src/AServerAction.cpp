@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 13:05:50 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/28 23:28:57 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:48:13 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,6 +308,7 @@ namespace Webserv
 	std::size_t AServerAction::setContent(const std::string &content)
 	{
 		this->_content.length() == 0 ? this->_content = content : this->_content.append(content);
+		this->setContentLength(this->_content.length());
 		return (this->_content.length());
 	}
 
