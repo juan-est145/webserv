@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 11:31:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 13:12:05 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ namespace Webserv
 		const std::map<std::string, std::string> &getResHeaders(void) const;
 		const struct CookieData &getCookie(void) const;
 		const struct RequestData &getRequestData(void) const;
+		std::string getConnectionHeader(void) const;
 
 		void setResCode(unsigned int resCode);
 		std::size_t setResourceContent(const std::string &content);

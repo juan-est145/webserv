@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 12:55:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 13:21:17 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,8 +172,18 @@ namespace Webserv
 		// The lines below are comented because we now don't close the connection on server. Later on we might need to change this
 		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, Cluster::cluster->getEvent()))
 		// 	throw Server::ServerException();
-		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
-			throw Webserv::Server::ServerException();
+		if (req->getConnectionHeader() == "close")
+		{
+			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
+				throw Webserv::Server::ServerException();
+			ICluster::cluster->deleteAcceptSocket(eventList.data.fd);
+			close(eventList.data.fd);
+		}
+		else
+		{
+			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();	
+		}
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);
 	}

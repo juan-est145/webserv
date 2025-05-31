@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 11:58:00 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 13:16:26 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,14 @@ namespace Webserv
 	const struct RequestData &Request::getRequestData(void) const
 	{
 		return (this->_requestData);
+	}
+
+	std::string Request::getConnectionHeader(void) const
+	{
+		std::map<std::string, std::string>::const_iterator it = this->getReqHeader().find("Connection");
+		if (it == this->getReqHeader().end() || it->second == "keep-alive")
+			return ("keep-alive");
+		return ("close");
 	}
 
 	void Request::setResCode(unsigned int resCode)
