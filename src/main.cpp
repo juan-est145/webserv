@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:36 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 23:19:03 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:25:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@ void sigHandler(int signum)
 {
     if (signum == SIGINT)
         g_stop = true;
-    // else if (signum == SIGCHLD)
-    // {
-    //     std::cout << "We have cached the child" << std::endl;
-    //     while (waitpid(-1, NULL, WNOHANG) > 0);
-    // }
 }
 
 
@@ -33,7 +28,6 @@ int main(int argc, char *argv[])
 {
     std::string confFile = argc < 2 ? "./config/default.conf" : argv[1];
     signal(SIGINT, &sigHandler);
-    //signal(SIGCHLD, &sigHandler);
     try
     {
         Webserv::ConfigParser parser;

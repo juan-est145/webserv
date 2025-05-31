@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 23:23:37 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:26:01 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,12 +114,7 @@ namespace Webserv
 		req->handleReq(this->_configurations, this->_sessions);
 		this->_sessions[req->getCookie()._id] = req->getCookie();
 		if (currentPool != this->_clientPool.size())
-		{
-			std::cout << "A cgi script has been loaded. The old pool was " << currentPool << " and now is at " << this->_clientPool.size() << std::endl;
 			return;
-		}
-		else
-			std::cout << "No cgi added" << std::endl;
 		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_MOD, EPOLLOUT, eventList.data.fd, ICluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
 	}
@@ -138,16 +133,11 @@ namespace Webserv
 		memset(buffer, '\0', sizeof(buffer));
 		if (waitpid(dynamic_cast<const CgiReq *>(cgiReq)->getChildPid(), NULL,  WNOHANG) == 0)
 			return;
-		//while (waitpid(-1, NULL, WNOHANG) > 0);
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{
-			std::cout << "The fd is " << eventList.data.fd << std::endl;
-			std::cout << "We have read " << bytesRead << " bytes" << std::endl;
 			content += buffer;
-			std::cout << content << std::endl;
 			memset(buffer, '\0', sizeof(buffer));
 		}
-		std::cout << "We are out" << std::endl;
 		ogReq->setResourceContent(content);
 		// TO DO: Think about failures in Cgi execution and send 500 errors
 		//if (bytesRead == -1)
