@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:41 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:16:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:31:23 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,11 @@ namespace Webserv
 		this->selectConfiguration(configs);
 		this->_serverAction = new Webserv::ResourceReq(this->getPath(), this->getSocketFd());
 		this->_serverAction->prepareDirectErrCode(this->_configuration, 400);
+	}
+
+	void Request::send500ErrorCode(void)
+	{
+		this->_serverAction->prepareDirectErrCode(this->_configuration, 500);
 	}
 
 	void Request::extractHeaders(std::string &buffer)

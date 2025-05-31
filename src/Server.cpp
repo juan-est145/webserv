@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 11:26:01 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:43:55 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,9 +129,8 @@ namespace Webserv
 		Request *ogReq = dynamic_cast<Request *>(this->_clientPool.find(ogReqFd)->second);
 		std::string content;
 
-		(void)status;
 		memset(buffer, '\0', sizeof(buffer));
-		if (waitpid(dynamic_cast<const CgiReq *>(cgiReq)->getChildPid(), NULL,  WNOHANG) == 0)
+		if (waitpid(dynamic_cast<const CgiReq *>(cgiReq)->getChildPid(), &status,  WNOHANG) == 0)
 			return;
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{
@@ -139,25 +138,14 @@ namespace Webserv
 			memset(buffer, '\0', sizeof(buffer));
 		}
 		ogReq->setResourceContent(content);
-		// TO DO: Think about failures in Cgi execution and send 500 errors
-		//if (bytesRead == -1)
-		// {
-		// 	close(pipeFd[PIPE_READ]);
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// }
-		// if (close(eventList.data.fd) == -1)
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, Cluster::cluster->getEvent()))
-		// 	throw Webserv::Server::ServerException();
-		// if (!AuxFunc::handle_ctl(Cluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLIN, cgiReq->getSocketFd(), Cluster::cluster->getEvent()))
-		// 	throw Webserv::Server::ServerException();
-		AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent());
-		AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), ICluster::cluster->getEvent());
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
+			throw Webserv::Cgi::CgiErrorException();
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), ICluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();
+		if (bytesRead == -1 || close(eventList.data.fd) == -1 ||!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+			ogReq->send500ErrorCode();
 		this->_clientPool.erase(cgiReq->getSocketFd());
 		delete cgiReq;
-		close(eventList.data.fd);
 	}
 
 	void Server::writeOperations(const struct epoll_event &eventList)

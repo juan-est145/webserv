@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:45 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 12:15:26 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:31:00 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ namespace Webserv
 			const std::vector<ConfigServer> &configs,
 			const std::map<std::string, struct CookieData> &sessions);
 		void send400ErrorCode(const std::vector<ConfigServer> &configs);
+		void send500ErrorCode(void);
 
 		const std::map<std::string, std::string> &getReqHeader(void) const;
 		std::pair<std::string, enum method> getMethod(void) const;

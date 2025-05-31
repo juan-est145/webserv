@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/03 18:13:04 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 11:25:35 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 11:54:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,10 +254,6 @@ namespace Webserv
 
 	void Cgi::parentProcess(int pipeFd[2], pid_t &pid, const int reqFd) const
 	{
-		//int status = 0;
-		
-		(void)pid;
-
 		if (write(pipeFd[PIPE_WRITE], this->_reqData->_reqBody.c_str(), this->_reqData->_reqBody.size()) == -1)
 		{
 			close(pipeFd[PIPE_WRITE]);
@@ -277,26 +273,6 @@ namespace Webserv
 			throw Webserv::IServer::ServerException();
 		ICluster::cluster->addPipeSocket(pipeFd[PIPE_READ], server);
 		server->addClientPool(pipeFd[PIPE_READ], cgiReq);
-		// if (waitpid(pid, &status, 0) == -1)
-		// {
-		// 	close(pipeFd[PIPE_WRITE]);
-		// 	close(pipeFd[PIPE_READ]);
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// }
-		// while ((bytesRead = read(pipeFd[PIPE_READ], buffer, sizeof(buffer))) > 0)
-		// {
-		// 	content += buffer;
-		// 	memset(buffer, '\0', sizeof(buffer));
-		// }
-		// if (bytesRead == -1)
-		// {
-		// 	close(pipeFd[PIPE_READ]);
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// }
-		// if (close(pipeFd[PIPE_READ]) == -1)
-		// 	throw Webserv::Cgi::CgiErrorException();
-		// if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-		// 	throw Webserv::Cgi::CgiErrorException();
 	}
 
 	const char *Cgi::NotFoundException::what(void) const throw()
