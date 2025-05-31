@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:26:31 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/29 18:33:47 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:52:49 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,6 @@ namespace Webserv
     {
     public:
         std::map<std::string, std::string> _extPath;
-        // enum E_Methods
-        // {
-        //     GET = 0,
-        //     POST = 1,
-        //     DELETE = 2,
-        // };
 
         Location();
         Location(const Location &toCopy);
@@ -61,7 +55,6 @@ namespace Webserv
         const std::vector<std::string> &getCgiExtension() const;
         const std::map<std::string, std::string> &getExtensionPath() const;
         const unsigned long &getMaxBodySize() const;
-        // std::string getPrintMethods() const; // for checking only
         ~Location();
 
     private:

@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:51:54 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/29 11:30:53 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:51:56 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@
 
 namespace Webserv
 {
-	// class ConfigServer;
-	// class Location;
-	// class AuxFunc;
 	class Cgi;
 
 	class AServerAction

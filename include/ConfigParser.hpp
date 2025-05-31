@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:49:08 by juestrel          #+#    #+#             */
-/*   Updated: 2025/04/21 21:49:08 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:52:11 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 
 namespace Webserv
 {
-	//class ConfigServer;
-
 	class ConfigParser
 	{
 	private:

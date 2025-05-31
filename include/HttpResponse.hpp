@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:26:30 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/29 00:33:13 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:52:22 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,8 @@ namespace Webserv
         // Setters
         void setResCode(const std::string &resCode);
         void setHttpVersion(const std::string &httpVersion);
-        // void setMime(const std::string &mime);
-        // void setContentLength(int contentLength);
-        // void setLocation(const std::string &location);
-        // void setAllow(const std::string &allow);
         void setHeaders(const std::map<std::string, std::string> &resHeaders);
         void setDate(const std::string &date);
-        /*
-        void setWwwAuthenticate(std::string wwwAuthenticate);
-
-
-        void setRetryAfter(int retryAfter);
-        */
-
         ~HttpResponse();
     };
 

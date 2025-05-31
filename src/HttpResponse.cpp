@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 14:46:33 by mfuente-          #+#    #+#             */
-/*   Updated: 2025/05/29 00:32:58 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:54:30 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ namespace Webserv
         ss << "\r\n" << content;
         return (ss.str());
     }
-    // APARTADOS FALTANTES
-    // WWW-Authenticate(401)
-    // RETRY-AFTER(503)
+ 
     //*************GETTERS**************//
     
     const std::string &HttpResponse::getResCode(void) const
@@ -114,39 +112,10 @@ namespace Webserv
             this->_headers[it->first] = it->second;
     }
 
-    // void HttpResponse::setMime(const std::string &mime)
-    // {
-    //     this->_headers["Content-Type"] = mime;
-    // }
-
-    // void HttpResponse::setContentLength(int contentLength)
-    // {
-    //     this->_headers["Content-Length"] = AuxFunc::ft_itoa(contentLength);
-    // }
-
-    // void HttpResponse::setLocation(const std::string &location)
-    // {
-    //     this->_headers["Location"] = location;
-    // }
-
-    // void HttpResponse::setAllow(const std::string &allow)
-    // {
-    //     this->_headers["Allow"] = allow;
-    // }
-
     void HttpResponse::setDate(const std::string &date)
     {
         this->_headers["Date"] = date;
     }
 
-    /*void setWwwAuthenticate(std::string wwwAuthenticate)
-    {
-        this->wwwAuthenticate = wwwAuthenticate;
-    }*/
-
-    /*void setRetryAfter(int retryAfter)
-    {
-        this->retryAfter = retryAfter;
-    }*/
     HttpResponse::~HttpResponse() {}
 }

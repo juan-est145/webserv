@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:50:29 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/02 20:07:04 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:53:33 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,6 @@ namespace Webserv
 			throw ErrorException("Wrong syntax: root");
 		this->_root = root;
 	}
-
-	// void	ConfigServer::setFd(int fd)
-	// {
-	// 	this->_listen_fd = fd;
-	// }
 
 	void ConfigServer::setPort(std::string parameter)
 	{
@@ -461,12 +456,6 @@ namespace Webserv
 			if (ConfigFile::checkFile(location.getIndexLocation(), R_OK) < 0)
 			{
 				std::string path = location.getRootLocation() + location.getPath() + "/" + location.getIndexLocation();
-				// if (ConfigFile::getTypePath(path) != 1)
-				// {
-				// 	std::string root = getcwd(NULL, 0);
-				// 	location.setRootLocation(root);
-				// 	path = root + location.getPath() + "/" + location.getIndexLocation();
-				// }
 				if (path.empty() || ConfigFile::getPathType(path) != 1 || ConfigFile::checkFile(path, 4) < 0)
 					return (1);
 			}
@@ -525,11 +514,6 @@ namespace Webserv
 		}
 		return (0);
 	}
-
-	// int ConfigServer::getFd()
-	// {
-	// 	return (this->_listen_fd);
-	// }
 
 	const std::string &ConfigServer::getServerName() const
 	{
