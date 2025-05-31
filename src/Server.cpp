@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 12:49:34 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:50:43 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,11 +220,6 @@ namespace Webserv
 			expiredSessId.pop();
 		}
 	}
-
-	// const char *Server::ServerException::what(void) const throw()
-	// {
-
-	// }
 
 	Server::~Server() {}
 }
