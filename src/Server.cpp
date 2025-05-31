@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 12:50:43 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:51:06 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ namespace Webserv
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
 		Request *req = dynamic_cast<Request *>(this->_clientPool.find(eventList.data.fd)->second);
-		// *----CAMBIO----//
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
