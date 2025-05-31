@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 11:43:55 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:46:42 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ namespace Webserv
 		const struct epoll_event *eventList = ICluster::cluster->getEventList();
 		const std::map<int, ICluster::SocketData> socketData = ICluster::cluster->getSockets();
 		std::map<int, ICluster::SocketData>::const_iterator socketInfo = socketData.find(eventList[eventListIndex].data.fd);
-		
+
 		if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == ICluster::ACCEPT_SOCKET)
 			this->readSocket(eventList[eventListIndex]);
 		else if (eventList[eventListIndex].events & EPOLLIN && socketInfo->second.socketType == ICluster::PIPE_SOCKET)
@@ -66,7 +66,7 @@ namespace Webserv
 		std::size_t bodySize;
 		std::size_t expectedSize;
 		unsigned long currentPool;
-		
+
 		memset(buffer, '\0', sizeof(buffer));
 		ssize_t bufRead = recv(eventList.data.fd, buffer, sizeof(buffer) - 1, 0);
 		if (bufRead <= 0)
@@ -81,7 +81,7 @@ namespace Webserv
 		{
 			req->readReq(buffer, bufRead);
 		}
-		catch(const Webserv::Request::InvalidReqException& e)
+		catch (const Webserv::Request::InvalidReqException &e)
 		{
 			req->send400ErrorCode(this->_configurations);
 			this->_clientPool[eventList.data.fd] = req;
@@ -130,7 +130,7 @@ namespace Webserv
 		std::string content;
 
 		memset(buffer, '\0', sizeof(buffer));
-		if (waitpid(dynamic_cast<const CgiReq *>(cgiReq)->getChildPid(), &status,  WNOHANG) == 0)
+		if (waitpid(dynamic_cast<const CgiReq *>(cgiReq)->getChildPid(), &status, WNOHANG) == 0)
 			return;
 		while ((bytesRead = read(eventList.data.fd, buffer, sizeof(buffer))) > 0)
 		{
@@ -142,7 +142,7 @@ namespace Webserv
 			throw Webserv::Cgi::CgiErrorException();
 		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, ogReq->getSocketFd(), ICluster::cluster->getEvent()))
 			throw Webserv::Server::ServerException();
-		if (bytesRead == -1 || close(eventList.data.fd) == -1 ||!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+		if (bytesRead == -1 || close(eventList.data.fd) == -1 || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
 			ogReq->send500ErrorCode();
 		this->_clientPool.erase(cgiReq->getSocketFd());
 		delete cgiReq;
@@ -150,17 +150,33 @@ namespace Webserv
 
 	void Server::writeOperations(const struct epoll_event &eventList)
 	{
-		const Request *req = dynamic_cast<const Request *>(this->_clientPool.find(eventList.data.fd)->second);
+		Request *req = dynamic_cast<Request *>(this->_clientPool.find(eventList.data.fd)->second);
 		// *----CAMBIO----//
 		HttpResponse Hresp;
 		std::string response;
 		Director director;
-		ConcreteBuilder *builder = new ConcreteBuilder(&Hresp); 
-		director.setBuilder(builder);
+		ConcreteBuilder *builder;
 
+		if (!(eventList.events & EPOLLOUT))
+		{
+			const CgiReq *cgiReq = dynamic_cast<const CgiReq *>(this->_clientPool.find(eventList.data.fd)->second);
+			req = dynamic_cast<Request *>(this->_clientPool.find(cgiReq->getOgReqSock())->second);
+			req->send500ErrorCode();
+			waitpid(cgiReq->getChildPid(), NULL, WNOHANG);
+			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
+				throw Webserv::Cgi::CgiErrorException();
+			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, req->getSocketFd(), ICluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();
+			close(eventList.data.fd);
+			this->_clientPool.erase(cgiReq->getSocketFd());
+			delete cgiReq;
+			return;
+		}
+		builder = new ConcreteBuilder(&Hresp);
+		director.setBuilder(builder);
 		director.buildDefaultResponse(req->getResCode(), req->getResHeaders());
 		response = Hresp.returnResponse(req->getResourceContent());
-		
+
 		if (send(eventList.data.fd, response.c_str(), response.size(), 0) == -1)
 			Webserv::Logger::errorLog(errno, strerror, false);
 		delete builder;
@@ -187,8 +203,8 @@ namespace Webserv
 		std::map<std::string, struct CookieData>::iterator it;
 		std::time_t currTime = std::time(NULL);
 		std::stack<std::string> expiredSessId;
-		
-		for  (it = this->_sessions.begin(); it != this->_sessions.end(); it++)
+
+		for (it = this->_sessions.begin(); it != this->_sessions.end(); it++)
 		{
 			if (currTime >= it->second._expirationDate)
 				expiredSessId.push(it->first);
@@ -202,7 +218,7 @@ namespace Webserv
 
 	// const char *Server::ServerException::what(void) const throw()
 	// {
-		
+
 	// }
 
 	Server::~Server() {}
