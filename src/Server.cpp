@@ -6,7 +6,7 @@
 /*   By: juestrel <juestrel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 12:15:16 by juestrel          #+#    #+#             */
-/*   Updated: 2025/05/31 12:46:42 by juestrel         ###   ########.fr       */
+/*   Updated: 2025/05/31 12:49:34 by juestrel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,17 +159,7 @@ namespace Webserv
 
 		if (!(eventList.events & EPOLLOUT))
 		{
-			const CgiReq *cgiReq = dynamic_cast<const CgiReq *>(this->_clientPool.find(eventList.data.fd)->second);
-			req = dynamic_cast<Request *>(this->_clientPool.find(cgiReq->getOgReqSock())->second);
-			req->send500ErrorCode();
-			waitpid(cgiReq->getChildPid(), NULL, WNOHANG);
-			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
-				throw Webserv::Cgi::CgiErrorException();
-			if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, req->getSocketFd(), ICluster::cluster->getEvent()))
-			throw Webserv::Server::ServerException();
-			close(eventList.data.fd);
-			this->_clientPool.erase(cgiReq->getSocketFd());
-			delete cgiReq;
+			this->invalidWriteEvent(req, eventList);
 			return;
 		}
 		builder = new ConcreteBuilder(&Hresp);
@@ -189,6 +179,21 @@ namespace Webserv
 			throw Webserv::Server::ServerException();
 		delete this->_clientPool[eventList.data.fd];
 		this->_clientPool.erase(eventList.data.fd);
+	}
+
+	void Server::invalidWriteEvent(Request *req, const struct epoll_event &eventList)
+	{
+		const CgiReq *cgiReq = dynamic_cast<const CgiReq *>(this->_clientPool.find(eventList.data.fd)->second);
+		req = dynamic_cast<Request *>(this->_clientPool.find(cgiReq->getOgReqSock())->second);
+		req->send500ErrorCode();
+		waitpid(cgiReq->getChildPid(), NULL, WNOHANG);
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_DEL, EPOLLIN, eventList.data.fd, ICluster::cluster->getEvent()))
+			throw Webserv::Cgi::CgiErrorException();
+		if (!AuxFunc::handle_ctl(ICluster::cluster->getEpollFd(), EPOLL_CTL_ADD, EPOLLOUT, req->getSocketFd(), ICluster::cluster->getEvent()))
+			throw Webserv::Server::ServerException();
+		close(eventList.data.fd);
+		this->_clientPool.erase(cgiReq->getSocketFd());
+		delete cgiReq;
 	}
 
 	std::size_t Server::findExpectedSize(Request *req) const
