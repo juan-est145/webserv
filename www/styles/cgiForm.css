@@ -1,0 +1,18 @@
+@import url("/styles/base.css");
+
+label {
+	font-size: 3rem;
+}
+
+input {
+	font-size: 2rem;
+}
+
+form {
+	flex-grow: 1;
+	gap: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
