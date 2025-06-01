@@ -3,29 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/upload.css">
     <title>File uploader</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-        h1 {
-            color: #ff0000;
-        }
-        .uploadInput {
-            color: #007BFF;
-        }
     </style>
 </head>
 <body>
@@ -35,7 +14,7 @@
             <label for="file">Upload here</label>
             <input type="file" name="file" id="file">
         </div>
-        <button type="submit">Upload</button>
+        <button class="main-btn" type="submit">Upload</button>
     </form>
 </body>
 </html>
