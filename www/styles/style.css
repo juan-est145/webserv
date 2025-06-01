@@ -10,6 +10,7 @@ body {
 	background-color: #2d3436;
 	background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
 	--btnColor: white;
+	--focusBtn: rgb(144, 144, 144);
 
 }
 
@@ -52,6 +53,9 @@ main {
 	border: none;
 	border-radius: 2em;
 	font-size: 1.2rem;
-	
 	padding: 0.6em;
+}
+
+#destroy-btn:focus{
+	background-color: var(--focusBtn);
 }
