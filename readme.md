@@ -1,6 +1,6 @@
 # Webserv
 
-A repository containing the webserv project of 42 Malaga. The aim of this project is to create from scratch a fully-functioning http server inspired by nginx. It support's GET, POST and DELETE methods, can process cgi scripts written with Python or shell scripts and it's also able to upload files. The server is also non-blocking thanks to the use of epoll. You can find all the information about the project in the subject pdf. This shell is compatible will require a Linux kernel to work. 
+A repository containing the webserv project of 42 Malaga. The aim of this project is to create from scratch a fully-functioning http server inspired by nginx. It support's GET, POST and DELETE methods, can process cgi scripts written with Python or shell scripts and it's also able to upload files. The server is also non-blocking thanks to the use of epoll. You can find all the information about the project in the subject pdf. This project requires a Linux kernel to work. 
  
 ## Authors
 
@@ -8,7 +8,7 @@ A repository containing the webserv project of 42 Malaga. The aim of this projec
 - [@MiguelAngel456](https://www.github.com/MiguelAngel456)
 
 ## Dependencies
-In order to be able to compile this project, you will need a C++ compiler (clang++ or g++ are recommended), the Make tool and be using a Linux kernel version greater than 2.5.44. It's also highly recommend to have python3 installed in your system.
+In order to be able to compile this project, you will need a C++ compiler (clang++ or g++ are recommended), the Make tool and be using a Linux kernel version greater than 2.5.44. It's also highly recommend to have Python3 installed in your system.
 
 To install all of these dependencies in Debian-based distros, you can use the following command
 ```bash
